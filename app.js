@@ -154,7 +154,7 @@ function renderList(root, category){
           el('span',{class:'org'}, p.org || ''),
           p.period ? el('span',{class:'period'}, p.period) : null
         ),
-        el('p',{class:'showcase-summary'}, (p.summary || '').substring(0, 120) + '...'),
+        el('p',{class:'showcase-summary'}, (p.summary || '').length > 120 ? (p.summary || '').substring(0, 120) + '...' : (p.summary || '')),
         el('div',{class:'tagrow'}, ...(p.tags||[]).slice(0,4).map(t=>el('span',{class:'tag'},t))),
         el('a',{class:'btn primary',href:`#/project/${p.id}`},'View Details →')
       )
