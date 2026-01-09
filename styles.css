@@ -129,3 +129,58 @@ li{margin:6px 0; color:rgba(234,240,246,.92); line-height:1.45}
   color:rgba(234,240,246,.92);
   font-size:13px;
 }
+
+/* Evidence box for PhD-focused project pages */
+.evidence-box{
+  border-left:3px solid rgba(234,179,8,.7);
+  padding:10px 12px;
+  background:rgba(234,179,8,.08);
+  border-radius:12px;
+  color:rgba(234,240,246,.92);
+  font-size:13px;
+  line-height:1.5;
+}
+
+/* Dense project cards with more info */
+.proj-dense .proj-header{
+  margin-bottom:8px;
+}
+
+.proj-dense .org-period{
+  display:flex;
+  gap:8px;
+  font-size:12px;
+  color:var(--muted);
+  margin:4px 0;
+}
+
+.proj-dense .org-period .org::after{
+  content:'•';
+  margin-left:8px;
+}
+
+.proj-dense .summary{
+  font-size:13px;
+  line-height:1.5;
+  color:rgba(234,240,246,.88);
+  margin:8px 0;
+}
+
+.summary-detail{
+  font-size:14px;
+  line-height:1.6;
+  color:rgba(234,240,246,.90);
+  font-style:italic;
+  margin:12px 0 20px;
+  padding:12px;
+  background:rgba(255,255,255,.02);
+  border-left:3px solid var(--accent);
+  border-radius:8px;
+}
+
+/* Project page improvements */
+.proj-page h3{
+  color:var(--accent);
+  font-size:17px;
+  margin-top:24px;
+}

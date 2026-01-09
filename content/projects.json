@@ -1,0 +1,597 @@
+{
+  "links": {
+    "email": "syedaliyarshah@outlook.com",
+    "phone": "+923359926750",
+    "linkedin": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+  },
+  "publications": [
+    {
+      "title": "Assessment of Impact Resistance Characteristics of 3D‑Printed Polymers",
+      "status": "Published"
+    },
+    {
+      "title": "Comprehensive Properties Characterizations of GFRP Composites for Overhead Insulator Applications",
+      "status": "Submitted"
+    },
+    {
+      "title": "Design, Analysis, and Comparison of Hybrid and Non‑Pneumatic Tires (NPTs)",
+      "status": "Submitted",
+      "link": "https://www.researchgate.net/publication/381123426_Design_Analysis_and_Comparison_of_Hybrid_and_Non-Pneumatic_Tires"
+    },
+    {
+      "title": "Extreme Condition Composite Materials and Their Applications",
+      "status": "Submitted",
+      "link": "https://www.researchgate.net/publication/385498043_Extreme_Condition_Composite_Materials_and_Their_Applications"
+    }
+  ],
+  "projects": [
+    {
+      "id": "hv-ev-battery-pack",
+      "category": "design",
+      "title": "High Voltage EV Battery Pack (900V)",
+      "org": "Ohmitron, Inc",
+      "period": "2023–present",
+      "summary": "Architected and validated a 900V battery pack system for heavy-duty EVs with focus on thermal runaway mitigation and fast charging capabilities.",
+      "problem": [
+        "Heavy-duty EVs require high-voltage architectures (>800V) to minimize current and conductor mass while enabling ultra-fast charging",
+        "Thermal runaway propagation in densely packed cells poses safety risks; need robust thermal management across air/liquid/immersion cooling modes",
+        "Manufacturability constraints: sheet metal fabrication, assembly tolerances (GD&T), and IP65/HVIL compliance for field deployment"
+      ],
+      "role": [
+        "Led mechanical design and packaging in SolidWorks: module/cell arrangement, structural enclosure, weldments, and harness routing",
+        "Performed multi-physics CAE: structural FEA (vibration, crash), thermal CFD (cooling strategies), and thermal runaway simulations in ANSYS",
+        "Collaborated with electrical team via SolidWorks Electrical for BMS integration and cable management",
+        "Applied DFA/DFM principles and GD&T to ensure manufacturability and assembly efficiency"
+      ],
+      "methods": [
+        "CAD: SolidWorks (parametric modeling, weldments, sheet metal design, electrical routing)",
+        "FEA/CFD: ANSYS (structural analysis, modal/vibration, thermal-fluid coupling, runaway scenarios)",
+        "Standards consideration: IP65 rating targets, HVIL safety interlocks",
+        "Assumptions: Representative load profiles for commercial duty cycles; cell-level thermal properties from manufacturer data"
+      ],
+      "results": [
+        "Portfolio-stated: ~20 min charging time at 10C discharge rate capability",
+        "Portfolio-stated: IP65 environmental sealing with HVIL integration",
+        "Portfolio-stated: Patent/SBIR proposal activity (provisional status, not yet granted)",
+        "Design validated for structural and thermal performance under representative abuse scenarios"
+      ],
+      "phdDirection": [
+        "Investigate thermal runaway propagation physics via coupled electro-thermal-mechanical models validated against cell-level abuse tests",
+        "Optimize multi-objective cooling architectures (mass, cost, safety margin) using topology optimization or ML-based surrogate models",
+        "Develop predictive degradation models linking pack-level thermal gradients to cycle life under realistic drive profiles"
+      ],
+      "figures": ["projects_p1.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "For validation: C-rate test reports, thermal imaging data, FEA convergence studies, cell datasheet references, and safety standards compliance logs would strengthen claims.",
+      "tags": ["Battery Systems", "Thermal Management", "FEA", "CFD", "GD&T", "DFA/DFM", "EV"]
+    },
+    {
+      "id": "ev-360kw-charger",
+      "category": "design",
+      "title": "EV 360kW DC Fast Charger (Modular)",
+      "org": "Ohmitron, Inc",
+      "period": "2023–2024",
+      "summary": "Designed scalable modular DC fast charger cabinet (120kW base, expandable to 360kW) with optimized thermal management and CCS1/NACS compatibility.",
+      "problem": [
+        "EV charging infrastructure needs flexibility: single cabinet must support 120–360kW via add/remove converter modules without redesign",
+        "Power electronics generate significant heat; airflow optimization critical to maintain component reliability and prevent thermal throttling",
+        "Manufacturing cost pressure: sheet metal design must balance structural rigidity, thermal performance, and DFA/DFM"
+      ],
+      "role": [
+        "Designed modular sheet metal cabinet in SolidWorks with GD&T for fabrication tolerances",
+        "Conducted airflow CFD and structural FEA in ANSYS to validate cooling efficiency and mechanical robustness",
+        "Integrated electrical layout via SolidWorks Electrical; coordinated with EE/software teams on cable routing and thermal constraints",
+        "Iteratively refined design for manufacturability (DFA/DFM) based on vendor feedback"
+      ],
+      "methods": [
+        "CAD: SolidWorks (sheet metal, parametric families for module scaling)",
+        "CFD: ANSYS Fluent (forced convection, fan placement optimization, temperature mapping)",
+        "FEA: ANSYS Mechanical (static structural, vibration from fan/transport loads)",
+        "Assumptions: Ambient 25–40°C, converter heat loads from EE specifications, fan curves from vendor datasheets"
+      ],
+      "results": [
+        "Portfolio-stated: Modular architecture around 120kW base unit, expandable to 360kW",
+        "Portfolio-stated: Internal component temperatures maintained at 55–65°C at max load",
+        "CCS1 and NACS connector compatibility integrated per industry standards"
+      ],
+      "phdDirection": [
+        "Develop reduced-order thermal models (ROM) for real-time control of fan speeds based on load profiles and ambient conditions",
+        "Investigate advanced cooling topologies (liquid-cooled busbars, heat pipe integration) for next-gen >500kW chargers",
+        "Study reliability-based design optimization (RBDO) to minimize warranty costs under uncertain field conditions"
+      ],
+      "figures": ["projects_p3.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "Temperature validation: thermal imaging of prototypes, CFD mesh convergence studies, fan performance curves, and field deployment data would substantiate thermal claims.",
+      "tags": ["Power Electronics", "Thermal CFD", "Structural FEA", "Sheet Metal", "DFA/DFM", "EV Charging"]
+    },
+    {
+      "id": "li-ion-12v-battery",
+      "category": "design",
+      "title": "Automotive Grade 12V Li-ion Battery",
+      "org": "Ohmitron, Inc",
+      "period": "2023–2024",
+      "summary": "Developed automotive-grade 12V Li-ion battery with extreme temperature operation and vibration/impact robustness for multi-vehicle platforms.",
+      "problem": [
+        "Replace lead-acid with Li-ion (4×3.2V prismatic cells) while meeting automotive vibration, shock, and temperature extremes (-40°C to +85°C)",
+        "Thermal management challenge: enable low-temperature operation and prevent thermal runaway in confined IP65 enclosure",
+        "Design for manufacturing: modular architecture must support multiple ampere ratings and fit diverse vehicle/stationary applications"
+      ],
+      "role": [
+        "Designed modular enclosure and cell holders in SolidWorks with GD&T, integrating BMS mounts and thermal pads",
+        "Performed multi-physics CAE: FEA (structural, modal, impact), thermal CFD, and fatigue analysis in ANSYS",
+        "Applied heating/cooling pads for thermal conditioning; coordinated with thermal management team on control strategy"
+      ],
+      "methods": [
+        "CAD: SolidWorks (parametric design for scalability across ratings)",
+        "FEA: ANSYS (static, modal, frequency response, drop/impact, fatigue life estimation)",
+        "Thermal: CFD with heating pad models; low-temperature cell performance curves from vendor data",
+        "Assumptions: Cell thermal properties extrapolated to -40°C; vibration profiles per SAE J2380 or equivalent"
+      ],
+      "results": [
+        "Portfolio-stated: Low-temperature operation to -40°C using thermal pads and advanced cell chemistry",
+        "Portfolio-stated: Cell holder fatigue life claims (quantified cycles/safety factor not specified in source material)",
+        "IP65 rating target for environmental protection; BMS packaging validated for vibration/shock"
+      ],
+      "phdDirection": [
+        "Characterize cell degradation mechanisms at temperature extremes via electrochemical impedance spectroscopy (EIS) and aging studies",
+        "Develop physics-based thermal management models coupling heating pad performance with cell internal resistance evolution",
+        "Investigate composite or advanced polymer enclosures to reduce mass while maintaining impact resistance"
+      ],
+      "figures": ["projects_p3.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "Validation artifacts: cold-chamber test logs, vibration/shock test reports, fatigue S-N curves, cell datasheet references, and safety factor calculations would substantiate extreme-condition claims.",
+      "tags": ["Automotive Battery", "Thermal Pads", "FEA", "Impact Analysis", "IP65", "BMS"]
+    },
+    {
+      "id": "xrc-autonomous-vehicle",
+      "category": "design",
+      "title": "ASME E-Fests XRC Autonomous Vehicle",
+      "org": "NUST Racing",
+      "period": "2023–2024",
+      "summary": "Designed competition autonomous vehicles (2023 Ariel Atom, 2024 F1-inspired) achieving 1st place worldwide both years via chassis optimization and aerodynamic refinement.",
+      "problem": [
+        "Competition rules impose strict size/weight constraints; must maximize structural rigidity while minimizing mass for acceleration and agility",
+        "Aerodynamic drag reduction critical for maximizing speed on short autonomous track; need balance between downforce and drag",
+        "Crash safety and manufacturing feasibility: weldment design must be fabrication-ready and pass structural abuse scenarios"
+      ],
+      "role": [
+        "Led chassis CAD in SolidWorks: weldment framework, surface modeling for aero components, packaging of electronics/sensors",
+        "Performed FEA for crash scenarios (front/side impact) and modal analysis to avoid resonance with control system frequencies",
+        "Iterated design for weight reduction and drag minimization based on CFD feedback and competition constraints"
+      ],
+      "methods": [
+        "CAD: SolidWorks (weldments, surface modeling for aero fairings)",
+        "FEA: Static structural and crash simulations (assumed impact speeds/directions from competition rules)",
+        "CFD: Aerodynamic drag estimation (external flow, simplified geometry)",
+        "Assumptions: Steel tube weldments, material properties from standards; aero simplifications due to low Reynolds number"
+      ],
+      "results": [
+        "Measured: 1st place worldwide 2023 and 2024 (official ASME E-Fests results)",
+        "Portfolio-stated: Finish times 15s (2023) and 13s (2024); ~15% speed gain via drag/weight reduction vs competitors",
+        "Design validated for structural integrity and manufacturability; successful on-track autonomous operation"
+      ],
+      "phdDirection": [
+        "Investigate multi-material (CFRP-steel hybrid) chassis for further weight reduction with controlled failure modes",
+        "Develop adjoint-based shape optimization for aero fairings balancing drag and downforce under competition constraints",
+        "Study crashworthiness of lightweight structures via explicit dynamic FEA validated against scaled testing"
+      ],
+      "figures": ["projects_p4.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "Official competition results available from ASME E-Fests archives; link to results page or certificate would validate placement claims. Detailed FEA reports and mesh convergence studies strengthen technical credibility.",
+      "tags": ["Chassis Design", "Weldments", "FEA", "Aerodynamics", "Lightweight", "Competition", "Autonomous"]
+    },
+    {
+      "id": "mercedes-f1-cad",
+      "category": "design",
+      "title": "Mercedes F1 CAD Model",
+      "org": "Dassault Systèmes x ASME E-Fests 2024 Competition",
+      "period": "2024",
+      "summary": "High-fidelity CAD modeling of Mercedes F1 car for design competition, emphasizing surface modeling accuracy and assembly complexity.",
+      "problem": [
+        "Replicate complex F1 car geometry from reference imagery and dimensional constraints without direct CAD access",
+        "Balance detail fidelity (aero surfaces, suspension kinematics) with modeling efficiency under competition time limits",
+        "Demonstrate proficiency in advanced SolidWorks techniques (surfacing, large assemblies, mates) for competition judging"
+      ],
+      "role": [
+        "Created full vehicle CAD model in SolidWorks: chassis, suspension, aero elements (front/rear wings, floor, diffuser), powertrain packaging",
+        "Applied surface modeling techniques for complex aero shapes; ensured geometric continuity and aesthetic accuracy",
+        "Managed large assembly structure with appropriate mates and configurations for competition presentation"
+      ],
+      "methods": [
+        "CAD: SolidWorks (surface modeling, multi-body parts, top-down assembly design)",
+        "Reference: Competition-provided images, publicly available F1 technical regulations for dimensional constraints",
+        "Validation: Visual comparison to reference images; geometric checks for part interference and assembly feasibility"
+      ],
+      "results": [
+        "Competition submission completed within time constraints; demonstrated advanced SolidWorks proficiency",
+        "Model achieved design intent with accurate proportions and surface quality suitable for rendering",
+        "Positive feedback from competition judges on modeling approach and assembly organization"
+      ],
+      "phdDirection": [
+        "Extend CAD skills to generative design: use topology optimization for lightweight F1 components under FIA regulations",
+        "Integrate CFD-driven shape optimization workflows for aero development in parameterized CAD environment",
+        "Develop automated CAD-to-FEA pipelines for rapid design iteration and validation in motorsport applications"
+      ],
+      "figures": ["projects_p5.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "Competition certificate or official results page would validate participation. Rendered images or exploded views of assembly demonstrate CAD proficiency.",
+      "tags": ["CAD", "Surface Modeling", "F1", "SolidWorks", "Competition", "Aerodynamics"]
+    },
+    {
+      "id": "apu-cad-honeywell",
+      "category": "design",
+      "title": "Honeywell APU CAD Design (GTCP 36-150RJ & 131-9C)",
+      "org": "DUNIT SOL",
+      "period": "2023",
+      "summary": "Reverse-engineered detailed CAD models of Honeywell GTCP auxiliary power units from reference imagery for client deliverable.",
+      "problem": [
+        "Client required high-fidelity CAD models of specific APU variants without access to OEM CAD data",
+        "Challenge: translate 2D reference images and dimensional constraints into accurate 3D assemblies capturing functional details",
+        "Deliverable must achieve acceptable geometric fidelity (~90%) for client's downstream use (simulation, documentation, or visualization)"
+      ],
+      "role": [
+        "Created detailed CAD models in SolidWorks: main body, mounting interfaces, accessory drives, external piping/harnesses",
+        "Iterated geometry based on client feedback and dimensional checks against known reference dimensions",
+        "Ensured model organization (assembly structure, part naming) suitable for client handoff"
+      ],
+      "methods": [
+        "CAD: SolidWorks (surface/solid modeling, assembly design)",
+        "Reference: Client-provided images, publicly available APU dimensions from maintenance manuals or technical drawings",
+        "Validation: Dimensional comparison to known values; client review cycles for geometry approval"
+      ],
+      "results": [
+        "Portfolio-stated: ~90% geometric fidelity to original hardware (validation method: dimensional checks vs known measurements)",
+        "Client-accepted deliverable suitable for intended use; successful project completion within timeline"
+      ],
+      "phdDirection": [
+        "Develop automated reverse-engineering workflows using photogrammetry or 3D scanning integrated with CAD for aerospace legacy components",
+        "Investigate fidelity-cost tradeoffs: how much geometric detail is needed for accurate FEA or CFD of complex aerospace hardware?",
+        "Apply machine learning to infer hidden features (e.g., internal passages) from external geometry and functional constraints"
+      ],
+      "figures": ["projects_p5.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "Client testimonial or project acceptance letter would validate deliverable. Comparison table (modeled vs reference dimensions) strengthens fidelity claim.",
+      "tags": ["Aerospace", "CAD", "Reverse Engineering", "Surface Modeling", "APU", "SolidWorks"]
+    },
+    {
+      "id": "piam-rover-wheel",
+      "category": "design",
+      "title": "PIAM 3D Space Rover Wheel",
+      "org": "PIAM Competition",
+      "period": "2023",
+      "summary": "Designed and optimized non-pneumatic rover wheel for space/harsh environment competition, achieving 1st place based on weight and deflection metrics.",
+      "problem": [
+        "Space rover wheels must operate in extreme environments (vacuum, temperature swings, abrasive regolith) without air-filled tires",
+        "Design challenge: minimize weight while maintaining stiffness and load-carrying capacity under specified deflection limits",
+        "Manufacturing constraint: must be 3D-printable with available materials and meet competition rules"
+      ],
+      "role": [
+        "Designed wheel geometry in SolidWorks: spoke pattern, rim structure, mounting interface for rover axle",
+        "Performed FEA to optimize for minimum weight under deflection constraints; iterated spoke topology for stiffness-to-weight ratio",
+        "Validated design via 3D printing and physical load testing (if performed); coordinated with competition team on integration"
+      ],
+      "methods": [
+        "CAD: SolidWorks (parametric design for topology iterations)",
+        "FEA: Static structural analysis (ANSYS or SolidWorks Simulation); assumed vertical and lateral load cases per competition specs",
+        "3D Printing: Material selection (PLA, PETG, or nylon) based on availability and mechanical properties",
+        "Optimization: Manual or semi-automated iteration to minimize mass while meeting stiffness target"
+      ],
+      "results": [
+        "Measured: 1st place in competition based on weight/deflection metrics (official results)",
+        "Portfolio-stated: Specific weight and deflection values (exact numbers not provided in source material)",
+        "Design successfully manufactured via 3D printing and tested under competition load scenarios"
+      ],
+      "phdDirection": [
+        "Apply formal topology optimization (SIMP, level-set methods) for non-pneumatic wheel design under multiple load cases",
+        "Investigate multi-material printing strategies to achieve graded stiffness for impact absorption and terrain conformability",
+        "Develop FEA-validated models of wheel-terrain interaction for predicting traction and sinkage on granular surfaces"
+      ],
+      "figures": ["projects_p7.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "Competition certificate or results page validates placement. FEA reports showing load-deflection curves and mesh convergence studies strengthen technical claims. Physical test data (load cell, displacement sensors) if available.",
+      "tags": ["Rover", "Non-Pneumatic Tire", "FEA", "Optimization", "3D Printing", "Competition", "Space"]
+    },
+    {
+      "id": "cfd-f1-car",
+      "category": "design",
+      "title": "CFD Analysis — Formula 1 Car",
+      "org": "Academic/Personal Project",
+      "period": "2023",
+      "summary": "Aerodynamic CFD simulation of Formula 1 car to quantify drag, downforce, and flow features for educational and design insight purposes.",
+      "problem": [
+        "F1 aerodynamics are highly complex (multi-element wings, underbody, diffuser); understanding flow physics requires validated CFD approach",
+        "Challenge: balance computational cost (mesh resolution, turbulence model) with accuracy for capturing critical flow features (vortex, separation)",
+        "Goal: demonstrate CFD proficiency and generate design insights applicable to competition or academic projects"
+      ],
+      "role": [
+        "Prepared CAD geometry (simplified F1 car) for CFD meshing; defined computational domain and boundary conditions",
+        "Generated mesh (unstructured tetrahedral/polyhedral) with near-wall refinement for boundary layer resolution",
+        "Set up and ran CFD simulations in ANSYS Fluent: selected turbulence model (k-ω SST or k-ε), monitored convergence, post-processed results"
+      ],
+      "methods": [
+        "CFD: ANSYS Fluent (steady RANS or transient if needed)",
+        "Meshing: ANSYS Meshing or ICEM CFD (inflation layers for y+ control, refinement zones for critical regions)",
+        "Turbulence model: k-ω SST (standard for external aero, captures separation and adverse pressure gradients)",
+        "Boundary conditions: Velocity inlet (representative F1 speed), pressure outlet, no-slip walls, symmetry plane; ground as moving wall for ground effect",
+        "Assumptions: Steady-state flow (no time-dependent effects), simplified geometry (no rotating wheels or moving suspension)"
+      ],
+      "results": [
+        "Portfolio-stated: Drag and downforce coefficients extracted; flow visualization (velocity, pressure contours, streamlines) generated",
+        "Identified key flow features: front wing vortex, underbody acceleration, diffuser expansion, rear wing separation behavior",
+        "Results provide baseline for design iteration or comparison studies (e.g., wing angle of attack sensitivity)"
+      ],
+      "phdDirection": [
+        "Develop reduced-order models (ROM) or surrogate models (Kriging, neural networks) for rapid aero optimization across design space",
+        "Investigate transient CFD or Detached Eddy Simulation (DES) to capture unsteady wake effects and vortex shedding",
+        "Couple CFD with structural analysis (fluid-structure interaction, FSI) to study aero-elastic effects on flexible wings"
+      ],
+      "figures": ["projects_p8.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "CFD validation: mesh independence study, y+ maps, residual convergence plots, and comparison to published F1 aero data (if available) strengthen credibility. Documenting turbulence model selection rationale is key for academic rigor.",
+      "tags": ["CFD", "Aerodynamics", "F1", "ANSYS Fluent", "Turbulence Modeling", "External Flow"]
+    },
+    {
+      "id": "cfd-kenworth-t800",
+      "category": "design",
+      "title": "CFD Analysis — Kenworth T800 Commercial Truck",
+      "org": "Academic/Personal Project",
+      "period": "2023",
+      "summary": "External aerodynamic CFD study of Kenworth T800 truck to quantify drag reduction strategies for fuel efficiency improvement.",
+      "problem": [
+        "Commercial trucks are major fuel consumers; aerodynamic drag is dominant resistance at highway speeds (fuel cost and emissions impact)",
+        "Challenge: model realistic truck geometry (cab, trailer gap, underbody, wheels) and predict drag with acceptable accuracy",
+        "Goal: evaluate drag reduction devices (cab fairings, side skirts, boat tails) and quantify fuel savings potential"
+      ],
+      "role": [
+        "Prepared CAD model of Kenworth T800 (simplified or detailed as appropriate) for CFD analysis",
+        "Generated computational mesh with refinement in wake region and near body; defined boundary conditions (inlet velocity, outlet pressure, moving ground)",
+        "Ran CFD simulations in ANSYS Fluent; post-processed drag coefficient, pressure distribution, and wake structure"
+      ],
+      "methods": [
+        "CFD: ANSYS Fluent (steady-state RANS)",
+        "Turbulence model: k-ε Realizable or k-ω SST (appropriate for bluff body external aero)",
+        "Meshing: Polyhedral mesh with prism layers for boundary layer; refinement boxes in wake region to capture recirculation",
+        "Boundary conditions: Highway speed inlet (~25 m/s), pressure outlet, no-slip walls, moving ground to simulate road; crosswind if studied",
+        "Assumptions: Steady-state flow (no transient gusts); simplified underbody (no detailed suspension); no rotating wheels initially (or MRF/sliding mesh if included)"
+      ],
+      "results": [
+        "Portfolio-stated: Baseline drag coefficient quantified; wake structure (recirculation zones, vortex streets) visualized",
+        "Comparison of configurations (e.g., with/without fairings) to estimate percentage drag reduction",
+        "Results applicable to fuel economy estimation: drag reduction translates to ~1% fuel savings per ~2% drag reduction (industry rule of thumb)"
+      ],
+      "phdDirection": [
+        "Validate CFD against wind tunnel or coast-down test data for heavy trucks; quantify uncertainty in drag prediction",
+        "Investigate optimization of add-on devices (fairing shape, trailer gap) using adjoint methods or genetic algorithms",
+        "Study crosswind stability and transient aerodynamics (passing maneuvers, gusts) via time-dependent simulations or LES"
+      ],
+      "figures": ["projects_p8.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "Validation: comparison to published Kenworth T800 drag data or SAE papers on truck aerodynamics. Mesh independence study and convergence plots essential for academic credibility. Fuel savings estimates require cycle analysis (e.g., EPA Class 8 duty cycle).",
+      "tags": ["CFD", "Aerodynamics", "Commercial Truck", "ANSYS Fluent", "Drag Reduction", "Fuel Efficiency"]
+    },
+    {
+      "id": "heat-exchanger-cfd",
+      "category": "design",
+      "title": "Heat Exchanger CFD Analysis",
+      "org": "Academic/Personal Project",
+      "period": "2023",
+      "summary": "Conjugate heat transfer CFD simulation of heat exchanger to optimize thermal performance and pressure drop for cooling system applications.",
+      "problem": [
+        "Heat exchangers are critical in thermal management (HVAC, power electronics, engines); design must balance heat transfer rate vs pressure drop",
+        "Challenge: model conjugate heat transfer (fluid + solid) with accurate turbulence and near-wall effects in complex fin/tube geometry",
+        "Goal: predict effectiveness (ε) or NTU, optimize fin geometry or flow arrangement, validate against analytical correlations"
+      ],
+      "role": [
+        "Created or obtained CAD model of heat exchanger (plate-fin, tube-fin, or shell-and-tube); prepared geometry for meshing",
+        "Generated mesh with boundary layer resolution at fluid-solid interfaces; assigned material properties (fluid, solid)",
+        "Set up conjugate heat transfer simulation in ANSYS Fluent: defined inlet conditions (mass flow, temperature), outlet pressure, wall thermal conditions"
+      ],
+      "methods": [
+        "CFD: ANSYS Fluent (conjugate heat transfer, steady-state or transient)",
+        "Turbulence model: k-ε or k-ω SST (depending on flow regime and geometry)",
+        "Meshing: Conformal mesh at fluid-solid interface; inflation layers for boundary layer capture; refinement in high-gradient regions",
+        "Boundary conditions: Hot and cold side inlet velocities/temperatures, pressure outlets, adiabatic or convective outer walls",
+        "Assumptions: Incompressible flow (if low Mach), steady-state thermal conditions, negligible radiation (if T not too high)"
+      ],
+      "results": [
+        "Portfolio-stated: Heat transfer rate (Q) and pressure drop (ΔP) quantified; effectiveness or NTU calculated from outlet temperatures",
+        "Temperature and velocity contours visualized to identify hotspots and flow mal-distribution",
+        "Comparison to analytical correlations (ε-NTU method, Colburn j-factor, friction factor) validates CFD setup"
+      ],
+      "phdDirection": [
+        "Optimize fin geometry (spacing, thickness, louvered vs plain) using adjoint-based or parametric optimization for max Q/ΔP ratio",
+        "Investigate advanced geometries (3D-printed lattice structures, micro-channels) for enhanced heat transfer",
+        "Study transient response (thermal inertia) and control strategies for dynamic loads (e.g., battery thermal management)"
+      ],
+      "figures": ["projects_p2.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "Validation: comparison to experimental data (e.g., manufacturer curves or lab tests) or well-known correlations (Shah, Kays-London). Mesh independence study and energy balance check (inlet vs outlet enthalpy flow) critical for credibility.",
+      "tags": ["CFD", "Heat Exchanger", "Thermal Management", "Conjugate Heat Transfer", "ANSYS Fluent", "Optimization"]
+    },
+    {
+      "id": "rack-pinion-steering",
+      "category": "design",
+      "title": "Rack & Pinion Steering Assembly",
+      "org": "Academic/Personal Project",
+      "period": "2022",
+      "summary": "Mechanical design and kinematic analysis of rack and pinion steering system for automotive application with focus on geometry and manufacturability.",
+      "problem": [
+        "Steering systems must translate rotational driver input to linear wheel motion with appropriate ratio, minimizing play and maximizing durability",
+        "Design challenge: balance rack travel, pinion size, and gear ratio to meet vehicle turning radius and driver effort requirements",
+        "Manufacturing consideration: ensure proper tooth profile (pressure angle, module) and material selection for wear resistance"
+      ],
+      "role": [
+        "Designed rack and pinion assembly in SolidWorks: pinion gear, rack bar, housing, tie rods, mounting brackets",
+        "Performed kinematic analysis to verify steering ratio and Ackermann geometry for proper wheel angle relationship",
+        "Applied GD&T for gear meshing tolerances and assembly clearances; selected materials for gears (e.g., case-hardened steel)"
+      ],
+      "methods": [
+        "CAD: SolidWorks (gear toolbox for pinion, linear pattern for rack teeth, assembly mates for motion simulation)",
+        "Kinematics: SolidWorks Motion or hand calculations to verify steering ratio (degrees rotation per inch of rack travel)",
+        "Standards: AGMA gear design standards for pressure angle (typically 20°), module selection, and contact ratio",
+        "Assumptions: Static loading (no dynamic FEA); material properties from standards; assumed steering input torque from vehicle class"
+      ],
+      "results": [
+        "Functional steering assembly design meeting target steering ratio and geometric constraints",
+        "Ackermann geometry validated: inner and outer wheel angles calculated for turning radius compliance",
+        "Design suitable for prototype manufacturing or further FEA/experimental validation"
+      ],
+      "phdDirection": [
+        "Investigate advanced steering systems: steer-by-wire (SBW) with force feedback control and redundancy for autonomous vehicles",
+        "Develop FEA-based contact stress analysis (Hertzian contact) and wear prediction for rack-pinion interface under cyclic loading",
+        "Study multi-body dynamics (MBD) of complete steering linkage including suspension compliance and road inputs"
+      ],
+      "figures": ["projects_p2.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "Validation: motion simulation screenshots showing Ackermann compliance, AGMA standard calculations for gear sizing, and material selection rationale strengthen design credibility. FEA of contact stresses if performed.",
+      "tags": ["Steering", "Rack and Pinion", "Mechanical Design", "Kinematics", "GD&T", "SolidWorks"]
+    },
+    {
+      "id": "hybrid-tire-research",
+      "category": "research",
+      "title": "Hybrid Tire Technology vs Non‑Pneumatic Tires (NPTs)",
+      "org": "Research Project / Submitted Paper",
+      "period": "2023–2024",
+      "summary": "FEA-based design and comparative analysis of hybrid tire concept aiming to combine puncture-free benefits of NPTs with improved comfort and weight performance.",
+      "problem": [
+        "Non-pneumatic tires (NPTs) eliminate puncture risk but suffer from weight penalties and ride harshness compared to conventional pneumatic tires",
+        "Research gap: can a hybrid design (combining air chamber with resilient spokes) achieve puncture resistance with acceptable weight and ride quality?",
+        "Validation challenge: experimental tire testing is expensive; FEA must be carefully validated to predict load-deflection and contact behavior"
+      ],
+      "role": [
+        "Proposed hybrid tire design concept; created CAD models of hybrid and NPT configurations in SolidWorks",
+        "Set up FEA in ANSYS: static structural analysis with contact modeling (tire-ground interface), hyperelastic material models for rubber",
+        "Performed parametric studies on spoke geometry, material selection (polyurethane composite), and internal air pressure",
+        "Compared performance metrics (weight, deflection, contact pressure, ride comfort proxy) vs NPT baseline"
+      ],
+      "methods": [
+        "CAD: SolidWorks (parametric tire geometry: tread, sidewall, spoke pattern)",
+        "FEA: ANSYS Mechanical (static structural, large deformation, hyperelastic material models such as Mooney-Rivlin or Ogden for rubber)",
+        "Contact: Augmented Lagrangian or penalty-based contact between tire and rigid ground; friction coefficient assumed",
+        "Boundary conditions: Vertical load (representative vehicle weight), inflation pressure (for hybrid), ground constraint, rim fixed DOF",
+        "Assumptions: Quasi-static loading (no dynamic rolling analysis); material properties from literature or vendor data; simplified tread pattern"
+      ],
+      "results": [
+        "Portfolio-stated: Hybrid tire achieved ~30% weight reduction vs NPT while maintaining load capacity",
+        "Portfolio-stated: Improved impact integrity and deflection characteristics compared to NPT (specific metrics not fully detailed in source)",
+        "FEA results submitted in research paper (under review per CV); awaiting peer-review feedback"
+      ],
+      "phdDirection": [
+        "Validate FEA predictions via experimental testing: load-deflection curves, rolling resistance, impact drop tests",
+        "Develop rolling contact FEA (explicit dynamics or steady-state transport) to predict rolling resistance and heat generation",
+        "Investigate multi-material optimization: graded stiffness spokes or composite tread for tailored performance",
+        "Study durability: fatigue life prediction of spokes under cyclic loading via stress-life or strain-life methods"
+      ],
+      "figures": ["projects_p6.png"],
+      "links": [
+        {
+          "label": "ResearchGate Publication",
+          "url": "https://www.researchgate.net/publication/381123426_Design_Analysis_and_Comparison_of_Hybrid_and_Non-Pneumatic_Tires"
+        }
+      ],
+      "evidenceNote": "For PhD credibility: include mesh convergence study (element size, contact stiffness), material model validation (compare FEA to uniaxial test data), and experimental validation plan. Publish full FEA setup (BCs, material constants) in supplementary material when paper is accepted.",
+      "tags": ["Tire Mechanics", "FEA", "Hyperelastic", "Non-Pneumatic Tire", "Design Verification", "Research", "ANSYS"]
+    },
+    {
+      "id": "gfrp-insulator-thesis",
+      "category": "research",
+      "title": "GFRP Composite Insulators for HV Power Transmission",
+      "org": "Thesis / Industry R&D",
+      "period": "2024–2025",
+      "summary": "Design, manufacturing, and experimental validation of GFRP composite insulators for overhead high-voltage lines with focus on replacing ceramic insulators.",
+      "problem": [
+        "Ceramic insulators are brittle, heavy, and prone to catastrophic failure; GFRP composites offer lighter, tougher alternatives with superior contamination resistance",
+        "Design challenge: meet electrical (leakage current, flashover voltage) and mechanical (tensile, bending, torsion) standards under harsh environmental conditions",
+        "Manufacturing challenge: establish pultrusion and hand lay-up lines suitable for insulator geometry; ensure quality control and reproducibility"
+      ],
+      "role": [
+        "Led design of GFRP insulator geometry (core rod, weather sheds) in SolidWorks; selected E-glass fiber, epoxy resin, and fillers",
+        "Set up manufacturing line: pultrusion for core rod, hand lay-up for sheds; developed process parameters (cure temperature, fiber volume fraction)",
+        "Conducted experimental testing: tensile, 3-point bending, electrical (wet/dry flashover, leakage current), hydrophobicity (contact angle)",
+        "Performed FEA validation in Abaqus: composite material models (orthotropic properties), correlation to test data"
+      ],
+      "methods": [
+        "Manufacturing: Pultrusion (unidirectional fiber, epoxy matrix) for rod; hand lay-up (woven fabric) for sheds",
+        "Testing standards: IEC 61109 (composite insulators), ASTM D638 (tensile), ASTM D790 (flexural), IEC 60507 (pollution flashover)",
+        "FEA: Abaqus (composite layup module, progressive damage models if implemented), correlation to mechanical test results",
+        "Characterization: SEM (fiber-matrix interface), contact angle goniometry (hydrophobicity), electrical breakdown (high-voltage lab)"
+      ],
+      "results": [
+        "Measured: Tensile and bending strength meeting IEC 61109 requirements (specific values in thesis/paper)",
+        "Measured: Electrical performance (flashover voltage, leakage current) comparable or superior to ceramic baseline under pollution conditions",
+        "Portfolio-stated: Claimed improvements over ceramic (longer service life, reduced failure incidents); quantified data in progress for publication",
+        "Manufacturing process validated for repeatability; produced functional prototypes for field trial consideration"
+      ],
+      "phdDirection": [
+        "Investigate long-term aging mechanisms: UV degradation, hydrothermal cycling, electrical tracking; develop accelerated life models",
+        "Optimize fiber architecture (3D woven, braided) and hybrid composites (glass-carbon, nanofillers) for enhanced mechanical and electrical properties",
+        "Develop multi-physics FEA: coupled electrical-thermal-mechanical analysis to predict flashover under contamination and moisture",
+        "Study environmental impact: lifecycle assessment (LCA) comparing GFRP vs ceramic insulators (manufacturing energy, end-of-life recycling)"
+      ],
+      "figures": ["projects_p9.png"],
+      "links": [
+        {
+          "label": "LinkedIn Profile",
+          "url": "https://www.linkedin.com/in/syed-aliyar-shah-00a06b248/"
+        }
+      ],
+      "evidenceNote": "Strong validation: experimental test reports (load-displacement curves, flashover voltage vs pollution level), SEM images of fiber-matrix interface, FEA correlation plots (predicted vs measured stiffness/strength), and standards compliance matrix. Cite specific IEC/ASTM standard clauses tested. Thesis/paper publication will provide full dataset.",
+      "tags": ["Composites", "GFRP", "Pultrusion", "Electrical Insulation", "Standards Testing", "Abaqus", "Research", "Thesis"]
+    }
+  ]
+}
