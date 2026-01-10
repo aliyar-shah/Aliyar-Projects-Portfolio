@@ -6,7 +6,7 @@
   },
   "publications": [
     {
-      "title": "Assessment of Impact Resistance Characteristics of 3D‑Printed Polymers",
+      "title": "Assessment of Impact Resistance Characteristics of 3D\u2011Printed Polymers",
       "status": "Published"
     },
     {
@@ -14,7 +14,7 @@
       "status": "Submitted"
     },
     {
-      "title": "Design, Analysis, and Comparison of Hybrid and Non‑Pneumatic Tires (NPTs)",
+      "title": "Design, Analysis, and Comparison of Hybrid and Non\u2011Pneumatic Tires (NPTs)",
       "status": "Submitted",
       "link": "https://www.researchgate.net/publication/381123426_Design_Analysis_and_Comparison_of_Hybrid_and_Non-Pneumatic_Tires"
     },
@@ -30,7 +30,7 @@
       "category": "design",
       "title": "High Voltage EV Battery Pack (900V)",
       "org": "Ohmitron, Inc",
-      "period": "2023–present",
+      "period": "2023\u2013present",
       "summary": "Architected and validated a 900V battery pack system for heavy-duty EVs with focus on thermal runaway mitigation and fast charging capabilities.",
       "problem": [
         "Heavy-duty EVs require high-voltage architectures (>800V) to minimize current and conductor mass while enabling ultra-fast charging",
@@ -60,7 +60,6 @@
         "Optimize multi-objective cooling architectures (mass, cost, safety margin) using topology optimization or ML-based surrogate models",
         "Develop predictive degradation models linking pack-level thermal gradients to cycle life under realistic drive profiles"
       ],
-      "figures": ["projects_p1.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -68,17 +67,32 @@
         }
       ],
       "evidenceNote": "For validation: C-rate test reports, thermal imaging data, FEA convergence studies, cell datasheet references, and safety standards compliance logs would strengthen claims.",
-      "tags": ["Battery Systems", "Thermal Management", "FEA", "CFD", "GD&T", "DFA/DFM", "EV"]
+      "tags": [
+        "Battery Systems",
+        "Thermal Management",
+        "FEA",
+        "CFD",
+        "GD&T",
+        "DFA/DFM",
+        "EV"
+      ],
+      "images": [
+        "projects/hv-ev-battery-pack/hv-battery-main.png",
+        "projects/hv-ev-battery-pack/hv-battery-cad.png",
+        "projects/hv-ev-battery-pack/hv-battery-thermal.png",
+        "projects/hv-ev-battery-pack/hv-battery-assembly.png",
+        "projects/hv-ev-battery-pack/hv-battery-testing.png"
+      ]
     },
     {
       "id": "ev-360kw-charger",
       "category": "design",
       "title": "EV 360kW DC Fast Charger (Modular)",
       "org": "Ohmitron, Inc",
-      "period": "2023–2024",
+      "period": "2023\u20132024",
       "summary": "Designed scalable modular DC fast charger cabinet (120kW base, expandable to 360kW) with optimized thermal management and CCS1/NACS compatibility.",
       "problem": [
-        "EV charging infrastructure needs flexibility: single cabinet must support 120–360kW via add/remove converter modules without redesign",
+        "EV charging infrastructure needs flexibility: single cabinet must support 120\u2013360kW via add/remove converter modules without redesign",
         "Power electronics generate significant heat; airflow optimization critical to maintain component reliability and prevent thermal throttling",
         "Manufacturing cost pressure: sheet metal design must balance structural rigidity, thermal performance, and DFA/DFM"
       ],
@@ -92,11 +106,11 @@
         "CAD: SolidWorks (sheet metal, parametric families for module scaling)",
         "CFD: ANSYS Fluent (forced convection, fan placement optimization, temperature mapping)",
         "FEA: ANSYS Mechanical (static structural, vibration from fan/transport loads)",
-        "Assumptions: Ambient 25–40°C, converter heat loads from EE specifications, fan curves from vendor datasheets"
+        "Assumptions: Ambient 25\u201340\u00b0C, converter heat loads from EE specifications, fan curves from vendor datasheets"
       ],
       "results": [
         "Portfolio-stated: Modular architecture around 120kW base unit, expandable to 360kW",
-        "Portfolio-stated: Internal component temperatures maintained at 55–65°C at max load",
+        "Portfolio-stated: Internal component temperatures maintained at 55\u201365\u00b0C at max load",
         "CCS1 and NACS connector compatibility integrated per industry standards"
       ],
       "phdDirection": [
@@ -104,7 +118,6 @@
         "Investigate advanced cooling topologies (liquid-cooled busbars, heat pipe integration) for next-gen >500kW chargers",
         "Study reliability-based design optimization (RBDO) to minimize warranty costs under uncertain field conditions"
       ],
-      "figures": ["projects_p3.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -112,17 +125,31 @@
         }
       ],
       "evidenceNote": "Temperature validation: thermal imaging of prototypes, CFD mesh convergence studies, fan performance curves, and field deployment data would substantiate thermal claims.",
-      "tags": ["Power Electronics", "Thermal CFD", "Structural FEA", "Sheet Metal", "DFA/DFM", "EV Charging"]
+      "tags": [
+        "Power Electronics",
+        "Thermal CFD",
+        "Structural FEA",
+        "Sheet Metal",
+        "DFA/DFM",
+        "EV Charging"
+      ],
+      "images": [
+        "projects/ev-360kw-charger/charger-main.png",
+        "projects/ev-360kw-charger/charger-cabinet.png",
+        "projects/ev-360kw-charger/charger-thermal-cfd.png",
+        "projects/ev-360kw-charger/charger-modules.png",
+        "projects/ev-360kw-charger/charger-assembly.png"
+      ]
     },
     {
       "id": "li-ion-12v-battery",
       "category": "design",
       "title": "Automotive Grade 12V Li-ion Battery",
       "org": "Ohmitron, Inc",
-      "period": "2023–2024",
+      "period": "2023\u20132024",
       "summary": "Developed automotive-grade 12V Li-ion battery with extreme temperature operation and vibration/impact robustness for multi-vehicle platforms.",
       "problem": [
-        "Replace lead-acid with Li-ion (4×3.2V prismatic cells) while meeting automotive vibration, shock, and temperature extremes (-40°C to +85°C)",
+        "Replace lead-acid with Li-ion (4\u00d73.2V prismatic cells) while meeting automotive vibration, shock, and temperature extremes (-40\u00b0C to +85\u00b0C)",
         "Thermal management challenge: enable low-temperature operation and prevent thermal runaway in confined IP65 enclosure",
         "Design for manufacturing: modular architecture must support multiple ampere ratings and fit diverse vehicle/stationary applications"
       ],
@@ -135,10 +162,10 @@
         "CAD: SolidWorks (parametric design for scalability across ratings)",
         "FEA: ANSYS (static, modal, frequency response, drop/impact, fatigue life estimation)",
         "Thermal: CFD with heating pad models; low-temperature cell performance curves from vendor data",
-        "Assumptions: Cell thermal properties extrapolated to -40°C; vibration profiles per SAE J2380 or equivalent"
+        "Assumptions: Cell thermal properties extrapolated to -40\u00b0C; vibration profiles per SAE J2380 or equivalent"
       ],
       "results": [
-        "Portfolio-stated: Low-temperature operation to -40°C using thermal pads and advanced cell chemistry",
+        "Portfolio-stated: Low-temperature operation to -40\u00b0C using thermal pads and advanced cell chemistry",
         "Portfolio-stated: Cell holder fatigue life claims (quantified cycles/safety factor not specified in source material)",
         "IP65 rating target for environmental protection; BMS packaging validated for vibration/shock"
       ],
@@ -147,7 +174,6 @@
         "Develop physics-based thermal management models coupling heating pad performance with cell internal resistance evolution",
         "Investigate composite or advanced polymer enclosures to reduce mass while maintaining impact resistance"
       ],
-      "figures": ["projects_p3.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -155,14 +181,26 @@
         }
       ],
       "evidenceNote": "Validation artifacts: cold-chamber test logs, vibration/shock test reports, fatigue S-N curves, cell datasheet references, and safety factor calculations would substantiate extreme-condition claims.",
-      "tags": ["Automotive Battery", "Thermal Pads", "FEA", "Impact Analysis", "IP65", "BMS"]
+      "tags": [
+        "Automotive Battery",
+        "Thermal Pads",
+        "FEA",
+        "Impact Analysis",
+        "IP65",
+        "BMS"
+      ],
+      "images": [
+        "projects/12v-automotive-battery/12v-battery-main.png",
+        "projects/12v-automotive-battery/12v-battery-design.png",
+        "projects/12v-automotive-battery/12v-battery-testing.png"
+      ]
     },
     {
       "id": "xrc-autonomous-vehicle",
       "category": "design",
       "title": "ASME E-Fests XRC Autonomous Vehicle",
       "org": "NUST Racing",
-      "period": "2023–2024",
+      "period": "2023\u20132024",
       "summary": "Designed competition autonomous vehicles (2023 Ariel Atom, 2024 F1-inspired) achieving 1st place worldwide both years via chassis optimization and aerodynamic refinement.",
       "problem": [
         "Competition rules impose strict size/weight constraints; must maximize structural rigidity while minimizing mass for acceleration and agility",
@@ -190,7 +228,6 @@
         "Develop adjoint-based shape optimization for aero fairings balancing drag and downforce under competition constraints",
         "Study crashworthiness of lightweight structures via explicit dynamic FEA validated against scaled testing"
       ],
-      "figures": ["projects_p4.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -198,13 +235,30 @@
         }
       ],
       "evidenceNote": "Official competition results available from ASME E-Fests archives; link to results page or certificate would validate placement claims. Detailed FEA reports and mesh convergence studies strengthen technical credibility.",
-      "tags": ["Chassis Design", "Weldments", "FEA", "Aerodynamics", "Lightweight", "Competition", "Autonomous"]
+      "tags": [
+        "Chassis Design",
+        "Weldments",
+        "FEA",
+        "Aerodynamics",
+        "Lightweight",
+        "Competition",
+        "Autonomous"
+      ],
+      "images": [
+        "projects/asme-xrc-autonomous-vehicle/xrc-vehicle-main.png",
+        "projects/asme-xrc-autonomous-vehicle/xrc-vehicle-cad.png",
+        "projects/asme-xrc-autonomous-vehicle/xrc-vehicle-cfd.png",
+        "projects/asme-xrc-autonomous-vehicle/xrc-vehicle-track.png",
+        "projects/asme-xrc-autonomous-vehicle/xrc-vehicle-team.png",
+        "projects/asme-xrc-autonomous-vehicle/xrc-vehicle-awards.png",
+        "projects/asme-xrc-autonomous-vehicle/xrc-vehicle-competition.png"
+      ]
     },
     {
       "id": "mercedes-f1-cad",
       "category": "design",
       "title": "Mercedes F1 CAD Model",
-      "org": "Dassault Systèmes x ASME E-Fests 2024 Competition",
+      "org": "Dassault Syst\u00e8mes x ASME E-Fests 2024 Competition",
       "period": "2024",
       "summary": "High-fidelity CAD modeling of Mercedes F1 car for design competition, emphasizing surface modeling accuracy and assembly complexity.",
       "problem": [
@@ -232,7 +286,6 @@
         "Integrate CFD-driven shape optimization workflows for aero development in parameterized CAD environment",
         "Develop automated CAD-to-FEA pipelines for rapid design iteration and validation in motorsport applications"
       ],
-      "figures": ["projects_p5.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -240,7 +293,19 @@
         }
       ],
       "evidenceNote": "Competition certificate or official results page would validate participation. Rendered images or exploded views of assembly demonstrate CAD proficiency.",
-      "tags": ["CAD", "Surface Modeling", "F1", "SolidWorks", "Competition", "Aerodynamics"]
+      "tags": [
+        "CAD",
+        "Surface Modeling",
+        "F1",
+        "SolidWorks",
+        "Competition",
+        "Aerodynamics"
+      ],
+      "images": [
+        "projects/mercedes-f1-cad/f1-main.png",
+        "projects/mercedes-f1-cad/f1-body.png",
+        "projects/mercedes-f1-cad/f1-details.png"
+      ]
     },
     {
       "id": "apu-cad-honeywell",
@@ -273,7 +338,6 @@
         "Investigate fidelity-cost tradeoffs: how much geometric detail is needed for accurate FEA or CFD of complex aerospace hardware?",
         "Apply machine learning to infer hidden features (e.g., internal passages) from external geometry and functional constraints"
       ],
-      "figures": ["projects_p5.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -281,7 +345,19 @@
         }
       ],
       "evidenceNote": "Client testimonial or project acceptance letter would validate deliverable. Comparison table (modeled vs reference dimensions) strengthens fidelity claim.",
-      "tags": ["Aerospace", "CAD", "Reverse Engineering", "Surface Modeling", "APU", "SolidWorks"]
+      "tags": [
+        "Aerospace",
+        "CAD",
+        "Reverse Engineering",
+        "Surface Modeling",
+        "APU",
+        "SolidWorks"
+      ],
+      "images": [
+        "projects/honeywell-apu/apu-main.png",
+        "projects/honeywell-apu/apu-assembly.png",
+        "projects/honeywell-apu/apu-components.png"
+      ]
     },
     {
       "id": "piam-rover-wheel",
@@ -316,7 +392,6 @@
         "Investigate multi-material printing strategies to achieve graded stiffness for impact absorption and terrain conformability",
         "Develop FEA-validated models of wheel-terrain interaction for predicting traction and sinkage on granular surfaces"
       ],
-      "figures": ["projects_p7.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -324,12 +399,27 @@
         }
       ],
       "evidenceNote": "Competition certificate or results page validates placement. FEA reports showing load-deflection curves and mesh convergence studies strengthen technical claims. Physical test data (load cell, displacement sensors) if available.",
-      "tags": ["Rover", "Non-Pneumatic Tire", "FEA", "Optimization", "3D Printing", "Competition", "Space"]
+      "tags": [
+        "Rover",
+        "Non-Pneumatic Tire",
+        "FEA",
+        "Optimization",
+        "3D Printing",
+        "Competition",
+        "Space"
+      ],
+      "images": [
+        "projects/piam-rover-wheel/rover-wheel-main.png",
+        "projects/piam-rover-wheel/rover-wheel-cad.png",
+        "projects/piam-rover-wheel/rover-wheel-3dprint.png",
+        "projects/piam-rover-wheel/rover-wheel-testing.png",
+        "projects/piam-rover-wheel/rover-wheel-final.png"
+      ]
     },
     {
       "id": "cfd-f1-car",
       "category": "design",
-      "title": "CFD Analysis — Formula 1 Car",
+      "title": "CFD Analysis \u2014 Formula 1 Car",
       "org": "Academic/Personal Project",
       "period": "2023",
       "summary": "Aerodynamic CFD simulation of Formula 1 car to quantify drag, downforce, and flow features for educational and design insight purposes.",
@@ -341,12 +431,12 @@
       "role": [
         "Prepared CAD geometry (simplified F1 car) for CFD meshing; defined computational domain and boundary conditions",
         "Generated mesh (unstructured tetrahedral/polyhedral) with near-wall refinement for boundary layer resolution",
-        "Set up and ran CFD simulations in ANSYS Fluent: selected turbulence model (k-ω SST or k-ε), monitored convergence, post-processed results"
+        "Set up and ran CFD simulations in ANSYS Fluent: selected turbulence model (k-\u03c9 SST or k-\u03b5), monitored convergence, post-processed results"
       ],
       "methods": [
         "CFD: ANSYS Fluent (steady RANS or transient if needed)",
         "Meshing: ANSYS Meshing or ICEM CFD (inflation layers for y+ control, refinement zones for critical regions)",
-        "Turbulence model: k-ω SST (standard for external aero, captures separation and adverse pressure gradients)",
+        "Turbulence model: k-\u03c9 SST (standard for external aero, captures separation and adverse pressure gradients)",
         "Boundary conditions: Velocity inlet (representative F1 speed), pressure outlet, no-slip walls, symmetry plane; ground as moving wall for ground effect",
         "Assumptions: Steady-state flow (no time-dependent effects), simplified geometry (no rotating wheels or moving suspension)"
       ],
@@ -360,7 +450,6 @@
         "Investigate transient CFD or Detached Eddy Simulation (DES) to capture unsteady wake effects and vortex shedding",
         "Couple CFD with structural analysis (fluid-structure interaction, FSI) to study aero-elastic effects on flexible wings"
       ],
-      "figures": ["projects_p8.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -368,12 +457,24 @@
         }
       ],
       "evidenceNote": "CFD validation: mesh independence study, y+ maps, residual convergence plots, and comparison to published F1 aero data (if available) strengthen credibility. Documenting turbulence model selection rationale is key for academic rigor.",
-      "tags": ["CFD", "Aerodynamics", "F1", "ANSYS Fluent", "Turbulence Modeling", "External Flow"]
+      "tags": [
+        "CFD",
+        "Aerodynamics",
+        "F1",
+        "ANSYS Fluent",
+        "Turbulence Modeling",
+        "External Flow"
+      ],
+      "images": [
+        "projects/cfd-f1-analysis/cfd-f1-main.png",
+        "projects/cfd-f1-analysis/cfd-f1-pressure.png",
+        "projects/cfd-f1-analysis/cfd-f1-velocity.png"
+      ]
     },
     {
       "id": "cfd-kenworth-t800",
       "category": "design",
-      "title": "CFD Analysis — Kenworth T800 Commercial Truck",
+      "title": "CFD Analysis \u2014 Kenworth T800 Commercial Truck",
       "org": "Academic/Personal Project",
       "period": "2023",
       "summary": "External aerodynamic CFD study of Kenworth T800 truck to quantify drag reduction strategies for fuel efficiency improvement.",
@@ -389,7 +490,7 @@
       ],
       "methods": [
         "CFD: ANSYS Fluent (steady-state RANS)",
-        "Turbulence model: k-ε Realizable or k-ω SST (appropriate for bluff body external aero)",
+        "Turbulence model: k-\u03b5 Realizable or k-\u03c9 SST (appropriate for bluff body external aero)",
         "Meshing: Polyhedral mesh with prism layers for boundary layer; refinement boxes in wake region to capture recirculation",
         "Boundary conditions: Highway speed inlet (~25 m/s), pressure outlet, no-slip walls, moving ground to simulate road; crosswind if studied",
         "Assumptions: Steady-state flow (no transient gusts); simplified underbody (no detailed suspension); no rotating wheels initially (or MRF/sliding mesh if included)"
@@ -404,7 +505,6 @@
         "Investigate optimization of add-on devices (fairing shape, trailer gap) using adjoint methods or genetic algorithms",
         "Study crosswind stability and transient aerodynamics (passing maneuvers, gusts) via time-dependent simulations or LES"
       ],
-      "figures": ["projects_p8.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -412,7 +512,19 @@
         }
       ],
       "evidenceNote": "Validation: comparison to published Kenworth T800 drag data or SAE papers on truck aerodynamics. Mesh independence study and convergence plots essential for academic credibility. Fuel savings estimates require cycle analysis (e.g., EPA Class 8 duty cycle).",
-      "tags": ["CFD", "Aerodynamics", "Commercial Truck", "ANSYS Fluent", "Drag Reduction", "Fuel Efficiency"]
+      "tags": [
+        "CFD",
+        "Aerodynamics",
+        "Commercial Truck",
+        "ANSYS Fluent",
+        "Drag Reduction",
+        "Fuel Efficiency"
+      ],
+      "images": [
+        "projects/cfd-kenworth-t800/cfd-truck-main.png",
+        "projects/cfd-kenworth-t800/cfd-truck-flow.png",
+        "projects/cfd-kenworth-t800/cfd-truck-drag.png"
+      ]
     },
     {
       "id": "heat-exchanger-cfd",
@@ -424,7 +536,7 @@
       "problem": [
         "Heat exchangers are critical in thermal management (HVAC, power electronics, engines); design must balance heat transfer rate vs pressure drop",
         "Challenge: model conjugate heat transfer (fluid + solid) with accurate turbulence and near-wall effects in complex fin/tube geometry",
-        "Goal: predict effectiveness (ε) or NTU, optimize fin geometry or flow arrangement, validate against analytical correlations"
+        "Goal: predict effectiveness (\u03b5) or NTU, optimize fin geometry or flow arrangement, validate against analytical correlations"
       ],
       "role": [
         "Created or obtained CAD model of heat exchanger (plate-fin, tube-fin, or shell-and-tube); prepared geometry for meshing",
@@ -433,22 +545,21 @@
       ],
       "methods": [
         "CFD: ANSYS Fluent (conjugate heat transfer, steady-state or transient)",
-        "Turbulence model: k-ε or k-ω SST (depending on flow regime and geometry)",
+        "Turbulence model: k-\u03b5 or k-\u03c9 SST (depending on flow regime and geometry)",
         "Meshing: Conformal mesh at fluid-solid interface; inflation layers for boundary layer capture; refinement in high-gradient regions",
         "Boundary conditions: Hot and cold side inlet velocities/temperatures, pressure outlets, adiabatic or convective outer walls",
         "Assumptions: Incompressible flow (if low Mach), steady-state thermal conditions, negligible radiation (if T not too high)"
       ],
       "results": [
-        "Portfolio-stated: Heat transfer rate (Q) and pressure drop (ΔP) quantified; effectiveness or NTU calculated from outlet temperatures",
+        "Portfolio-stated: Heat transfer rate (Q) and pressure drop (\u0394P) quantified; effectiveness or NTU calculated from outlet temperatures",
         "Temperature and velocity contours visualized to identify hotspots and flow mal-distribution",
-        "Comparison to analytical correlations (ε-NTU method, Colburn j-factor, friction factor) validates CFD setup"
+        "Comparison to analytical correlations (\u03b5-NTU method, Colburn j-factor, friction factor) validates CFD setup"
       ],
       "phdDirection": [
-        "Optimize fin geometry (spacing, thickness, louvered vs plain) using adjoint-based or parametric optimization for max Q/ΔP ratio",
+        "Optimize fin geometry (spacing, thickness, louvered vs plain) using adjoint-based or parametric optimization for max Q/\u0394P ratio",
         "Investigate advanced geometries (3D-printed lattice structures, micro-channels) for enhanced heat transfer",
         "Study transient response (thermal inertia) and control strategies for dynamic loads (e.g., battery thermal management)"
       ],
-      "figures": ["projects_p2.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -456,7 +567,19 @@
         }
       ],
       "evidenceNote": "Validation: comparison to experimental data (e.g., manufacturer curves or lab tests) or well-known correlations (Shah, Kays-London). Mesh independence study and energy balance check (inlet vs outlet enthalpy flow) critical for credibility.",
-      "tags": ["CFD", "Heat Exchanger", "Thermal Management", "Conjugate Heat Transfer", "ANSYS Fluent", "Optimization"]
+      "tags": [
+        "CFD",
+        "Heat Exchanger",
+        "Thermal Management",
+        "Conjugate Heat Transfer",
+        "ANSYS Fluent",
+        "Optimization"
+      ],
+      "images": [
+        "projects/heat-exchanger-cfd/heat-exchanger-main.png",
+        "projects/heat-exchanger-cfd/heat-exchanger-flow.png",
+        "projects/heat-exchanger-cfd/heat-exchanger-temp.png"
+      ]
     },
     {
       "id": "rack-pinion-steering",
@@ -478,7 +601,7 @@
       "methods": [
         "CAD: SolidWorks (gear toolbox for pinion, linear pattern for rack teeth, assembly mates for motion simulation)",
         "Kinematics: SolidWorks Motion or hand calculations to verify steering ratio (degrees rotation per inch of rack travel)",
-        "Standards: AGMA gear design standards for pressure angle (typically 20°), module selection, and contact ratio",
+        "Standards: AGMA gear design standards for pressure angle (typically 20\u00b0), module selection, and contact ratio",
         "Assumptions: Static loading (no dynamic FEA); material properties from standards; assumed steering input torque from vehicle class"
       ],
       "results": [
@@ -491,7 +614,6 @@
         "Develop FEA-based contact stress analysis (Hertzian contact) and wear prediction for rack-pinion interface under cyclic loading",
         "Study multi-body dynamics (MBD) of complete steering linkage including suspension compliance and road inputs"
       ],
-      "figures": ["projects_p2.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -499,14 +621,26 @@
         }
       ],
       "evidenceNote": "Validation: motion simulation screenshots showing Ackermann compliance, AGMA standard calculations for gear sizing, and material selection rationale strengthen design credibility. FEA of contact stresses if performed.",
-      "tags": ["Steering", "Rack and Pinion", "Mechanical Design", "Kinematics", "GD&T", "SolidWorks"]
+      "tags": [
+        "Steering",
+        "Rack and Pinion",
+        "Mechanical Design",
+        "Kinematics",
+        "GD&T",
+        "SolidWorks"
+      ],
+      "images": [
+        "projects/rack-pinion-steering/steering-main.png",
+        "projects/rack-pinion-steering/steering-assembly.png",
+        "projects/rack-pinion-steering/steering-mechanism.png"
+      ]
     },
     {
       "id": "hybrid-tire-research",
       "category": "research",
-      "title": "Hybrid Tire Technology vs Non‑Pneumatic Tires (NPTs)",
+      "title": "Hybrid Tire Technology vs Non\u2011Pneumatic Tires (NPTs)",
       "org": "Research Project / Submitted Paper",
-      "period": "2023–2024",
+      "period": "2023\u20132024",
       "summary": "FEA-based design and comparative analysis of hybrid tire concept aiming to combine puncture-free benefits of NPTs with improved comfort and weight performance.",
       "problem": [
         "Non-pneumatic tires (NPTs) eliminate puncture risk but suffer from weight penalties and ride harshness compared to conventional pneumatic tires",
@@ -537,7 +671,6 @@
         "Investigate multi-material optimization: graded stiffness spokes or composite tread for tailored performance",
         "Study durability: fatigue life prediction of spokes under cyclic loading via stress-life or strain-life methods"
       ],
-      "figures": ["projects_p6.png"],
       "links": [
         {
           "label": "ResearchGate Publication",
@@ -545,14 +678,31 @@
         }
       ],
       "evidenceNote": "For PhD credibility: include mesh convergence study (element size, contact stiffness), material model validation (compare FEA to uniaxial test data), and experimental validation plan. Publish full FEA setup (BCs, material constants) in supplementary material when paper is accepted.",
-      "tags": ["Tire Mechanics", "FEA", "Hyperelastic", "Non-Pneumatic Tire", "Design Verification", "Research", "ANSYS"]
+      "tags": [
+        "Tire Mechanics",
+        "FEA",
+        "Hyperelastic",
+        "Non-Pneumatic Tire",
+        "Design Verification",
+        "Research",
+        "ANSYS"
+      ],
+      "images": [
+        "projects/hybrid-tire-research/tire-main.png",
+        "projects/hybrid-tire-research/tire-design.png",
+        "projects/hybrid-tire-research/tire-fea.png",
+        "projects/hybrid-tire-research/tire-comparison.png",
+        "projects/hybrid-tire-research/tire-results.png"
+      ],
+      "paperLink": "https://www.researchgate.net/publication/381123426_Design_Analysis_and_Comparison_of_Hybrid_and_Non-Pneumatic_Tires",
+      "paperStatus": "Published"
     },
     {
       "id": "gfrp-insulator-thesis",
       "category": "research",
       "title": "GFRP Composite Insulators for HV Power Transmission",
       "org": "Thesis / Industry R&D",
-      "period": "2024–2025",
+      "period": "2024\u20132025",
       "summary": "Design, manufacturing, and experimental validation of GFRP composite insulators for overhead high-voltage lines with focus on replacing ceramic insulators.",
       "problem": [
         "Ceramic insulators are brittle, heavy, and prone to catastrophic failure; GFRP composites offer lighter, tougher alternatives with superior contamination resistance",
@@ -583,7 +733,6 @@
         "Develop multi-physics FEA: coupled electrical-thermal-mechanical analysis to predict flashover under contamination and moisture",
         "Study environmental impact: lifecycle assessment (LCA) comparing GFRP vs ceramic insulators (manufacturing energy, end-of-life recycling)"
       ],
-      "figures": ["projects_p9.png"],
       "links": [
         {
           "label": "LinkedIn Profile",
@@ -591,7 +740,23 @@
         }
       ],
       "evidenceNote": "Strong validation: experimental test reports (load-displacement curves, flashover voltage vs pollution level), SEM images of fiber-matrix interface, FEA correlation plots (predicted vs measured stiffness/strength), and standards compliance matrix. Cite specific IEC/ASTM standard clauses tested. Thesis/paper publication will provide full dataset.",
-      "tags": ["Composites", "GFRP", "Pultrusion", "Electrical Insulation", "Standards Testing", "Abaqus", "Research", "Thesis"]
+      "tags": [
+        "Composites",
+        "GFRP",
+        "Pultrusion",
+        "Electrical Insulation",
+        "Standards Testing",
+        "Abaqus",
+        "Research",
+        "Thesis"
+      ],
+      "images": [
+        "projects/gfrp-insulators/insulator-main.png",
+        "projects/gfrp-insulators/insulator-composite.png",
+        "projects/gfrp-insulators/insulator-testing.png",
+        "projects/gfrp-insulators/insulator-final.png"
+      ],
+      "paperStatus": "Submitted"
     }
   ]
 }
