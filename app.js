@@ -70,7 +70,7 @@ function renderHome(root){
           el('a',{class:'btn primary',href:'#/cv'},'CV'),
           el('a',{class:'btn',href:'#/design'},'Design Portfolio'),
           el('a',{class:'btn',href:'#/research'},'Research Portfolio'),
-          el('a',{class:'btn',href:'#/docs/portfolio'},'Portfolio PDFs')
+          el('a',{class:'btn',href:'#/docs'},'All Documents')
         ),
         el('hr',{class:'sep'}),
         el('div',{class:'small'}, `Contact`),
@@ -127,12 +127,40 @@ function renderList(root, category){
     el('p',{}, desc),
     el('div',{class:'cta-row'},
       el('a',{class:'btn',href:'#/cv'},'CV'),
+      el('a',{class:'btn',href:'#/docs'},'Documents'),
       el('a',{class:'btn primary',href: category==='design'?'#/design':'#/research'}, category==='design'?'Design':'Research')
     )
   ));
   const items = state.data.projects.filter(p=>p.category===category);
-  root.appendChild(el('div',{class:'section-title'}, el('h2',{},'Projects'), el('span',{class:'small'},`${items.length} items`)));
-  root.appendChild(el('div',{class:'grid'}, ...items.map(projectCard)));
+  
+  // Add showcase section
+  root.appendChild(el('div',{class:'section-title'}, 
+    el('h2',{}, category==='design' ? 'Project Showcase' : 'Research Showcase'), 
+    el('span',{class:'small'},`${items.length} items`)
+  ));
+  
+  root.appendChild(el('div',{class:'showcase-grid'}, ...items.map(p => {
+    return el('div',{class:'showcase-card card'},
+      el('div',{class:'showcase-thumb'},
+        el('img',{src:`assets/${p.figures?.[0] || 'projects_p1.png'}`, alt:p.title})
+      ),
+      el('div',{class:'showcase-content'},
+        el('div',{class:'showcase-header'},
+          el('span',{class:'showcase-label'}, category==='design'?'Design':'Research'),
+          p.status ? el('span',{class:'showcase-status'}, p.status) : null
+        ),
+        el('h3',{}, p.title),
+        el('div',{class:'showcase-meta'},
+          el('span',{class:'org'}, p.org || ''),
+          p.period ? el('span',{class:'period'}, p.period) : null
+        ),
+        el('p',{class:'showcase-summary'}, (p.summary || '').length > 120 ? (p.summary || '').substring(0, 120) + '...' : (p.summary || '')),
+        el('div',{class:'tagrow'}, ...(p.tags||[]).slice(0,4).map(t=>el('span',{class:'tag'},t))),
+        el('a',{class:'btn primary',href:`#/project/${p.id}`},'View Details →')
+      )
+    );
+  })));
+  
   root.appendChild(el('div',{class:'footer'}, 'Tip: click a project card to open its detailed page. Use Back to return.'));
 }
 
@@ -210,6 +238,63 @@ function renderCV(root){
   ));
 }
 
+function renderDocsHub(root){
+  root.appendChild(el('div',{class:'card pad'},
+    el('div',{class:'kicker'},'Portfolio Documents'),
+    el('h1',{},'Documents & Downloads'),
+    el('p',{},'View and download portfolio documents, CV, and research materials.')
+  ));
+  
+  const docs = [
+    {
+      id: 'cv',
+      title: 'Curriculum Vitae',
+      desc: 'Professional CV with experience, education, publications, and skills.',
+      file: 'Aliyar_CV_Oct_25.pdf',
+      viewRoute: '#/cv',
+      thumb: 'cv'
+    },
+    {
+      id: 'portfolio',
+      title: 'Design Projects Portfolio',
+      desc: 'Detailed design project documentation with CAD, FEA, and engineering work samples.',
+      file: 'Aliyar_Project_Portfolio.pdf',
+      viewRoute: '#/docs/portfolio',
+      thumb: 'portfolio'
+    },
+    {
+      id: 'research',
+      title: 'Research Document',
+      desc: 'Research projects, publications, and academic investigations overview.',
+      file: 'Aliyar_Research_Document.pdf',
+      viewRoute: '#/docs/research',
+      thumb: 'research'
+    }
+  ];
+  
+  root.appendChild(el('div',{class:'docs-grid'}, 
+    ...docs.map(doc => 
+      el('div',{class:'doc-card card'},
+        el('div',{class:'doc-thumb'},
+          el('div',{class:'doc-icon'},'📄')
+        ),
+        el('div',{class:'doc-content'},
+          el('h2',{}, doc.title),
+          el('p',{class:'small'}, doc.desc),
+          el('div',{class:'doc-actions'},
+            el('a',{class:'btn primary',href:doc.viewRoute},'View Document'),
+            el('a',{class:'btn',href:`assets/${doc.file}`, download:doc.file},'Download PDF')
+          )
+        )
+      )
+    )
+  ));
+  
+  root.appendChild(el('div',{class:'footer'},
+    'All documents are stored in /assets. Update files there to refresh content.'
+  ));
+}
+
 function renderDocViewer(root, docType){
   const docs = {
     portfolio: {
@@ -218,9 +303,9 @@ function renderDocViewer(root, docType){
       desc: 'Detailed design project documentation and visuals.'
     },
     research: {
-      title: 'Full Portfolio',
-      file: 'Aliyar_Portfolio_Full.pdf',
-      desc: 'Comprehensive portfolio including all work samples.'
+      title: 'Research Document',
+      file: 'Aliyar_Research_Document.pdf',
+      desc: 'Research projects, publications, and academic work overview.'
     }
   };
   const doc = docs[docType];
@@ -235,10 +320,9 @@ function renderDocViewer(root, docType){
     el('p',{}, doc.desc),
     el('div',{class:'cta-row'},
       el('a',{class:'btn primary',href:`assets/${doc.file}`, target:'_blank', rel:'noreferrer'},'Open in New Tab'),
-      el('a',{class:'btn',href:`assets/${doc.file}`, download:doc.file},'Download'),
-      el('a',{class:'btn',href:'#/cv'},'CV'),
-      el('a',{class:'btn',href:'#/design'},'Design Portfolio'),
-      el('a',{class:'btn',href:'#/research'},'Research Portfolio')
+      el('a',{class:'btn',href:`assets/${doc.file}`, download:doc.file},'Download PDF'),
+      el('a',{class:'btn',href:'#/docs'},'← Back to Documents'),
+      el('a',{class:'btn',href:'#/cv'},'CV')
     ),
     el('hr',{class:'sep'}),
     el('iframe',{
@@ -265,7 +349,10 @@ function render(){
   if(route[0]==='design'){ renderList(root,'design'); return; }
   if(route[0]==='research'){ renderList(root,'research'); return; }
   if(route[0]==='project' && route[1]){ renderProject(root, route[1]); return; }
-  if(route[0]==='docs' && route[1]){ renderDocViewer(root, route[1]); return; }
+  if(route[0]==='docs'){
+    if(!route[1]){ renderDocsHub(root); return; }
+    if(route[1]){ renderDocViewer(root, route[1]); return; }
+  }
 
   root.appendChild(el('div',{class:'card pad'}, el('h1',{},'Page not found'), el('a',{href:'#/'},'Go home')));
 }
