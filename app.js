@@ -38,7 +38,7 @@ function setActiveNav(){
 function projectCard(p){
   return el('a', {class:'card proj proj-dense', href:`#/project/${p.id}`},
     el('div',{class:'thumb'},
-      el('img',{src:`assets/${p.figures?.[0] || 'projects_p1.png'}`, alt:p.title})
+      el('img',{src:`assets/${p.images?.[0] || 'projects_p1.png'}`, alt:p.title})
     ),
     el('div',{class:'proj-body'},
       el('div',{class:'proj-header'},
@@ -146,7 +146,7 @@ function renderList(root, category){
   root.appendChild(el('div',{class:'showcase-grid'}, ...items.map(p => {
     return el('div',{class:'showcase-card card'},
       el('div',{class:'showcase-thumb'},
-        el('img',{src:`assets/${p.figures?.[0] || 'projects_p1.png'}`, alt:p.title})
+        el('img',{src:`assets/${p.images?.[0] || 'projects_p1.png'}`, alt:p.title})
       ),
       el('div',{class:'showcase-content'},
         el('div',{class:'showcase-header'},
@@ -168,6 +168,98 @@ function renderList(root, category){
   root.appendChild(el('div',{class:'footer'}, 'Tip: click a project card to open its detailed page. Use Back to return.'));
 }
 
+// Gallery state management
+const galleryState = {};
+
+function createGallery(projectId, images) {
+  if (!images || images.length === 0) {
+    images = ['projects_p1.png'];
+  }
+  
+  // Initialize gallery state for this project
+  if (!galleryState[projectId]) {
+    galleryState[projectId] = { currentIndex: 0 };
+  }
+  
+  const state = galleryState[projectId];
+  
+  // Main image container
+  const mainImage = el('img', {
+    class: 'gallery-image',
+    src: `assets/${images[state.currentIndex]}`,
+    alt: 'Project image'
+  });
+  
+  // Navigation buttons
+  const prevBtn = el('button', {
+    class: 'gallery-nav gallery-prev',
+    onclick: (e) => {
+      e.preventDefault();
+      state.currentIndex = (state.currentIndex - 1 + images.length) % images.length;
+      updateGallery();
+    }
+  }, '◀');
+  
+  const nextBtn = el('button', {
+    class: 'gallery-nav gallery-next',
+    onclick: (e) => {
+      e.preventDefault();
+      state.currentIndex = (state.currentIndex + 1) % images.length;
+      updateGallery();
+    }
+  }, '▶');
+  
+  const galleryMain = el('div', { class: 'gallery-main' }, prevBtn, mainImage, nextBtn);
+  
+  // Thumbnails
+  const thumbnails = images.map((img, idx) => {
+    return el('img', {
+      class: idx === state.currentIndex ? 'thumb active' : 'thumb',
+      src: `assets/${img}`,
+      alt: `Thumbnail ${idx + 1}`,
+      'data-index': idx,
+      onclick: (e) => {
+        e.preventDefault();
+        state.currentIndex = idx;
+        updateGallery();
+      }
+    });
+  });
+  
+  const thumbnailsContainer = el('div', { class: 'gallery-thumbnails' }, ...thumbnails);
+  
+  const gallery = el('div', { class: 'gallery' }, galleryMain, thumbnailsContainer);
+  
+  // Update function
+  function updateGallery() {
+    mainImage.src = `assets/${images[state.currentIndex]}`;
+    thumbnails.forEach((thumb, idx) => {
+      thumb.className = idx === state.currentIndex ? 'thumb active' : 'thumb';
+    });
+  }
+  
+  // Keyboard navigation
+  const keyHandler = (e) => {
+    if (e.key === 'ArrowLeft') {
+      state.currentIndex = (state.currentIndex - 1 + images.length) % images.length;
+      updateGallery();
+    } else if (e.key === 'ArrowRight') {
+      state.currentIndex = (state.currentIndex + 1) % images.length;
+      updateGallery();
+    }
+  };
+  
+  // Add keyboard listener when gallery is created
+  document.addEventListener('keydown', keyHandler);
+  
+  // Store cleanup function
+  gallery._cleanup = () => {
+    document.removeEventListener('keydown', keyHandler);
+  };
+  
+  return gallery;
+}
+
 function renderProject(root, id){
   const p = state.data.projects.find(x=>x.id===id);
   if(!p){
@@ -175,49 +267,140 @@ function renderProject(root, id){
     return;
   }
   
-  const aside = el('div',{class:'card pad'},
-    el('div',{class:'kicker'}, p.category==='design'?'Design project':'Research project'),
-    el('h2',{},'At a glance'),
-    el('p',{class:'small'}, `${p.org || ''} • ${p.period || ''}`),
-    el('div',{class:'tagrow'}, ...(p.tags||[]).map(t=>el('span',{class:'tag'},t))),
-    el('hr',{class:'sep'}),
-    el('h3',{},'Links'),
-    ...(p.links && p.links.length ? p.links.map(l=>el('a',{class:'btn',href:l.url,target:'_blank',rel:'noreferrer'},l.label)) : [el('div',{class:'small'},'No public links.')]),
-    el('hr',{class:'sep'}),
-    el('div',{class:'small'},'Evidence & Verification'),
-    el('div',{class:'evidence-box'}, p.evidenceNote || 'Validation artifacts would strengthen claims for PhD reviewers.')
+  // Back button
+  root.appendChild(el('div', {class: 'project-back'},
+    el('a', {class: 'pill', href: p.category === 'design' ? '#/design' : '#/research'}, 
+      '← Back to ' + (p.category === 'design' ? 'Design' : 'Research') + ' Portfolio')
+  ));
+  
+  // Create side panel with quick info
+  const sidePanelItems = [
+    el('div', {class: 'kicker'}, p.category === 'design' ? 'DESIGN PROJECT' : 'RESEARCH PROJECT')
+  ];
+  
+  if (p.org) {
+    sidePanelItems.push(
+      el('div', {class: 'side-panel-section'},
+        el('div', {class: 'side-panel-label'}, 'Organization'),
+        el('div', {class: 'side-panel-value'}, p.org)
+      )
+    );
+  }
+  
+  if (p.period) {
+    sidePanelItems.push(
+      el('div', {class: 'side-panel-section'},
+        el('div', {class: 'side-panel-label'}, 'Period'),
+        el('div', {class: 'side-panel-value'}, p.period)
+      )
+    );
+  }
+  
+  // Research-specific fields
+  if (p.category === 'research' && p.paperStatus) {
+    sidePanelItems.push(
+      el('div', {class: 'side-panel-section'},
+        el('div', {class: 'side-panel-label'}, 'Status'),
+        el('div', {class: 'side-panel-value'}, p.paperStatus)
+      )
+    );
+  }
+  
+  if (p.tags && p.tags.length > 0) {
+    sidePanelItems.push(
+      el('hr', {class: 'sep'}),
+      el('div', {class: 'side-panel-label'}, 'Tags'),
+      el('div', {class: 'tagrow'}, ...(p.tags || []).map(t => el('span', {class: 'tag'}, t)))
+    );
+  }
+  
+  sidePanelItems.push(el('hr', {class: 'sep'}));
+  
+  // Add appropriate buttons based on category
+  if (p.category === 'research') {
+    if (p.paperLink) {
+      sidePanelItems.push(
+        el('a', {
+          class: 'btn primary',
+          href: p.paperLink,
+          target: '_blank',
+          rel: 'noreferrer'
+        }, '📄 Read Full Research Paper')
+      );
+    }
+    sidePanelItems.push(
+      el('a', {
+        class: 'btn',
+        href: '#/docs/research'
+      }, 'View Research Documents')
+    );
+  } else {
+    sidePanelItems.push(
+      el('a', {
+        class: 'btn primary',
+        href: '#/docs/portfolio'
+      }, 'View Full Portfolio PDF')
+    );
+  }
+  
+  const sidePanel = el('div', {class: 'project-side-panel card pad'}, ...sidePanelItems);
+  
+  // Main content with gallery and details
+  const mainContentItems = [];
+  
+  // Gallery
+  if (p.images && p.images.length > 0) {
+    mainContentItems.push(createGallery(id, p.images));
+  }
+  
+  // Project details
+  mainContentItems.push(
+    el('h1', {}, p.title),
+    el('p', {class: 'summary-detail'}, p.summary || '')
   );
-
-  const main = el('div',{class:'card pad'},
-    el('a',{class:'pill',href: p.category==='design'?'#/design':'#/research'},'← Back'),
-    el('h1',{}, p.title),
-    el('p',{class:'summary-detail'}, p.summary || ''),
-    ...(p.figures && p.figures.length ? [el('figure',{}, el('img',{src:`assets/${p.figures[0]}`, alt:p.title}))] : []),
-    
-    el('h3',{},'Problem / Motivation'),
-    el('ul',{}, ...(p.problem||['No problem statement provided.']).map(x=>el('li',{},x))),
-    
-    el('h3',{},'My Role'),
-    el('ul',{}, ...(p.role||['No role details provided.']).map(x=>el('li',{},x))),
-    
-    el('h3',{},'Methods'),
-    el('ul',{}, ...(p.methods||['No methods documented.']).map(x=>el('li',{},x))),
-    
-    el('h3',{},'Results'),
-    el('ul',{}, ...(p.results||['No results documented.']).map(x=>el('li',{},x))),
-    
-    el('h3',{},'What I\'d do next (PhD direction)'),
-    el('ul',{}, ...(p.phdDirection||['No PhD research directions identified.']).map(x=>el('li',{},x))),
-    
-    el('hr',{class:'sep'}),
-    el('div',{class:'cta-row'},
-      el('a',{class:'btn',href:'assets/Aliyar_Project_Portfolio.pdf', target:'_blank', rel:'noreferrer'},'Design Portfolio (PDF)'),
-      el('a',{class:'btn',href:'assets/Aliyar_Portfolio_Full.pdf', target:'_blank', rel:'noreferrer'},'Full Portfolio (PDF)')
-    )
-  );
-
-  root.appendChild(el('div',{class:'proj-page'}, main, aside));
-  root.appendChild(el('div',{class:'footer'}, 'For proprietary work: replace sensitive details with sanitized diagrams and high-level role descriptions.'));
+  
+  if (p.problem && p.problem.length > 0) {
+    mainContentItems.push(
+      el('h3', {}, 'Problem / Motivation'),
+      el('ul', {}, ...(p.problem || []).map(x => el('li', {}, x)))
+    );
+  }
+  
+  if (p.role && p.role.length > 0) {
+    mainContentItems.push(
+      el('h3', {}, 'My Role'),
+      el('ul', {}, ...(p.role || []).map(x => el('li', {}, x)))
+    );
+  }
+  
+  if (p.methods && p.methods.length > 0) {
+    mainContentItems.push(
+      el('h3', {}, 'Methods'),
+      el('ul', {}, ...(p.methods || []).map(x => el('li', {}, x)))
+    );
+  }
+  
+  if (p.results && p.results.length > 0) {
+    mainContentItems.push(
+      el('h3', {}, 'Results'),
+      el('ul', {}, ...(p.results || []).map(x => el('li', {}, x)))
+    );
+  }
+  
+  if (p.phdDirection && p.phdDirection.length > 0) {
+    mainContentItems.push(
+      el('h3', {}, p.category === 'design' ? 'PhD Direction' : 'Future Research Directions'),
+      el('ul', {}, ...(p.phdDirection || []).map(x => el('li', {}, x)))
+    );
+  }
+  
+  const mainContent = el('div', {class: 'project-main-content card pad'}, ...mainContentItems);
+  
+  // Layout container
+  root.appendChild(el('div', {class: 'project-detail-layout'}, mainContent, sidePanel));
+  
+  root.appendChild(el('div', {class: 'footer'}, 
+    'For proprietary work: replace sensitive details with sanitized diagrams and high-level role descriptions.'));
 }
 
 function renderCV(root){
