@@ -117,18 +117,22 @@ function renderHome(root){
 }
 
 function renderList(root, category){
-  const title = category==='design' ? 'Design Projects Portfolio' : 'Research Projects Portfolio';
+  const title = category==='design' ? 'Design Projects Portfolio' : 'Research Projects & Publications';
   const desc = category==='design'
     ? 'Industry, competition, and engineering design work (CAD/CAE, packaging, manufacturing-readiness).'
     : 'Research papers, simulations, and materials/mechanics investigations.';
+  
+  // PDF paths and routes based on category
+  const pdfPath = category==='design' ? 'assets/Aliyar_Project_Portfolio.pdf' : 'assets/Aliyar_Research_Document.pdf';
+  const viewerRoute = category==='design' ? '#/docs/portfolio' : '#/docs/research';
+  
   root.appendChild(el('div',{class:'card pad'},
     el('div',{class:'kicker'},'Portfolio'),
     el('h1',{}, title),
     el('p',{}, desc),
     el('div',{class:'cta-row'},
-      el('a',{class:'btn',href:'#/cv'},'CV'),
-      el('a',{class:'btn',href:'#/docs'},'Documents'),
-      el('a',{class:'btn primary',href: category==='design'?'#/design':'#/research'}, category==='design'?'Design':'Research')
+      el('a',{class:'btn primary',href:viewerRoute},'View Full PDF'),
+      el('a',{class:'btn',href:pdfPath, target:'_blank', rel:'noreferrer', download:''},'Download PDF')
     )
   ));
   const items = state.data.projects.filter(p=>p.category===category);
@@ -220,12 +224,10 @@ function renderCV(root){
   root.appendChild(el('div',{class:'card pad'},
     el('div',{class:'kicker'},'Curriculum Vitae'),
     el('h1',{},'CV'),
-    el('p',{},'Download or view inline below.'),
+    el('p',{},'Academic and professional background. Download or view inline below.'),
     el('div',{class:'cta-row'},
-      el('a',{class:'btn primary',href:'assets/Aliyar_CV_Oct_25.pdf', target:'_blank', rel:'noreferrer'},'Open in New Tab'),
-      el('a',{class:'btn',href:'assets/Aliyar_CV_Oct_25.pdf', download:'Aliyar_CV_Oct_25.pdf'},'Download'),
-      el('a',{class:'btn',href:'#/design'},'Design Portfolio'),
-      el('a',{class:'btn',href:'#/research'},'Research Portfolio')
+      el('a',{class:'btn',href:'assets/Aliyar_CV_Oct_25.pdf', download:'Aliyar_CV_Oct_25.pdf'},'Download CV PDF'),
+      el('a',{class:'btn primary',href:'assets/Aliyar_CV_Oct_25.pdf', target:'_blank', rel:'noreferrer'},'Open in New Tab')
     ),
     el('hr',{class:'sep'}),
     el('iframe',{
@@ -321,8 +323,7 @@ function renderDocViewer(root, docType){
     el('div',{class:'cta-row'},
       el('a',{class:'btn primary',href:`assets/${doc.file}`, target:'_blank', rel:'noreferrer'},'Open in New Tab'),
       el('a',{class:'btn',href:`assets/${doc.file}`, download:doc.file},'Download PDF'),
-      el('a',{class:'btn',href:'#/docs'},'← Back to Documents'),
-      el('a',{class:'btn',href:'#/cv'},'CV')
+      el('a',{class:'btn',href:'#/docs'},'← Back to Documents')
     ),
     el('hr',{class:'sep'}),
     el('iframe',{
