@@ -484,7 +484,7 @@ function renderDocsHub(root){
         el('img', {
           class: 'document-thumbnail',
           src: doc.thumbnail,
-          alt: doc.title
+          alt: `PDF preview of ${doc.title}`
         })
       ),
       // Info
@@ -499,7 +499,7 @@ function renderDocsHub(root){
           el('a', {
             class: 'btn',
             href: doc.downloadPath,
-            download: '',
+            download: doc.downloadPath.split('/').pop(),
             target: '_blank'
           }, 'Download PDF')
         )
