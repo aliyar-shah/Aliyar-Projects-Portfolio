@@ -165,7 +165,7 @@ function renderList(root, category){
     );
   })));
   
-  root.appendChild(el('div',{class:'footer'}, 'Tip: click a project card to open its detailed page. Use Back to return.'));
+  root.appendChild(el('div',{class:'footer'}, '© Syed Aliyar Shah — Engineering Portfolio'));
 }
 
 // Gallery state management
@@ -398,9 +398,6 @@ function renderProject(root, id){
   
   // Layout container
   root.appendChild(el('div', {class: 'project-detail-layout'}, mainContent, sidePanel));
-  
-  root.appendChild(el('div', {class: 'footer'}, 
-    'For proprietary work: replace sensitive details with sanitized diagrams and high-level role descriptions.'));
 }
 
 function renderCV(root){
@@ -418,66 +415,100 @@ function renderCV(root){
       style:'width:100%; height:78vh; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(0,0,0,.2)'
     })
   ));
-  root.appendChild(el('div',{class:'footer'},
-    'Tip: Replace assets/Aliyar_CV_Oct_25.pdf with newer version (same filename) to update.'
-  ));
 }
 
 function renderDocsHub(root){
-  root.appendChild(el('div',{class:'card pad'},
-    el('div',{class:'kicker'},'Portfolio Documents'),
-    el('h1',{},'Documents & Downloads'),
-    el('p',{},'View and download portfolio documents, CV, and research materials.')
-  ));
-  
-  const docs = [
+  const documents = [
     {
       id: 'cv',
       title: 'Curriculum Vitae',
-      desc: 'Professional CV with experience, education, publications, and skills.',
-      file: 'Aliyar_CV_Oct_25.pdf',
-      viewRoute: '#/cv',
-      thumb: 'cv'
+      subtitle: 'Complete academic and professional background',
+      thumbnail: 'assets/thumbnails/cv-thumbnail.png',
+      features: [
+        'Education & Academic Qualifications',
+        'Professional Work Experience',
+        'Technical Skills & Competencies',
+        'Publications & Research',
+        'Awards & Achievements'
+      ],
+      viewLink: '#/cv',
+      downloadPath: 'assets/Aliyar_CV_Oct_25.pdf'
     },
     {
       id: 'portfolio',
       title: 'Design Projects Portfolio',
-      desc: 'Detailed design project documentation with CAD, FEA, and engineering work samples.',
-      file: 'Aliyar_Project_Portfolio.pdf',
-      viewRoute: '#/docs/portfolio',
-      thumb: 'portfolio'
+      subtitle: 'Comprehensive collection of engineering design projects',
+      thumbnail: 'assets/thumbnails/portfolio-thumbnail.png',
+      features: [
+        'EV Battery Systems & Power Electronics',
+        'CAD/CAE Analysis (FEA, CFD)',
+        'Competition Winning Designs',
+        'Industry & Professional Projects',
+        'Mechanical Design & Manufacturing'
+      ],
+      viewLink: '#/docs/portfolio',
+      downloadPath: 'assets/Aliyar_Project_Portfolio.pdf'
     },
     {
       id: 'research',
-      title: 'Research Document',
-      desc: 'Research projects, publications, and academic investigations overview.',
-      file: 'Aliyar_Research_Document.pdf',
-      viewRoute: '#/docs/research',
-      thumb: 'research'
+      title: 'Research & Publications',
+      subtitle: 'Academic research papers and technical reports',
+      thumbnail: 'assets/thumbnails/research-thumbnail.png',
+      features: [
+        'Published Research Papers',
+        'Composite Materials Research',
+        'Technical Analysis Reports',
+        'Experimental Studies',
+        'Conference Submissions'
+      ],
+      viewLink: '#/docs/research',
+      downloadPath: 'assets/Aliyar_Research_Document.pdf'
     }
   ];
+
+  // Header
+  root.appendChild(
+    el('div', {class: 'download-centre-header'},
+      el('h1', {}, 'Download Centre'),
+      el('p', {}, 'Access and download all portfolio documents. Browse through my complete collection of portfolio documents, research papers, and CV.')
+    )
+  );
+
+  // Document cards
+  const cardsContainer = el('div', {class: 'document-cards'});
   
-  root.appendChild(el('div',{class:'docs-grid'}, 
-    ...docs.map(doc => 
-      el('div',{class:'doc-card card'},
-        el('div',{class:'doc-thumb'},
-          el('div',{class:'doc-icon'},'📄')
+  documents.forEach(doc => {
+    const card = el('div', {class: 'document-card'},
+      // Thumbnail
+      el('div', {class: 'thumbnail-wrapper'},
+        el('img', {
+          class: 'document-thumbnail',
+          src: doc.thumbnail,
+          alt: `PDF preview of ${doc.title}`
+        })
+      ),
+      // Info
+      el('div', {class: 'document-info'},
+        el('h2', {}, doc.title),
+        el('p', {class: 'subtitle'}, doc.subtitle),
+        el('ul', {class: 'document-features'},
+          ...doc.features.map(f => el('li', {}, f))
         ),
-        el('div',{class:'doc-content'},
-          el('h2',{}, doc.title),
-          el('p',{class:'small'}, doc.desc),
-          el('div',{class:'doc-actions'},
-            el('a',{class:'btn primary',href:doc.viewRoute},'View Document'),
-            el('a',{class:'btn',href:`assets/${doc.file}`, download:doc.file},'Download PDF')
-          )
+        el('div', {class: 'document-actions'},
+          el('a', {class: 'btn primary', href: doc.viewLink}, 'View Document'),
+          el('a', {
+            class: 'btn',
+            href: doc.downloadPath,
+            download: doc.downloadPath.split('/').pop(),
+            target: '_blank'
+          }, 'Download PDF')
         )
       )
-    )
-  ));
-  
-  root.appendChild(el('div',{class:'footer'},
-    'All documents are stored in /assets. Update files there to refresh content.'
-  ));
+    );
+    cardsContainer.appendChild(card);
+  });
+
+  root.appendChild(cardsContainer);
 }
 
 function renderDocViewer(root, docType){
@@ -506,16 +537,13 @@ function renderDocViewer(root, docType){
     el('div',{class:'cta-row'},
       el('a',{class:'btn primary',href:`assets/${doc.file}`, target:'_blank', rel:'noreferrer'},'Open in New Tab'),
       el('a',{class:'btn',href:`assets/${doc.file}`, download:doc.file},'Download PDF'),
-      el('a',{class:'btn',href:'#/docs'},'← Back to Documents')
+      el('a',{class:'btn',href:'#/docs'},'← Back to Download Centre')
     ),
     el('hr',{class:'sep'}),
     el('iframe',{
       src:`assets/${doc.file}`,
       style:'width:100%; height:78vh; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(0,0,0,.2)'
     })
-  ));
-  root.appendChild(el('div',{class:'footer'},
-    'Documents are hosted in /assets. Update files there to refresh content.'
   ));
 }
 
