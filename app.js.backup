@@ -65,132 +65,60 @@ function projectCard(p){
 }
 
 function renderHome(root){
-  const {links} = state.data;
+  const {links, publications, projects} = state.data;
+  const topDesign = projects.filter(p=>p.category==='design').slice(0,6);
+  const topResearch = projects.filter(p=>p.category==='research').slice(0,6);
 
-  // Profile Section
-  const profileSection = el('div', {class: 'profile-section card pad'},
-    el('div', {class: 'profile-content'},
-      // Profile photo
-      el('div', {class: 'profile-photo-wrapper'},
-        el('img', {
-          class: 'profile-photo',
-          src: 'assets/profile/profile-photo.png',
-          alt: 'Syed Aliyar Shah',
-          onerror: function() {
-            // Fallback to initials if image not found
-            this.style.display = 'none';
-            this.parentElement.classList.add('fallback');
-            const initials = el('div', {class: 'profile-initials'}, 'SAS');
-            this.parentElement.appendChild(initials);
-          }
-        })
+  root.appendChild(
+    el('div',{class:'hero'},
+      el('div',{class:'card pad'},
+        el('div',{class:'kicker'},'PhD-focused engineering portfolio (US programs)'),
+        el('h1',{},'Syed Aliyar Shah'),
+        el('p',{},'Mechanical Engineer (NUST) with industry experience in EV battery systems, power electronics packaging, and CAE (FEA/CFD). Research interests: EV energy systems, mechanical design & analysis, composites, thermal and structural mechanics, and computational methods for multi-physics problems.'),
+        el('div',{class:'cta-row'},
+          el('a',{class:'btn primary',href:'#/cv'},'CV'),
+          el('a',{class:'btn',href:'#/design'},'Design Portfolio'),
+          el('a',{class:'btn',href:'#/research'},'Research Portfolio'),
+          el('a',{class:'btn',href:'#/docs'},'All Documents')
+        ),
+        el('hr',{class:'sep'}),
+        el('div',{class:'small'}, `Contact`),
+        el('div',{class:'cta-row'},
+          el('a',{class:'btn',href:`mailto:${links.email}`},links.email),
+          el('a',{class:'btn',href:links.linkedin, target:'_blank', rel:'noreferrer'},'LinkedIn'),
+          el('span',{class:'btn'}, links.phone)
+        )
       ),
-      // Profile info
-      el('div', {class: 'profile-info'},
-        el('h1', {class: 'profile-name'}, 'SYED ALIYAR SHAH'),
-        el('div', {class: 'profile-title'}, 'Mechanical Design & Simulation Engineer'),
-        el('div', {class: 'profile-contact'},
-          el('div', {class: 'contact-item'},
-            el('span', {class: 'contact-icon'}, '📧'),
-            el('a', {href: `mailto:${links.email}`, class: 'contact-link'}, links.email)
-          ),
-          el('div', {class: 'contact-item'},
-            el('span', {class: 'contact-icon'}, '📱'),
-            el('span', {class: 'contact-text'}, '(+92) 335-9926750')
-          ),
-          el('div', {class: 'contact-item'},
-            el('span', {class: 'contact-icon'}, '🔗'),
-            el('a', {
-              href: links.linkedin,
-              target: '_blank',
-              rel: 'noreferrer',
-              class: 'contact-link'
-            }, 'LinkedIn Profile')
-          )
+      el('div',{class:'card pad'},
+        el('h2',{},'Publications'),
+        el('div',{class:'small'},'Accurate listing from CV. Links to publicly accessible copies only.'),
+        el('ul',{}, ...(publications||[]).map(pub=>{
+          const li = el('li',{}, `${pub.title} — ${pub.status}`);
+          if(pub.link){
+            li.appendChild(el('span',{},' ('));
+            li.appendChild(el('a',{href:pub.link,target:'_blank',rel:'noreferrer'},'link'));
+            li.appendChild(el('span',{},')'));
+          }
+          return li;
+        })),
+        el('div',{class:'notice'},
+          'Important: Some project results in the provided PDFs are written as claims (e.g., “20 min at 10C”, “-40°C operation”). For PhD reviewers, add evidence: test setup, assumptions, plots, standards, or public references.'
         )
       )
     )
   );
 
-  // Welcome text
-  const welcomeSection = el('div', {class: 'welcome-section card pad'},
-    el('p', {class: 'welcome-text'},
-      'Welcome! I am a Mechanical Design and Simulation Engineer with expertise in EV battery systems, CAE (FEA/CFD), composite materials, and multi-physics modeling. Currently pursuing advanced research in structural mechanics, sustainable energy systems, and computational methods. I hold a Bachelor\'s in Mechanical Engineering from NUST and have industry experience with Ohmitron Inc. (USA) working on high-voltage EV systems and power electronics.'
-    ),
-    el('div', {class: 'scroll-button-wrapper'},
-      el('button', {
-        class: 'btn primary scroll-to-highlights',
-        onclick: () => {
-          document.querySelector('#highlights-section').scrollIntoView({
-            behavior: 'smooth'
-          });
-        }
-      }, '▼ Professional Highlights')
-    )
-  );
+  root.appendChild(el('div',{class:'section-title'},
+    el('h2',{},'Featured Design Projects'),
+    el('a',{href:'#/design'},'View all →')
+  ));
+  root.appendChild(el('div',{class:'grid'}, ...topDesign.map(projectCard)));
 
-  root.appendChild(profileSection);
-  root.appendChild(welcomeSection);
-
-  // Professional Highlights Section
-  const highlightsSection = el('div', {class: 'highlights-section', id: 'highlights-section'},
-    el('div', {class: 'section-header'},
-      el('h2', {}, 'PROFESSIONAL HIGHLIGHTS'),
-      el('p', {class: 'section-subtitle'}, 'Explore my academic and professional journey')
-    ),
-    el('div', {class: 'highlights-grid'},
-      // Education
-      el('a', {class: 'highlight-card card', href: '#/education'},
-        el('div', {class: 'highlight-icon'}, '🎓'),
-        el('h3', {}, 'Education'),
-        el('p', {class: 'highlight-detail'}, 'NUST ME'),
-        el('p', {class: 'highlight-detail'}, '2021-2025')
-      ),
-      // Publications
-      el('a', {class: 'highlight-card card', href: '#/publications'},
-        el('div', {class: 'highlight-icon'}, '📄'),
-        el('h3', {}, 'Publications'),
-        el('p', {class: 'highlight-detail'}, '6 Papers')
-      ),
-      // Research Projects
-      el('a', {class: 'highlight-card card', href: '#/research'},
-        el('div', {class: 'highlight-icon'}, '🔬'),
-        el('h3', {}, 'Research'),
-        el('h3', {}, 'Projects'),
-        el('p', {class: 'highlight-detail'}, 'Portfolio')
-      ),
-      // Design Projects
-      el('a', {class: 'highlight-card card', href: '#/design'},
-        el('div', {class: 'highlight-icon'}, '⚙️'),
-        el('h3', {}, 'Design'),
-        el('h3', {}, 'Projects'),
-        el('p', {class: 'highlight-detail'}, 'Portfolio')
-      ),
-      // Work Experience
-      el('a', {class: 'highlight-card card', href: '#/experience'},
-        el('div', {class: 'highlight-icon'}, '💼'),
-        el('h3', {}, 'Work'),
-        el('h3', {}, 'Experience'),
-        el('p', {class: 'highlight-detail'}, '5 Positions')
-      ),
-      // Awards & Honors
-      el('a', {class: 'highlight-card card', href: '#/awards'},
-        el('div', {class: 'highlight-icon'}, '🏆'),
-        el('h3', {}, 'Awards &'),
-        el('h3', {}, 'Honors'),
-        el('p', {class: 'highlight-detail'}, 'Gold Medal')
-      ),
-      // Certifications
-      el('a', {class: 'highlight-card card', href: '#/certifications'},
-        el('div', {class: 'highlight-icon'}, '📜'),
-        el('h3', {}, 'Certifi-'),
-        el('h3', {}, 'cations'),
-        el('p', {class: 'highlight-detail'}, '25+')
-      )
-    )
-  );
-
-  root.appendChild(highlightsSection);
+  root.appendChild(el('div',{class:'section-title'},
+    el('h2',{},'Featured Research Projects'),
+    el('a',{href:'#/research'},'View all →')
+  ));
+  root.appendChild(el('div',{class:'grid'}, ...topResearch.map(projectCard)));
 
   root.appendChild(el('div',{class:'footer'},
     '© Syed Aliyar Shah — static site for GitHub Pages. Update projects via content/projects.json and /assets.'
@@ -628,210 +556,6 @@ function renderDocViewer(root, docType){
   ));
 }
 
-// NEW PAGE RENDERERS
-
-function renderEducation(root) {
-  const edu = state.portfolioData?.education || {};
-  
-  root.appendChild(el('div', {class: 'page-back'},
-    el('a', {class: 'pill', href: '#/'}, '← Back to Home')
-  ));
-  
-  root.appendChild(el('div', {class: 'card pad'},
-    el('h1', {}, 'EDUCATION'),
-    el('div', {class: 'education-main'},
-      el('div', {class: 'education-icon'}, '🎓'),
-      el('h2', {}, edu.degree || 'Bachelor of Engineering in Mechanical Engineering'),
-      el('p', {class: 'institution'}, edu.institution || 'National University of Sciences and Technology (NUST)'),
-      el('p', {}, edu.college || 'College of Electrical & Mechanical Engineering (CEME)'),
-      el('p', {}, edu.location || 'Islamabad, Pakistan'),
-      el('p', {class: 'duration'}, `Duration: ${edu.duration || 'November 2021 - May 2025'}`),
-      el('h3', {}, 'Key Areas:'),
-      el('ul', {}, ...(edu.keyAreas || []).map(area => el('li', {}, area))),
-      el('h3', {}, 'Thesis:'),
-      el('p', {class: 'thesis'}, edu.thesis || '')
-    )
-  ));
-  
-  if (edu.images && edu.images.length > 0) {
-    root.appendChild(el('div', {class: 'education-images'},
-      ...edu.images.map(img => 
-        el('div', {class: 'education-image-wrapper'},
-          el('img', {src: `assets/${img}`, alt: 'Campus photo', onerror: function() { this.parentElement.style.display = 'none'; }})
-        )
-      )
-    ));
-  }
-}
-
-function renderPublications(root) {
-  const pubs = state.portfolioData?.publications || [];
-  
-  root.appendChild(el('div', {class: 'page-back'},
-    el('a', {class: 'pill', href: '#/'}, '← Back to Home')
-  ));
-  
-  root.appendChild(el('div', {class: 'card pad'},
-    el('h1', {}, 'PUBLICATIONS'),
-    el('p', {class: 'section-subtitle'}, 'Academic research papers and technical manuscripts')
-  ));
-  
-  // Published
-  const published = pubs.filter(p => p.status === 'published');
-  if (published.length > 0) {
-    root.appendChild(el('div', {class: 'pub-section-header'}, 'PUBLISHED'));
-    published.forEach(pub => {
-      root.appendChild(el('div', {class: 'publication-card card pad'},
-        el('h3', {}, `[${pub.id}] ${pub.title}`),
-        el('p', {class: 'pub-authors'}, pub.authors),
-        el('p', {class: 'pub-journal'}, `${pub.journal}, ${pub.year}`),
-        pub.link ? el('a', {class: 'btn primary', href: pub.link, target: '_blank', rel: 'noreferrer'}, `📄 View Paper - DOI: ${pub.doi}`) : null
-      ));
-    });
-  }
-  
-  // Under Review
-  const underReview = pubs.filter(p => p.status === 'under-review');
-  if (underReview.length > 0) {
-    root.appendChild(el('div', {class: 'pub-section-header'}, 'SUBMITTED (Under Review)'));
-    underReview.forEach(pub => {
-      root.appendChild(el('div', {class: 'publication-card card pad'},
-        el('h3', {}, `[${pub.id}] ${pub.title}`),
-        el('p', {class: 'pub-authors'}, pub.authors),
-        el('p', {class: 'pub-journal'}, pub.journal),
-        el('p', {class: 'pub-status'}, `Status: ${pub.statusText || 'Manuscript Under Review'}`)
-      ));
-    });
-  }
-  
-  // In Preparation
-  const inPrep = pubs.filter(p => p.status === 'in-preparation');
-  if (inPrep.length > 0) {
-    root.appendChild(el('div', {class: 'pub-section-header'}, 'IN PREPARATION'));
-    inPrep.forEach(pub => {
-      root.appendChild(el('div', {class: 'publication-card card pad'},
-        el('h3', {}, `[${pub.id}] ${pub.title}`),
-        el('p', {class: 'pub-authors'}, pub.authors),
-        el('p', {class: 'pub-journal'}, pub.journal)
-      ));
-    });
-  }
-}
-
-function renderExperience(root) {
-  const experiences = state.portfolioData?.workExperience || [];
-  
-  root.appendChild(el('div', {class: 'page-back'},
-    el('a', {class: 'pill', href: '#/'}, '← Back to Home')
-  ));
-  
-  root.appendChild(el('div', {class: 'card pad'},
-    el('h1', {}, 'WORK EXPERIENCE'),
-    el('p', {class: 'section-subtitle'}, 'Professional journey across industry and research')
-  ));
-  
-  experiences.forEach(exp => {
-    root.appendChild(el('div', {class: 'experience-card card pad'},
-      el('div', {class: 'experience-layout'},
-        // Image slideshow
-        exp.images && exp.images.length > 0 ? createGallery(exp.id, exp.images) : null,
-        // Details
-        el('div', {class: 'experience-details'},
-          el('h2', {}, exp.title),
-          el('p', {class: 'exp-company'}, exp.company),
-          el('p', {}, exp.location),
-          el('p', {class: 'exp-duration'}, exp.duration),
-          el('p', {}, exp.description),
-          exp.responsibilities && exp.responsibilities.length > 0 ? el('ul', {}, ...exp.responsibilities.map(r => el('li', {}, r))) : null
-        )
-      )
-    ));
-  });
-}
-
-function renderAwards(root) {
-  const awards = state.portfolioData?.awards || [];
-  
-  root.appendChild(el('div', {class: 'page-back'},
-    el('a', {class: 'pill', href: '#/'}, '← Back to Home')
-  ));
-  
-  root.appendChild(el('div', {class: 'card pad'},
-    el('h1', {}, 'AWARDS & HONORS'),
-    el('p', {class: 'section-subtitle'}, 'Recognition for academic and technical achievements')
-  ));
-  
-  // Honors
-  const honors = awards.filter(a => a.category === 'honor');
-  if (honors.length > 0) {
-    root.appendChild(el('div', {class: 'pub-section-header'}, 'HONORS'));
-    honors.forEach(award => {
-      root.appendChild(el('div', {class: 'award-card card pad'},
-        el('div', {class: 'experience-layout'},
-          award.images && award.images.length > 0 ? createGallery(award.id, award.images) : null,
-          el('div', {class: 'award-details'},
-            el('h2', {}, award.title),
-            el('p', {class: 'award-org'}, award.organization),
-            el('p', {class: 'award-year'}, award.year),
-            el('p', {}, award.description)
-          )
-        )
-      ));
-    });
-  }
-  
-  // Awards
-  const awardsOnly = awards.filter(a => a.category === 'award');
-  if (awardsOnly.length > 0) {
-    root.appendChild(el('div', {class: 'pub-section-header'}, 'AWARDS'));
-    awardsOnly.forEach(award => {
-      root.appendChild(el('div', {class: 'award-card card pad'},
-        el('div', {class: 'experience-layout'},
-          award.images && award.images.length > 0 ? createGallery(award.id, award.images) : null,
-          el('div', {class: 'award-details'},
-            el('h2', {}, award.title),
-            el('p', {class: 'award-org'}, award.organization),
-            el('p', {class: 'award-year'}, award.year),
-            el('p', {}, award.description)
-          )
-        )
-      ));
-    });
-  }
-}
-
-function renderCertifications(root) {
-  const certs = state.portfolioData?.certifications || [];
-  const allCertsLink = state.portfolioData?.allCertificatesLink || '';
-  
-  root.appendChild(el('div', {class: 'page-back'},
-    el('a', {class: 'pill', href: '#/'}, '← Back to Home')
-  ));
-  
-  root.appendChild(el('div', {class: 'card pad'},
-    el('h1', {}, 'CERTIFICATIONS'),
-    el('p', {class: 'section-subtitle'}, 'Professional certifications and completed courses')
-  ));
-  
-  certs.forEach(cert => {
-    root.appendChild(el('div', {class: 'certification-card card pad'},
-      el('div', {class: 'cert-icon'}, '📜'),
-      el('h2', {}, cert.title),
-      el('p', {class: 'cert-issuer'}, cert.issuer),
-      cert.areas && cert.areas.length > 0 ? el('p', {class: 'cert-areas'}, `Areas: ${cert.areas.join(' • ')}`) : null,
-      cert.credentialLink ? el('a', {class: 'btn primary', href: cert.credentialLink, target: '_blank', rel: 'noreferrer'}, '🔗 View Credential') : null
-    ));
-  });
-  
-  if (allCertsLink) {
-    root.appendChild(el('div', {class: 'card pad all-certs-card'},
-      el('h2', {}, '📂 VIEW ALL 25+ CERTIFICATES'),
-      el('p', {}, 'Complete collection of professional certifications'),
-      el('a', {class: 'btn primary', href: allCertsLink, target: '_blank', rel: 'noreferrer'}, '🔗 View All Certificates')
-    ));
-  }
-}
-
 function render(){
   const root = document.getElementById('app');
   root.innerHTML = '';
@@ -843,11 +567,6 @@ function render(){
     return;
   }
   if(route[0]==='cv'){ renderCV(root); return; }
-  if(route[0]==='education'){ renderEducation(root); return; }
-  if(route[0]==='publications'){ renderPublications(root); return; }
-  if(route[0]==='experience'){ renderExperience(root); return; }
-  if(route[0]==='awards'){ renderAwards(root); return; }
-  if(route[0]==='certifications'){ renderCertifications(root); return; }
   if(route[0]==='design'){ renderList(root,'design'); return; }
   if(route[0]==='research'){ renderList(root,'research'); return; }
   if(route[0]==='project' && route[1]){ renderProject(root, route[1]); return; }
