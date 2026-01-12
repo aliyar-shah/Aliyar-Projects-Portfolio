@@ -1,0 +1,309 @@
+{
+  "education": {
+    "degree": "Bachelor of Engineering in Mechanical Engineering",
+    "institution": "National University of Sciences and Technology (NUST)",
+    "college": "College of Electrical & Mechanical Engineering (CEME)",
+    "location": "Islamabad, Pakistan",
+    "duration": "November 2021 - May 2025",
+    "keyAreas": [
+      "Finite Element Analysis (FEA) & CAD/CAE/CAM",
+      "Composite Materials & Multi-physics Modeling",
+      "Structural & Thermal Analysis",
+      "Fluid Dynamics / CFD Simulations"
+    ],
+    "thesis": "Design and Development of Non-Ceramic Glass Fiber-Epoxy Composite Insulator for Power Lines",
+    "images": [
+      "education/campus-1.png",
+      "education/campus-2.png"
+    ]
+  },
+  "publications": [
+    {
+      "id": 1,
+      "title": "Assessment of Impact Resistance Characteristics of 3D-Printed Polymers",
+      "authors": "M. R. Khan, S. Ali, I. Asim, S. A. Shah, M. Ahmad",
+      "journal": "Key Engineering Materials",
+      "year": "2025",
+      "status": "published",
+      "doi": "10.4028/p-g8owyW",
+      "link": "https://doi.org/10.4028/p-g8owyW"
+    },
+    {
+      "id": 2,
+      "title": "Design, Analysis and Comparison of Hybrid & Non-Pneumatic Tires",
+      "authors": "S. Ali, S. A. Shah, M. Ahmad, S. M. Zain, A. R. Khan",
+      "journal": "ACI Avances En Ciencias E Ingenierías",
+      "year": "2025",
+      "status": "published",
+      "doi": "10.18272/aci.3909",
+      "link": "https://doi.org/10.18272/aci.3909"
+    },
+    {
+      "id": 3,
+      "title": "Comprehensive Characterization of GFRP Composite Insulators for High-Voltage Overhead Lines",
+      "authors": "S. A. Shah, S. Ali, A. R. Khan, Z. Sajid",
+      "journal": "Materials & Energy Systems Journal",
+      "year": "",
+      "status": "under-review",
+      "statusText": "Manuscript Under Review"
+    },
+    {
+      "id": 4,
+      "title": "High-Performance Composites for Aerospace, Hydrogen Fuel Storage, and Nuclear Technologies: A Review",
+      "authors": "S. Ali, S. A. Shah",
+      "journal": "Advanced Materials Review",
+      "year": "",
+      "status": "under-review",
+      "statusText": "Manuscript Under Review"
+    },
+    {
+      "id": 5,
+      "title": "Computational Approaches for Dynamic Crack Propagation: Review",
+      "authors": "S. A. Shah, S. Ali",
+      "journal": "Mechanics of Materials",
+      "year": "",
+      "status": "in-preparation"
+    },
+    {
+      "id": 6,
+      "title": "Experimental and Computational Validation of Mechanical and Failure Modes in GFRP Epoxy Composite Rods for HV Insulators",
+      "authors": "S. A. Shah, M. R. Khan",
+      "journal": "Polymers",
+      "year": "",
+      "status": "in-preparation"
+    }
+  ],
+  "workExperience": [
+    {
+      "id": "ohmitron",
+      "title": "Mechanical Design and Simulation Engineer",
+      "company": "Ohmitron, Inc",
+      "location": "Irvine, California, USA",
+      "duration": "Aug 2023 - Present",
+      "description": "Leading mechanical design and simulation for EV battery systems and power electronics.",
+      "responsibilities": [
+        "HV Li-ion Battery Packs - Design and thermal management",
+        "MegaWatt Charging Systems - Power electronics packaging",
+        "Power Electronics Modules - Thermal and structural analysis",
+        "Si-C based HV Inverters/Converters - Design optimization",
+        "12V Li-ion Batteries - Automotive applications",
+        "On-Board Chargers - Mechanical integration"
+      ],
+      "skills": [
+        "CAD/CAE (SolidWorks, ANSYS)",
+        "FEM&A (Structural, Thermal, Modal)",
+        "Thermal CFD Analysis",
+        "Materials: Al, Steel, ABS-PC, GFRP",
+        "DFMEA, DVP&R",
+        "GD&T, DFA/DFM"
+      ],
+      "images": [
+        "experience/ohmitron/ohmitron-1.png",
+        "experience/ohmitron/ohmitron-2.png",
+        "experience/ohmitron/ohmitron-3.png",
+        "experience/ohmitron/ohmitron-4.png"
+      ]
+    },
+    {
+      "id": "polymer-industries",
+      "title": "R&D Engineer",
+      "company": "Polymer Private Industries",
+      "location": "Gujranwala, Pakistan",
+      "duration": "Jun 2024 - Apr 2025",
+      "description": "Research and development of non-ceramic GFRP composite insulators for power transmission.",
+      "responsibilities": [
+        "Design and Development of non-ceramic GFRP Composite Insulator",
+        "Composite mechanics R&D",
+        "ASTM/ANSI testing protocols",
+        "FEA in ABAQUS for composite structures"
+      ],
+      "skills": [
+        "Composite Materials",
+        "GFRP Design",
+        "ASTM/ANSI Standards",
+        "ABAQUS FEA",
+        "Experimental Testing"
+      ],
+      "images": [
+        "experience/polymer-industries/polymer-1.png",
+        "experience/polymer-industries/polymer-2.png",
+        "experience/polymer-industries/polymer-3.png"
+      ]
+    },
+    {
+      "id": "nust-lab",
+      "title": "Research Assistant",
+      "company": "NUST Advanced Manufacturing Lab",
+      "location": "Islamabad, Pakistan",
+      "duration": "Jun 2024 - Apr 2025",
+      "description": "Research assistant focusing on impact testing and polymer characterization.",
+      "responsibilities": [
+        "Impact testing of 3D-printed polymers",
+        "Polymer characterization studies",
+        "FEA workflows development",
+        "Co-authored research publications"
+      ],
+      "skills": [
+        "Impact Testing",
+        "Material Characterization",
+        "FEA",
+        "Research Methodology",
+        "Technical Writing"
+      ],
+      "images": [
+        "experience/nust-lab/lab-1.png",
+        "experience/nust-lab/lab-2.png",
+        "experience/nust-lab/lab-3.png"
+      ]
+    },
+    {
+      "id": "enertia",
+      "title": "Mechanical Design Engineer",
+      "company": "Enertia",
+      "location": "Lahore, Pakistan",
+      "duration": "Apr 2025 - Jul 2025",
+      "description": "Mechanical design for HVAC and thermal systems.",
+      "responsibilities": [
+        "Heat Pump Water Heater design",
+        "Pressure Vessel analysis",
+        "HVAC component development"
+      ],
+      "skills": [
+        "Thermal Design",
+        "Pressure Vessel Design",
+        "HVAC Systems",
+        "CAD Modeling"
+      ],
+      "images": [
+        "experience/enertia/enertia-1.png",
+        "experience/enertia/enertia-2.png"
+      ]
+    },
+    {
+      "id": "proceedit",
+      "title": "Trainee Engineer (Contractual)",
+      "company": "Proceedit",
+      "location": "Barcelona, Spain",
+      "duration": "Sep 2025 - Nov 2025",
+      "description": "Manufacturing automation and process optimization training.",
+      "responsibilities": [
+        "Manufacturing workflow optimization",
+        "Robot automation programming",
+        "Python scripting for RPA",
+        "Process documentation"
+      ],
+      "skills": [
+        "Manufacturing Processes",
+        "Robot Automation",
+        "Python Programming",
+        "RPA (Robotic Process Automation)"
+      ],
+      "images": [
+        "experience/proceedit/proceedit-1.png",
+        "experience/proceedit/proceedit-2.png"
+      ]
+    }
+  ],
+  "awards": [
+    {
+      "id": "gold-medal",
+      "category": "honor",
+      "title": "Gold Medalist - Best Final Year Project",
+      "organization": "Department of Mechanical Engineering, NUST",
+      "year": "2025",
+      "description": "Awarded for outstanding final year project on GFRP composite insulators.",
+      "images": [
+        "awards/gold-medal/medal-1.png",
+        "awards/gold-medal/medal-2.png",
+        "awards/gold-medal/medal-3.png"
+      ]
+    },
+    {
+      "id": "asme-xrc",
+      "category": "honor",
+      "title": "1st Position - ASME E-Fests XRC",
+      "organization": "ASME International",
+      "year": "2023 & 2024",
+      "description": "First place in Autonomous Vehicle International Competition for two consecutive years.",
+      "images": [
+        "awards/asme-xrc/xrc-1.png",
+        "awards/asme-xrc/xrc-2.png",
+        "awards/asme-xrc/xrc-3.png",
+        "awards/asme-xrc/xrc-4.png",
+        "awards/asme-xrc/xrc-5.png"
+      ]
+    },
+    {
+      "id": "nust-achiever",
+      "category": "honor",
+      "title": "NUST High Achievers Award & Certificate of Merit",
+      "organization": "NUST",
+      "year": "2023, 2024, 2025",
+      "description": "Recognized for academic excellence across multiple years.",
+      "images": [
+        "awards/nust-achiever/achiever-1.png",
+        "awards/nust-achiever/achiever-2.png"
+      ]
+    },
+    {
+      "id": "mars-wheel",
+      "category": "award",
+      "title": "1st Position - Mars Wheel and Wheel-Hub Joint National Design Competition",
+      "organization": "PIAM Competition",
+      "year": "2023 & 2024",
+      "description": "First place in national competition for innovative wheel design.",
+      "images": [
+        "awards/mars-wheel/wheel-1.png",
+        "awards/mars-wheel/wheel-2.png",
+        "awards/mars-wheel/wheel-3.png"
+      ]
+    },
+    {
+      "id": "3dxworld",
+      "category": "award",
+      "title": "3DxWorld24 by 3D Experience Dassault Systemes",
+      "organization": "Dassault Systemes",
+      "year": "2024",
+      "description": "Participated in global 3D design competition.",
+      "images": []
+    },
+    {
+      "id": "formula-sae",
+      "category": "award",
+      "title": "Deputy Director - Formula SAE Project",
+      "organization": "NUSTAG Official and ASME CEME Student Section",
+      "year": "2023-2024",
+      "description": "Leadership role in Formula SAE competition team.",
+      "images": []
+    }
+  ],
+  "certifications": [
+    {
+      "id": "cswa",
+      "title": "Certified SolidWorks Associate (CSWA)",
+      "issuer": "Dassault Systemes",
+      "areas": [
+        "Mechanical Design",
+        "Sustainability",
+        "Simulation",
+        "Additive Manufacturing"
+      ],
+      "credentialLink": "https://cv.virtualtester.com/qr/?b=SLDWRKS&i=C-PGVDNPM9HG"
+    },
+    {
+      "id": "amorphous-alloys",
+      "title": "Combinatorial Development of Amorphous Alloys",
+      "issuer": "UTP CCR, ISER",
+      "areas": [],
+      "credentialLink": ""
+    },
+    {
+      "id": "ev-simulations",
+      "title": "Basics of Electric Vehicle Simulations Using ANSYS",
+      "issuer": "Skill Lync",
+      "areas": [],
+      "credentialLink": ""
+    }
+  ],
+  "allCertificatesLink": "https://drive.google.com/drive/folders/1-example-link-to-all-certificates"
+}
