@@ -861,7 +861,130 @@ function render(){
 
 window.addEventListener('hashchange', render);
 
+// ============================================
+// MOBILE MENU FUNCTIONALITY
+// ============================================
+
+function initMobileMenu() {
+  const hamburger = document.querySelector('.hamburger');
+  const navlinks = document.querySelector('.navlinks');
+  
+  if (!hamburger || !navlinks) return;
+  
+  // Toggle menu on hamburger click
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    navlinks.classList.toggle('open');
+    hamburger.classList.toggle('open');
+  });
+  
+  // Close menu when a navigation link is clicked
+  const navPills = document.querySelectorAll('.navlinks .pill');
+  navPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      navlinks.classList.remove('open');
+      hamburger.classList.remove('open');
+    });
+  });
+  
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !navlinks.contains(e.target)) {
+      navlinks.classList.remove('open');
+      hamburger.classList.remove('open');
+    }
+  });
+}
+
+// ============================================
+// TOUCH SWIPE SUPPORT FOR GALLERIES
+// ============================================
+
+let touchSwipeInitialized = false;
+
+function initTouchSwipe() {
+  let touchStartX = 0;
+  let touchEndX = 0;
+  
+  function handleSwipe(galleryElement, projectId) {
+    const diff = touchStartX - touchEndX;
+    const minSwipeDistance = 50;
+    
+    if (Math.abs(diff) > minSwipeDistance) {
+      const state = galleryState[projectId];
+      if (!state) return;
+      
+      const gallery = galleryElement.closest('.gallery');
+      if (!gallery) return;
+      
+      const images = Array.from(gallery.querySelectorAll('.gallery-thumbnails .thumb'));
+      const totalImages = images.length;
+      
+      if (diff > 0) {
+        // Swipe left - next image
+        state.currentIndex = (state.currentIndex + 1) % totalImages;
+      } else {
+        // Swipe right - previous image
+        state.currentIndex = (state.currentIndex - 1 + totalImages) % totalImages;
+      }
+      
+      // Update gallery
+      const mainImage = gallery.querySelector('.gallery-image');
+      const thumbs = gallery.querySelectorAll('.gallery-thumbnails .thumb');
+      
+      if (mainImage && thumbs.length > 0) {
+        const imageSrc = thumbs[state.currentIndex].src;
+        mainImage.src = imageSrc;
+        
+        thumbs.forEach((thumb, idx) => {
+          thumb.className = idx === state.currentIndex ? 'thumb active' : 'thumb';
+        });
+      }
+    }
+  }
+  
+  // Add touch listeners to all galleries
+  const galleries = document.querySelectorAll('.gallery-main');
+  galleries.forEach((gallery) => {
+    // Skip if already has listeners
+    if (gallery.dataset.touchEnabled) return;
+    
+    // Try to find project ID from the gallery's context
+    let projectId = null;
+    const galleryContainer = gallery.closest('.gallery');
+    
+    // Find project ID from URL or context
+    const route = getRoute();
+    if (route[0] === 'project' && route[1]) {
+      projectId = route[1];
+    } else if (galleryContainer && galleryContainer.id) {
+      projectId = galleryContainer.id;
+    }
+    
+    if (projectId) {
+      gallery.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      
+      gallery.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe(gallery, projectId);
+      }, { passive: true });
+      
+      // Mark as initialized
+      gallery.dataset.touchEnabled = 'true';
+    }
+  });
+}
+
+// Re-initialize touch swipe on route change
+window.addEventListener('hashchange', () => {
+  setTimeout(initTouchSwipe, 100);
+});
+
 (async function init(){
   await loadData();
   render();
+  initMobileMenu();
+  initTouchSwipe();
 })();
