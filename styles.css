@@ -1416,32 +1416,16 @@ li{margin:6px 0; color:rgba(234,240,246,.92); line-height:1.45}
   }
   
   /* Remove hover effects on touch devices */
-  .btn:hover {
-    transform: none;
-  }
-  
-  .card:hover {
-    transform: none;
-  }
-  
-  .highlight-card:hover {
-    transform: none;
-  }
-  
-  .showcase-card:hover {
-    transform: none;
-  }
-  
+  .btn:hover,
+  .card:hover,
+  .highlight-card:hover,
+  .showcase-card:hover,
   .doc-card:hover {
     transform: none;
   }
   
   /* Active states for touch */
-  .btn:active {
-    transform: scale(0.98);
-    opacity: 0.9;
-  }
-  
+  .btn:active,
   .pill:active {
     transform: scale(0.98);
     opacity: 0.9;

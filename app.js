@@ -900,6 +900,8 @@ function initMobileMenu() {
 // TOUCH SWIPE SUPPORT FOR GALLERIES
 // ============================================
 
+let touchSwipeInitialized = false;
+
 function initTouchSwipe() {
   let touchStartX = 0;
   let touchEndX = 0;
@@ -942,34 +944,36 @@ function initTouchSwipe() {
   }
   
   // Add touch listeners to all galleries
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      const galleries = document.querySelectorAll('.gallery-main');
-      galleries.forEach((gallery) => {
-        // Try to find project ID from the gallery's context
-        let projectId = null;
-        const galleryContainer = gallery.closest('.gallery');
-        
-        // Find project ID from URL or context
-        const route = getRoute();
-        if (route[0] === 'project' && route[1]) {
-          projectId = route[1];
-        } else if (galleryContainer && galleryContainer.id) {
-          projectId = galleryContainer.id;
-        }
-        
-        if (projectId) {
-          gallery.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-          }, { passive: true });
-          
-          gallery.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe(gallery, projectId);
-          }, { passive: true });
-        }
-      });
-    }, 100);
+  const galleries = document.querySelectorAll('.gallery-main');
+  galleries.forEach((gallery) => {
+    // Skip if already has listeners
+    if (gallery.dataset.touchEnabled) return;
+    
+    // Try to find project ID from the gallery's context
+    let projectId = null;
+    const galleryContainer = gallery.closest('.gallery');
+    
+    // Find project ID from URL or context
+    const route = getRoute();
+    if (route[0] === 'project' && route[1]) {
+      projectId = route[1];
+    } else if (galleryContainer && galleryContainer.id) {
+      projectId = galleryContainer.id;
+    }
+    
+    if (projectId) {
+      gallery.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      
+      gallery.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe(gallery, projectId);
+      }, { passive: true });
+      
+      // Mark as initialized
+      gallery.dataset.touchEnabled = 'true';
+    }
   });
 }
 
