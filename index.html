@@ -9,6 +9,9 @@
   <!-- Analytics (optional): replace G-XXXXXXXXXX with your GA4 Measurement ID.
        Then remove the comment markers around the script tags.
   -->
+  <!-- Supabase SDK — required for dynamic profile photo / document URLs -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
   <!--
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
@@ -37,6 +40,7 @@
         <a class="pill" data-nav="design" href="#/design">Design Portfolio</a>
         <a class="pill" data-nav="research" href="#/research">Research Portfolio</a>
         <a class="pill" data-nav="docs" href="#/docs">Download Centre</a>
+        <a class="pill admin-link" href="admin.html" title="Admin">⚙</a>
       </div>
     </div>
   </div>

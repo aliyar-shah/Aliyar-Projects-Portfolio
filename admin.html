@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Admin — Syed Aliyar Shah Portfolio</title>
+  <!-- Block search-engine indexing for admin page -->
+  <meta name="robots" content="noindex, nofollow"/>
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="admin.css"/>
+</head>
+<body>
+
+  <!-- NAV -->
+  <div class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <strong>Syed Aliyar Shah</strong>
+        <span>Admin Dashboard</span>
+      </div>
+      <div class="navlinks" id="adminNavLinks">
+        <a class="pill" href="index.html">← Public Site</a>
+        <button class="pill admin-logout-btn" id="logoutBtn" style="display:none;cursor:pointer;background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="adminApp"></div>
+  </div>
+
+  <!-- Supabase SDK (must come first) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <!-- Your project credentials -->
+  <script src="supabase-config.js"></script>
+  <!-- Admin logic -->
+  <script src="admin.js"></script>
+</body>
+</html>

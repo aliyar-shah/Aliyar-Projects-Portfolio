@@ -1,5 +1,15 @@
 
-const state = { data: null, portfolioData: null };
+const state = {
+  data: null,
+  portfolioData: null,
+  // Supabase overrides — null means "use static fallback"
+  profilePhotoUrl: null,
+  profileName:     null,
+  profileTitle:    null,
+  cvUrl:           null,
+  portfolioUrl:    null,
+  researchUrl:     null,
+};
 
 async function loadData(){
   const res = await fetch('content/projects.json');
@@ -12,6 +22,36 @@ async function loadData(){
   } catch(e) {
     console.warn('Could not load data.json, using minimal fallbacks');
     state.portfolioData = {education: {}, publications: [], workExperience: [], awards: [], certifications: []};
+  }
+
+  // Optionally pull live data from Supabase (profile photo, document URLs)
+  await loadSupabaseOverrides();
+}
+
+async function loadSupabaseOverrides(){
+  if (!window.supabaseClient) return;
+  try {
+    const [profileRes, docsRes] = await Promise.all([
+      window.supabaseClient.from('profile').select('*').eq('id', 'main').single(),
+      window.supabaseClient.from('documents').select('*'),
+    ]);
+
+    if (!profileRes.error && profileRes.data) {
+      const p = profileRes.data;
+      if (p.photo_url) state.profilePhotoUrl = p.photo_url;
+      if (p.name)      state.profileName     = p.name;
+      if (p.title)     state.profileTitle    = p.title;
+    }
+
+    if (!docsRes.error && docsRes.data) {
+      docsRes.data.forEach(d => {
+        if (d.id === 'cv'        && d.file_url) state.cvUrl        = d.file_url;
+        if (d.id === 'portfolio' && d.file_url) state.portfolioUrl = d.file_url;
+        if (d.id === 'research'  && d.file_url) state.researchUrl  = d.file_url;
+      });
+    }
+  } catch(e) {
+    console.warn('[Supabase] Failed to load overrides:', e.message);
   }
 }
 
@@ -74,8 +114,8 @@ function renderHome(root){
       el('div', {class: 'profile-photo-wrapper'},
         el('img', {
           class: 'profile-photo',
-          src: 'assets/profile/profile-photo.png',
-          alt: 'Syed Aliyar Shah',
+          src: state.profilePhotoUrl || 'assets/profile/profile-photo.png',
+          alt: state.profileName || 'Syed Aliyar Shah',
           onerror: function() {
             // Fallback to initials if image not found
             this.style.display = 'none';
@@ -87,8 +127,8 @@ function renderHome(root){
       ),
       // Profile info
       el('div', {class: 'profile-info'},
-        el('h1', {class: 'profile-name'}, 'SYED ALIYAR SHAH'),
-        el('div', {class: 'profile-title'}, 'Mechanical Design & Simulation Engineer'),
+        el('h1', {class: 'profile-name'}, state.profileName  || 'SYED ALIYAR SHAH'),
+        el('div', {class: 'profile-title'}, state.profileTitle || 'Mechanical Design & Simulation Engineer'),
         el('div', {class: 'profile-contact'},
           el('div', {class: 'contact-item'},
             el('span', {class: 'contact-icon'}, '📧'),
@@ -204,7 +244,9 @@ function renderList(root, category){
     : 'Research papers, simulations, and materials/mechanics investigations.';
   
   // PDF paths and routes based on category
-  const pdfPath = category==='design' ? 'assets/Aliyar_Project_Portfolio.pdf' : 'assets/Aliyar_Research_Document.pdf';
+  const pdfPath = category==='design'
+    ? (state.portfolioUrl || 'assets/Aliyar_Project_Portfolio.pdf')
+    : (state.researchUrl  || 'assets/Aliyar_Research_Document.pdf');
   const viewerRoute = category==='design' ? '#/docs/portfolio' : '#/docs/research';
   
   root.appendChild(el('div',{class:'card pad'},
@@ -482,17 +524,18 @@ function renderProject(root, id){
 }
 
 function renderCV(root){
+  const cvPath = state.cvUrl || 'assets/Aliyar_CV_Oct_25.pdf';
   root.appendChild(el('div',{class:'card pad'},
     el('div',{class:'kicker'},'Curriculum Vitae'),
     el('h1',{},'CV'),
     el('p',{},'Academic and professional background. Download or view inline below.'),
     el('div',{class:'cta-row'},
-      el('a',{class:'btn',href:'assets/Aliyar_CV_Oct_25.pdf', download:'Aliyar_CV_Oct_25.pdf'},'Download CV PDF'),
-      el('a',{class:'btn primary',href:'assets/Aliyar_CV_Oct_25.pdf', target:'_blank', rel:'noreferrer'},'Open in New Tab')
+      el('a',{class:'btn',href:cvPath, download:'Aliyar_CV.pdf'},'Download CV PDF'),
+      el('a',{class:'btn primary',href:cvPath, target:'_blank', rel:'noreferrer'},'Open in New Tab')
     ),
     el('hr',{class:'sep'}),
     el('iframe',{
-      src:'assets/Aliyar_CV_Oct_25.pdf',
+      src:cvPath,
       style:'width:100%; height:78vh; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(0,0,0,.2)'
     })
   ));
@@ -513,7 +556,7 @@ function renderDocsHub(root){
         'Awards & Achievements'
       ],
       viewLink: '#/cv',
-      downloadPath: 'assets/Aliyar_CV_Oct_25.pdf'
+      downloadPath: state.cvUrl || 'assets/Aliyar_CV_Oct_25.pdf'
     },
     {
       id: 'portfolio',
@@ -528,7 +571,7 @@ function renderDocsHub(root){
         'Mechanical Design & Manufacturing'
       ],
       viewLink: '#/docs/portfolio',
-      downloadPath: 'assets/Aliyar_Project_Portfolio.pdf'
+      downloadPath: state.portfolioUrl || 'assets/Aliyar_Project_Portfolio.pdf'
     },
     {
       id: 'research',
@@ -543,7 +586,7 @@ function renderDocsHub(root){
         'Conference Submissions'
       ],
       viewLink: '#/docs/research',
-      downloadPath: 'assets/Aliyar_Research_Document.pdf'
+      downloadPath: state.researchUrl || 'assets/Aliyar_Research_Document.pdf'
     }
   ];
 
@@ -593,16 +636,22 @@ function renderDocsHub(root){
 }
 
 function renderDocViewer(root, docType){
+  const staticNames = {
+    portfolio: 'Aliyar_Project_Portfolio.pdf',
+    research:  'Aliyar_Research_Document.pdf',
+  };
   const docs = {
     portfolio: {
-      title: 'Design Projects Portfolio',
-      file: 'Aliyar_Project_Portfolio.pdf',
-      desc: 'Detailed design project documentation and visuals.'
+      title:    'Design Projects Portfolio',
+      file:     state.portfolioUrl || 'assets/Aliyar_Project_Portfolio.pdf',
+      fileName: staticNames.portfolio,
+      desc:     'Detailed design project documentation and visuals.'
     },
     research: {
-      title: 'Research Document',
-      file: 'Aliyar_Research_Document.pdf',
-      desc: 'Research projects, publications, and academic work overview.'
+      title:    'Research Document',
+      file:     state.researchUrl || 'assets/Aliyar_Research_Document.pdf',
+      fileName: staticNames.research,
+      desc:     'Research projects, publications, and academic work overview.'
     }
   };
   const doc = docs[docType];
@@ -616,13 +665,13 @@ function renderDocViewer(root, docType){
     el('h1',{}, doc.title),
     el('p',{}, doc.desc),
     el('div',{class:'cta-row'},
-      el('a',{class:'btn primary',href:`assets/${doc.file}`, target:'_blank', rel:'noreferrer'},'Open in New Tab'),
-      el('a',{class:'btn',href:`assets/${doc.file}`, download:doc.file},'Download PDF'),
+      el('a',{class:'btn primary',href:doc.file, target:'_blank', rel:'noreferrer'},'Open in New Tab'),
+      el('a',{class:'btn',href:doc.file, download:doc.fileName},'Download PDF'),
       el('a',{class:'btn',href:'#/docs'},'← Back to Download Centre')
     ),
     el('hr',{class:'sep'}),
     el('iframe',{
-      src:`assets/${doc.file}`,
+      src:doc.file,
       style:'width:100%; height:78vh; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(0,0,0,.2)'
     })
   ));

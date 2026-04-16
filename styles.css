@@ -1437,3 +1437,17 @@ li{margin:6px 0; color:rgba(234,240,246,.92); line-height:1.45}
     opacity: 0.95;
   }
 }
+
+
+/* Admin gear link in nav — subtle, small */
+.admin-link {
+  font-size: 15px;
+  padding: 6px 10px;
+  opacity: 0.45;
+  color: var(--muted);
+}
+.admin-link:hover {
+  opacity: 1;
+  color: var(--accent);
+  border-color: rgba(94,234,212,.4);
+}
