@@ -139,6 +139,13 @@ function el(tag, attrs={}, ...children){
   return node;
 }
 
+// Returns a valid image src — handles full Supabase URLs and local asset paths
+function imgSrc(img) {
+  if (!img) return 'assets/projects_p1.png';
+  if (typeof img === 'string' && (img.startsWith('http') || img.startsWith('/') || img.startsWith('blob:'))) return img;
+  return `assets/${img}`;
+}
+
 function getRoute(){
   const hash = location.hash || '#/';
   const parts = hash.replace(/^#\//,'').split('/').filter(Boolean);
@@ -157,7 +164,7 @@ function setActiveNav(){
 function projectCard(p){
   return el('a', {class:'card proj proj-dense', href:`#/project/${p.id}`},
     el('div',{class:'thumb'},
-      el('img',{src:`assets/${p.images?.[0] || 'projects_p1.png'}`, alt:p.title})
+      el('img',{src:imgSrc(p.images?.[0]), alt:p.title})
     ),
     el('div',{class:'proj-body'},
       el('div',{class:'proj-header'},
@@ -338,7 +345,7 @@ function renderList(root, category){
   root.appendChild(el('div',{class:'showcase-grid'}, ...items.map(p => {
     return el('div',{class:'showcase-card card'},
       el('div',{class:'showcase-thumb'},
-        el('img',{src:`assets/${p.images?.[0] || 'projects_p1.png'}`, alt:p.title})
+        el('img',{src:imgSrc(p.images?.[0]), alt:p.title})
       ),
       el('div',{class:'showcase-content'},
         el('div',{class:'showcase-header'},
@@ -378,7 +385,7 @@ function createGallery(projectId, images) {
   // Main image container
   const mainImage = el('img', {
     class: 'gallery-image',
-    src: `assets/${images[state.currentIndex]}`,
+    src: imgSrc(images[state.currentIndex]),
     alt: 'Project image'
   });
   
@@ -407,7 +414,7 @@ function createGallery(projectId, images) {
   const thumbnails = images.map((img, idx) => {
     return el('img', {
       class: idx === state.currentIndex ? 'thumb active' : 'thumb',
-      src: `assets/${img}`,
+      src: imgSrc(img),
       alt: `Thumbnail ${idx + 1}`,
       'data-index': idx,
       onclick: (e) => {
@@ -424,7 +431,7 @@ function createGallery(projectId, images) {
   
   // Update function
   function updateGallery() {
-    mainImage.src = `assets/${images[state.currentIndex]}`;
+    mainImage.src = imgSrc(images[state.currentIndex]);
     thumbnails.forEach((thumb, idx) => {
       thumb.className = idx === state.currentIndex ? 'thumb active' : 'thumb';
     });
@@ -817,7 +824,7 @@ function renderPublications(root) {
         el('h3', {}, `[${pub.id}] ${pub.title}`),
         el('p', {class: 'pub-authors'}, pub.authors),
         el('p', {class: 'pub-journal'}, pub.journal),
-        el('p', {class: 'pub-status'}, `Status: ${pub.statusText || 'Manuscript Under Review'}`)
+        el('p', {class: 'pub-status'}, `Status: ${pub.status_text || pub.statusText || 'Manuscript Under Review'}`)
       ));
     });
   }

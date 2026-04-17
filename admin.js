@@ -374,6 +374,74 @@ function buildUploadSection({ title, desc, storagePath, fileType, currentUrl, on
   return el('div', { class: 'upload-block' }, ...children);
 }
 
+// ── Image manager (multi-image upload/remove) ──────────────────
+
+function buildImageManager(storagePrefix, initialImages, onChange) {
+  let images = Array.isArray(initialImages) ? [...initialImages] : [];
+
+  const grid      = el('div', { class: 'image-manager-grid' });
+  const statusEl  = el('span', { class: 'img-mgr-status admin-muted' });
+  const fileInput = el('input', { type: 'file', accept: 'image/png,image/jpeg,image/webp', style: 'display:none' });
+  const addBtn    = el('button', { class: 'admin-btn admin-btn-xs', type: 'button' }, '+ Add Image');
+
+  function renderGrid() {
+    grid.innerHTML = '';
+    images.forEach((img, idx) => {
+      const src = (typeof img === 'string' && (img.startsWith('http') || img.startsWith('blob:')))
+        ? img : `assets/${img}`;
+      const removeBtn = el('button', {
+        class: 'admin-btn danger admin-btn-xs img-remove-btn',
+        type: 'button',
+        title: 'Remove image'
+      }, '✕');
+      removeBtn.addEventListener('click', () => {
+        images.splice(idx, 1);
+        onChange([...images]);
+        renderGrid();
+      });
+      grid.appendChild(el('div', { class: 'image-manager-thumb' },
+        el('img', { src, alt: `Image ${idx + 1}` }),
+        removeBtn
+      ));
+    });
+  }
+
+  addBtn.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    const err = validateFile(file, 'image');
+    if (err) { statusEl.textContent = err; return; }
+    addBtn.disabled = true;
+    statusEl.textContent = 'Uploading…';
+    try {
+      const ext  = (file.name.split('.').pop() || 'jpg').replace(/[^a-z0-9]/gi, '');
+      const path = `${storagePrefix}/${Date.now()}.${ext}`;
+      const url  = await uploadFile(path, file);
+      images.push(url);
+      onChange([...images]);
+      statusEl.textContent = '';
+      fileInput.value = '';
+      renderGrid();
+    } catch (e) {
+      statusEl.textContent = 'Error: ' + e.message;
+    } finally {
+      addBtn.disabled = false;
+    }
+  });
+
+  renderGrid();
+
+  return el('div', { class: 'admin-field g-span-full' },
+    el('label', {}, 'Images'),
+    el('div', { class: 'image-manager' },
+      grid,
+      el('div', { class: 'image-manager-add' }, addBtn, fileInput, statusEl)
+    )
+  );
+}
+
 // ── Panel: Profile ─────────────────────────────────────────────
 
 function buildProfilePanel(profile) {
@@ -542,6 +610,7 @@ function buildPublicationsPanel(pubs) {
       ['under-review',   'Under Review'],
       ['in-preparation', 'In Preparation']
     ], pub?.status || 'in-preparation');
+    const statusTextIn = inp('text', pub?.status_text || pub?.statusText || '', 'e.g. Under review at Composite Structures');
     const doiIn     = inp('text', pub?.doi  || '', 'DOI (e.g. 10.4028/p-xxxxx)');
     const linkIn    = inp('url',  pub?.link || '', 'Full URL to paper');
     const saveBtn   = el('button', { class: 'admin-btn primary admin-btn-xs', type: 'button' }, '💾 Save');
@@ -553,6 +622,7 @@ function buildPublicationsPanel(pubs) {
       const data = {
         title, authors: authIn.value.trim(), journal: journalIn.value.trim(),
         year: yearIn.value.trim(), status: statusIn.value,
+        status_text: statusTextIn.value.trim(),
         doi: doiIn.value.trim(), link: linkIn.value.trim()
       };
       setButtonLoading(saveBtn, true, '💾 Save');
@@ -574,6 +644,7 @@ function buildPublicationsPanel(pubs) {
         fld('Journal / Conference', journalIn),
         fld('Year', yearIn),
         fld('Status', statusIn),
+        fld('Status Details', statusTextIn, true),
         fld('DOI', doiIn),
         fld('Paper URL', linkIn, true)
       ),
@@ -612,6 +683,14 @@ function buildExperiencePanel(experiences) {
     const descIn   = txta(exp?.description || '', 3, 'Brief role description…');
     const respIn   = txta(linesJoin(exp?.responsibilities), 4, 'One responsibility per line');
     const skillsIn = txta(linesJoin(exp?.skills), 3, 'One skill per line');
+
+    let imgList = [...(exp?.images || [])];
+    const imgMgrEl = buildImageManager(
+      `experience/${exp?.id || ('new-' + Date.now())}`,
+      imgList,
+      (updated) => { imgList = updated; }
+    );
+
     const saveBtn   = el('button', { class: 'admin-btn primary admin-btn-xs', type: 'button' }, '💾 Save');
     const cancelBtn = el('button', { class: 'admin-btn admin-btn-xs', type: 'button' }, 'Cancel');
 
@@ -622,7 +701,8 @@ function buildExperiencePanel(experiences) {
       const data = {
         id, title, company: compIn.value.trim(), location: locIn.value.trim(),
         duration: durIn.value.trim(), description: descIn.value.trim(),
-        responsibilities: parseLines(respIn.value), skills: parseLines(skillsIn.value)
+        responsibilities: parseLines(respIn.value), skills: parseLines(skillsIn.value),
+        images: imgList
       };
       setButtonLoading(saveBtn, true, '💾 Save');
       hideAlert(al);
@@ -642,7 +722,8 @@ function buildExperiencePanel(experiences) {
         fld('Duration', durIn, true),
         fld('Description', descIn, true),
         fld('Responsibilities (one per line)', respIn, true),
-        fld('Skills (one per line)', skillsIn, true)
+        fld('Skills (one per line)', skillsIn, true),
+        imgMgrEl
       ),
       al,
       el('div', { class: 'crud-form-actions' }, saveBtn, cancelBtn)
@@ -677,6 +758,14 @@ function buildAwardsPanel(awards) {
     const orgIn   = inp('text', award?.organization || '', 'Awarding organization');
     const yearIn  = inp('text', award?.year || '', 'Year(s), e.g. 2023 & 2024');
     const descIn  = txta(award?.description || '', 3, 'Brief description…');
+
+    let imgList = [...(award?.images || [])];
+    const imgMgrEl = buildImageManager(
+      `awards/${award?.id || ('new-' + Date.now())}`,
+      imgList,
+      (updated) => { imgList = updated; }
+    );
+
     const saveBtn   = el('button', { class: 'admin-btn primary admin-btn-xs', type: 'button' }, '💾 Save');
     const cancelBtn = el('button', { class: 'admin-btn admin-btn-xs', type: 'button' }, 'Cancel');
 
@@ -687,7 +776,8 @@ function buildAwardsPanel(awards) {
       const data = {
         id, title, category: catIn.value,
         organization: orgIn.value.trim(), year: yearIn.value.trim(),
-        description: descIn.value.trim()
+        description: descIn.value.trim(),
+        images: imgList
       };
       setButtonLoading(saveBtn, true, '💾 Save');
       hideAlert(al);
@@ -705,7 +795,8 @@ function buildAwardsPanel(awards) {
         fld('Category', catIn),
         fld('Year', yearIn),
         fld('Organization', orgIn, true),
-        fld('Description', descIn, true)
+        fld('Description', descIn, true),
+        imgMgrEl
       ),
       al,
       el('div', { class: 'crud-form-actions' }, saveBtn, cancelBtn)
@@ -807,6 +898,14 @@ function buildProjectsPanel(projects, category) {
     const phdIn     = txta(linesJoin(proj?.phdDirection || proj?.phd_direction), 3, 'One future/PhD direction per line');
     const tagsIn    = inp('text', (proj?.tags || []).join(', '), 'Comma-separated tags');
 
+    // Image manager
+    let imgList = [...(proj?.images || [])];
+    const imgMgrEl = buildImageManager(
+      `projects/${proj?.id || ('new-' + Date.now())}`,
+      imgList,
+      (updated) => { imgList = updated; }
+    );
+
     // Research-only fields
     const paperStatusIn = category === 'research'
       ? inp('text', proj?.paperStatus || proj?.paper_status || '', 'Paper status') : null;
@@ -830,7 +929,7 @@ function buildProjectsPanel(projects, category) {
         results: parseLines(resultsIn.value),
         phd_direction: parseLines(phdIn.value),
         tags:   tagsIn.value.split(',').map(s => s.trim()).filter(Boolean),
-        images: proj?.images || []
+        images: imgList
       };
       if (category === 'research') {
         data.paper_status = paperStatusIn.value.trim();
@@ -858,7 +957,8 @@ function buildProjectsPanel(projects, category) {
       fld('Results (one per line)', resultsIn, true),
       fld('PhD / Future Directions (one per line)', phdIn, true),
       fld('Tags (comma-separated)', tagsIn, true),
-      ...(category === 'research' ? [fld('Paper Status', paperStatusIn), fld('Paper URL', paperLinkIn, false)] : [])
+      ...(category === 'research' ? [fld('Paper Status', paperStatusIn), fld('Paper URL', paperLinkIn, false)] : []),
+      imgMgrEl
     ];
 
     return el('div', { class: 'crud-item-form' },
