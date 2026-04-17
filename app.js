@@ -69,9 +69,9 @@ async function loadSupabaseOverrides(){
       contentRes.value.data.forEach(row => {
         if (!row.data) return;
         if (row.section_key === 'contact') {
-          if (row.data.email)    state.data.links.email    = row.data.email;
-          if (row.data.linkedin) state.data.links.linkedin = row.data.linkedin;
-          if (row.data.phone)    state.profilePhone        = row.data.phone;
+          if (row.data.email    && state.data?.links) state.data.links.email    = row.data.email;
+          if (row.data.linkedin && state.data?.links) state.data.links.linkedin = row.data.linkedin;
+          if (row.data.phone)    state.profilePhone = row.data.phone;
         }
         if (row.section_key === 'welcome' && row.data.text) {
           state.welcomeText = row.data.text;

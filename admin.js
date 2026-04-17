@@ -274,6 +274,7 @@ function buildUploadSection({ title, desc, storagePath, fileType, currentUrl, on
 
   const fileInput = el('input', { type: 'file', accept: acceptAttr });
   const previewEl = el('div', { class: 'upload-preview' });
+  let _previewBlobUrl = null;
 
   fileInput.addEventListener('change', () => {
     const file = fileInput.files[0];
@@ -281,14 +282,19 @@ function buildUploadSection({ title, desc, storagePath, fileType, currentUrl, on
     const err = validateFile(file, fileType);
     if (err) { showAlert(alertEl, err, 'error'); fileInput.value = ''; previewEl.className = 'upload-preview'; return; }
     hideAlert(alertEl);
+    // Revoke previous blob URL to free memory
+    if (_previewBlobUrl) { URL.revokeObjectURL(_previewBlobUrl); _previewBlobUrl = null; }
     previewEl.innerHTML = '';
     previewEl.className = 'upload-preview show';
     if (isImage) {
-      // URL.createObjectURL returns a safe blob: URL — no XSS risk
       const blobUrl = URL.createObjectURL(file);
-      const img = el('img', { class: 'preview-img', alt: 'Preview' });
-      img.setAttribute('src', blobUrl);
-      previewEl.appendChild(img);
+      // createObjectURL always returns a blob: URL; validate before assigning to src
+      if (typeof blobUrl === 'string' && blobUrl.startsWith('blob:')) {
+        _previewBlobUrl = blobUrl;
+        const img = el('img', { class: 'preview-img', alt: 'Preview' });
+        img.src = blobUrl;
+        previewEl.appendChild(img);
+      }
     } else {
       previewEl.appendChild(el('div', { class: 'preview-file-info' },
         el('span', { class: 'preview-file-icon' }, '📄'),
