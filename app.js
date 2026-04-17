@@ -6,9 +6,11 @@ const state = {
   profilePhotoUrl: null,
   profileName:     null,
   profileTitle:    null,
+  profilePhone:    null,
   cvUrl:           null,
   portfolioUrl:    null,
   researchUrl:     null,
+  welcomeText:     null,
 };
 
 async function loadData(){
@@ -24,32 +26,100 @@ async function loadData(){
     state.portfolioData = {education: {}, publications: [], workExperience: [], awards: [], certifications: []};
   }
 
-  // Optionally pull live data from Supabase (profile photo, document URLs)
+  // Optionally pull live data from Supabase (overrides static JSON)
   await loadSupabaseOverrides();
 }
 
 async function loadSupabaseOverrides(){
   if (!window.supabaseClient) return;
   try {
-    const [profileRes, docsRes] = await Promise.all([
+    const results = await Promise.allSettled([
       window.supabaseClient.from('profile').select('*').eq('id', 'main').single(),
       window.supabaseClient.from('documents').select('*'),
+      window.supabaseClient.from('site_content').select('section_key,data'),
+      window.supabaseClient.from('publications').select('*').order('sort_order', {ascending:true}),
+      window.supabaseClient.from('work_experience').select('*').order('sort_order', {ascending:true}),
+      window.supabaseClient.from('awards').select('*').order('sort_order', {ascending:true}),
+      window.supabaseClient.from('certifications').select('*').order('sort_order', {ascending:true}),
+      window.supabaseClient.from('projects').select('*').order('sort_order', {ascending:true}),
     ]);
 
-    if (!profileRes.error && profileRes.data) {
-      const p = profileRes.data;
+    // Profile
+    const profileRes = results[0];
+    if (profileRes.status === 'fulfilled' && !profileRes.value.error && profileRes.value.data) {
+      const p = profileRes.value.data;
       if (p.photo_url) state.profilePhotoUrl = p.photo_url;
       if (p.name)      state.profileName     = p.name;
       if (p.title)     state.profileTitle    = p.title;
     }
 
-    if (!docsRes.error && docsRes.data) {
-      docsRes.data.forEach(d => {
+    // Documents
+    const docsRes = results[1];
+    if (docsRes.status === 'fulfilled' && !docsRes.value.error && docsRes.value.data) {
+      docsRes.value.data.forEach(d => {
         if (d.id === 'cv'        && d.file_url) state.cvUrl        = d.file_url;
         if (d.id === 'portfolio' && d.file_url) state.portfolioUrl = d.file_url;
         if (d.id === 'research'  && d.file_url) state.researchUrl  = d.file_url;
       });
     }
+
+    // site_content sections
+    const contentRes = results[2];
+    if (contentRes.status === 'fulfilled' && !contentRes.value.error && contentRes.value.data) {
+      contentRes.value.data.forEach(row => {
+        if (!row.data) return;
+        if (row.section_key === 'contact') {
+          if (row.data.email)    state.data.links.email    = row.data.email;
+          if (row.data.linkedin) state.data.links.linkedin = row.data.linkedin;
+          if (row.data.phone)    state.profilePhone        = row.data.phone;
+        }
+        if (row.section_key === 'welcome' && row.data.text) {
+          state.welcomeText = row.data.text;
+        }
+        if (row.section_key === 'education') {
+          state.portfolioData.education = row.data;
+        }
+      });
+    }
+
+    // Publications
+    const pubsRes = results[3];
+    if (pubsRes.status === 'fulfilled' && !pubsRes.value.error && pubsRes.value.data && pubsRes.value.data.length > 0) {
+      state.portfolioData.publications = pubsRes.value.data;
+    }
+
+    // Work Experience
+    const expRes = results[4];
+    if (expRes.status === 'fulfilled' && !expRes.value.error && expRes.value.data && expRes.value.data.length > 0) {
+      state.portfolioData.workExperience = expRes.value.data;
+    }
+
+    // Awards
+    const awardsRes = results[5];
+    if (awardsRes.status === 'fulfilled' && !awardsRes.value.error && awardsRes.value.data && awardsRes.value.data.length > 0) {
+      state.portfolioData.awards = awardsRes.value.data;
+    }
+
+    // Certifications
+    const certsRes = results[6];
+    if (certsRes.status === 'fulfilled' && !certsRes.value.error && certsRes.value.data && certsRes.value.data.length > 0) {
+      state.portfolioData.certifications = certsRes.value.data.map(c => ({
+        ...c,
+        credentialLink: c.credential_link || c.credentialLink || ''
+      }));
+    }
+
+    // Projects (replace static JSON projects when Supabase has data)
+    const projRes = results[7];
+    if (projRes.status === 'fulfilled' && !projRes.value.error && projRes.value.data && projRes.value.data.length > 0) {
+      state.data.projects = projRes.value.data.map(p => ({
+        ...p,
+        phdDirection: p.phd_direction || p.phdDirection || [],
+        paperStatus:  p.paper_status  || p.paperStatus  || '',
+        paperLink:    p.paper_link    || p.paperLink    || '',
+      }));
+    }
+
   } catch(e) {
     console.warn('[Supabase] Failed to load overrides:', e.message);
   }
@@ -136,7 +206,7 @@ function renderHome(root){
           ),
           el('div', {class: 'contact-item'},
             el('span', {class: 'contact-icon'}, '📱'),
-            el('span', {class: 'contact-text'}, '(+92) 335-9926750')
+            el('span', {class: 'contact-text'}, state.profilePhone || '(+92) 335-9926750')
           ),
           el('div', {class: 'contact-item'},
             el('span', {class: 'contact-icon'}, '🔗'),
@@ -153,10 +223,9 @@ function renderHome(root){
   );
 
   // Welcome text
+  const defaultWelcome = 'Welcome! I am a Mechanical Design and Simulation Engineer with expertise in EV battery systems, CAE (FEA/CFD), composite materials, and multi-physics modeling. Currently pursuing advanced research in structural mechanics, sustainable energy systems, and computational methods. I hold a Bachelor\'s in Mechanical Engineering from NUST and have industry experience with Ohmitron Inc. (USA) working on high-voltage EV systems and power electronics.';
   const welcomeSection = el('div', {class: 'welcome-section card pad'},
-    el('p', {class: 'welcome-text'},
-      'Welcome! I am a Mechanical Design and Simulation Engineer with expertise in EV battery systems, CAE (FEA/CFD), composite materials, and multi-physics modeling. Currently pursuing advanced research in structural mechanics, sustainable energy systems, and computational methods. I hold a Bachelor\'s in Mechanical Engineering from NUST and have industry experience with Ohmitron Inc. (USA) working on high-voltage EV systems and power electronics.'
-    ),
+    el('p', {class: 'welcome-text'}, state.welcomeText || defaultWelcome),
     el('div', {class: 'scroll-button-wrapper'},
       el('button', {
         class: 'btn primary scroll-to-highlights',
