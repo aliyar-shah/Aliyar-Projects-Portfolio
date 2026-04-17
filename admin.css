@@ -405,6 +405,19 @@ textarea.admin-input  { min-height: 64px; }
   font-size: 11px;
 }
 
+/* ── Seed / Import panel ──────────────────────────────────── */
+.seed-counts {
+  margin: 12px 0 16px;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.json-fallback-banner {
+  margin-bottom: 12px;
+}
+
 /* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 768px) {
   .admin-layout {

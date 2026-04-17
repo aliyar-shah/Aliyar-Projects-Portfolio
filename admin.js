@@ -1094,6 +1094,141 @@ function renderNotConfigured(root) {
   );
 }
 
+// ── Static JSON fallback ───────────────────────────────────────
+
+async function loadStaticFallback() {
+  try {
+    const [projRes, dataRes] = await Promise.allSettled([
+      fetch('content/projects.json').then(r => r.json()),
+      fetch('content/data.json').then(r => r.json()),
+    ]);
+    const projects = projRes.status === 'fulfilled' ? (projRes.value.projects || []) : [];
+    const data     = dataRes.status === 'fulfilled'  ? dataRes.value : {};
+    return {
+      projects,
+      publications:    data.publications    || [],
+      workExperience:  data.workExperience  || [],
+      awards:          data.awards          || [],
+      certifications:  data.certifications  || [],
+    };
+  } catch(e) {
+    return { projects: [], publications: [], workExperience: [], awards: [], certifications: [] };
+  }
+}
+
+// Seed all static JSON data into Supabase (one-time import)
+async function seedAllToSupabase(staticData) {
+  const errors = [];
+
+  // Publications — BIGSERIAL id, so always insert (with sort_order for ordering)
+  for (let i = 0; i < staticData.publications.length; i++) {
+    const p = staticData.publications[i];
+    try {
+      await window.supabaseClient.from('publications')
+        .insert({
+          sort_order:  i,
+          title:       p.title       || '',
+          authors:     p.authors     || '',
+          journal:     p.journal     || '',
+          year:        p.year        || '',
+          status:      p.status      || 'in-preparation',
+          status_text: p.statusText  || p.status_text || '',
+          doi:         p.doi         || '',
+          link:        p.link        || '',
+          updated_at:  new Date().toISOString(),
+        });
+    } catch(e) { errors.push('Publication: ' + (p.title || '') + ' — ' + e.message); }
+  }
+
+  // Work Experience — TEXT id, safe to upsert
+  for (let i = 0; i < staticData.workExperience.length; i++) {
+    const e = staticData.workExperience[i];
+    try {
+      await upsertRow('work_experience', { ...e, sort_order: i });
+    } catch(err) { errors.push('Experience: ' + (e.id || '') + ' — ' + err.message); }
+  }
+
+  // Awards — TEXT id, safe to upsert
+  for (let i = 0; i < staticData.awards.length; i++) {
+    const a = staticData.awards[i];
+    try {
+      await upsertRow('awards', { ...a, sort_order: i });
+    } catch(err) { errors.push('Award: ' + (a.id || '') + ' — ' + err.message); }
+  }
+
+  // Certifications — TEXT id, safe to upsert
+  for (let i = 0; i < staticData.certifications.length; i++) {
+    const c = staticData.certifications[i];
+    try {
+      await upsertRow('certifications', {
+        ...c,
+        sort_order:      i,
+        credential_link: c.credentialLink || c.credential_link || '',
+      });
+    } catch(err) { errors.push('Cert: ' + (c.id || '') + ' — ' + err.message); }
+  }
+
+  // Projects — TEXT id, safe to upsert
+  for (let i = 0; i < staticData.projects.length; i++) {
+    const p = staticData.projects[i];
+    try {
+      await upsertRow('projects', {
+        ...p,
+        sort_order:    i,
+        phd_direction: p.phdDirection  || p.phd_direction  || [],
+        paper_status:  p.paperStatus   || p.paper_status   || '',
+        paper_link:    p.paperLink     || p.paper_link     || '',
+      });
+    } catch(err) { errors.push('Project: ' + (p.id || '') + ' — ' + err.message); }
+  }
+
+  return errors;
+}
+
+// ── Panel: Import / Seed ───────────────────────────────────────
+
+function buildSeedPanel(staticData, onImported) {
+  const al     = el('div', { class: 'admin-alert' });
+  const counts = el('ul', { class: 'seed-counts' },
+    el('li', {}, `📄 Publications: ${staticData.publications.length}`),
+    el('li', {}, `💼 Work Experience: ${staticData.workExperience.length}`),
+    el('li', {}, `🏆 Awards: ${staticData.awards.length}`),
+    el('li', {}, `📜 Certifications: ${staticData.certifications.length}`),
+    el('li', {}, `⚙️ / 🔬 Projects: ${staticData.projects.length}`)
+  );
+  const importBtn = el('button', { class: 'admin-btn primary', type: 'button' }, '📥 Import all JSON data to Supabase');
+
+  importBtn.addEventListener('click', async () => {
+    if (!confirm('This will import all items from the static JSON files into Supabase. Already-existing items (by id) will be updated. Publications will be inserted fresh. Continue?')) return;
+    setButtonLoading(importBtn, true, '📥 Import all JSON data to Supabase');
+    hideAlert(al);
+    try {
+      const errors = await seedAllToSupabase(staticData);
+      if (errors.length === 0) {
+        showAlert(al, '✅ All data imported successfully! Reload the page to see the items in their panels.', 'success');
+        if (onImported) onImported();
+      } else {
+        showAlert(al, `⚠️ Imported with ${errors.length} error(s): ${errors.slice(0, 3).join('; ')}`, 'error');
+      }
+    } catch(e) {
+      showAlert(al, `Error: ${e.message}`, 'error');
+    } finally {
+      setButtonLoading(importBtn, false, '📥 Import all JSON data to Supabase');
+    }
+  });
+
+  return el('div', { class: 'section-panel' },
+    el('div', { class: 'admin-section card' },
+      el('h2', {}, '📥 Import / Seed Data'),
+      el('p', { class: 'admin-muted' }, 'Your portfolio data is stored in static JSON files. Use this panel to import that data into Supabase so it can be edited from the admin dashboard.'),
+      el('p', { class: 'admin-muted' }, 'This is safe to run more than once — projects, experience, awards and certifications are upserted by id. Publications are always inserted fresh (avoid double-clicking).'),
+      counts,
+      al,
+      importBtn
+    )
+  );
+}
+
 // ── Dashboard ──────────────────────────────────────────────────
 
 async function renderDashboard(root) {
@@ -1138,11 +1273,81 @@ async function renderDashboard(root) {
     researchProjects = all.filter(p => p.category === 'research');
   }
 
+  // ── Static JSON fallback ───────────────────────────────────
+  // When Supabase tables are empty, load from static JSON so existing content
+  // is visible and editable in the admin. Saving any item upserts it to Supabase.
+  let staticData = null;
+  const needsFallback = pubs.length === 0 || expList.length === 0 ||
+    awardList.length === 0 || certList.length === 0 ||
+    (designProjects.length === 0 && researchProjects.length === 0);
+
+  if (needsFallback) {
+    staticData = await loadStaticFallback();
+
+    // Publications — clear numeric id so saves use insertRow (BIGSERIAL table)
+    if (pubs.length === 0) {
+      pubs = staticData.publications.map((p, i) => ({
+        ...p,
+        id:          null,
+        sort_order:  i,
+        status_text: p.statusText || p.status_text || '',
+      }));
+    }
+
+    // Work Experience — keep text id; upsertRow is idempotent
+    if (expList.length === 0) {
+      expList = staticData.workExperience.map((e, i) => ({ ...e, sort_order: i }));
+    }
+
+    // Awards
+    if (awardList.length === 0) {
+      awardList = staticData.awards.map((a, i) => ({ ...a, sort_order: i }));
+    }
+
+    // Certifications — normalise credentialLink → credential_link
+    if (certList.length === 0) {
+      certList = staticData.certifications.map((c, i) => ({
+        ...c,
+        sort_order:      i,
+        credential_link: c.credentialLink || c.credential_link || '',
+      }));
+    }
+
+    // Projects — normalise camelCase fields
+    if (designProjects.length === 0 && researchProjects.length === 0) {
+      const allProjects = staticData.projects.map((p, i) => ({
+        ...p,
+        sort_order:    i,
+        phd_direction: p.phdDirection  || p.phd_direction  || [],
+        paper_status:  p.paperStatus   || p.paper_status   || '',
+        paper_link:    p.paperLink     || p.paper_link     || '',
+      }));
+      designProjects   = allProjects.filter(p => p.category === 'design');
+      researchProjects = allProjects.filter(p => p.category === 'research');
+    }
+  }
+
   const docMap    = {};
   documents.forEach(d => { docMap[d.id] = d; });
   const cv        = docMap['cv']        || { id: 'cv',        title: 'Curriculum Vitae',          subtitle: '', file_url: null };
   const portfolio = docMap['portfolio'] || { id: 'portfolio', title: 'Design Projects Portfolio',  subtitle: '', file_url: null };
   const research  = docMap['research']  || { id: 'research',  title: 'Research & Publications',    subtitle: '', file_url: null };
+
+  // Helper: info banner shown when a panel is loaded from static JSON fallback
+  function jsonFallbackBanner(panelName) {
+    return el('div', { class: 'admin-alert show info json-fallback-banner' },
+      `ℹ️ ${panelName} loaded from static JSON (Supabase table is empty). ` +
+      'Save any item to persist it to Supabase, or use the "📥 Import Data" panel to import everything at once.'
+    );
+  }
+
+  function wrapWithBanner(panelEl, panelName) {
+    if (!needsFallback) return panelEl;
+    const wrap = el('div', {});
+    wrap.appendChild(jsonFallbackBanner(panelName));
+    wrap.appendChild(panelEl);
+    return wrap;
+  }
 
   // Build sidebar nav
   const navItems = [
@@ -1151,15 +1356,16 @@ async function renderDashboard(root) {
     { id: 'home',         icon: '🏠', label: 'Home Page',         panel: () => buildHomePanel(welcome) },
     { id: 'education',    icon: '🎓', label: 'Education',         panel: () => buildEducationPanel(education) },
     null, // divider
-    { id: 'publications', icon: '📄', label: 'Publications',      panel: () => buildPublicationsPanel(pubs) },
-    { id: 'experience',   icon: '💼', label: 'Experience',        panel: () => buildExperiencePanel(expList) },
-    { id: 'awards',       icon: '🏆', label: 'Awards',            panel: () => buildAwardsPanel(awardList) },
-    { id: 'certs',        icon: '📜', label: 'Certifications',    panel: () => buildCertificationsPanel(certList) },
+    { id: 'publications', icon: '📄', label: 'Publications',      panel: () => wrapWithBanner(buildPublicationsPanel(pubs), 'Publications') },
+    { id: 'experience',   icon: '💼', label: 'Experience',        panel: () => wrapWithBanner(buildExperiencePanel(expList), 'Work Experience') },
+    { id: 'awards',       icon: '🏆', label: 'Awards',            panel: () => wrapWithBanner(buildAwardsPanel(awardList), 'Awards') },
+    { id: 'certs',        icon: '📜', label: 'Certifications',    panel: () => wrapWithBanner(buildCertificationsPanel(certList), 'Certifications') },
     null, // divider
-    { id: 'design',       icon: '⚙️', label: 'Design Projects',  panel: () => buildProjectsPanel(designProjects, 'design') },
-    { id: 'research',     icon: '🔬', label: 'Research Projects', panel: () => buildProjectsPanel(researchProjects, 'research') },
+    { id: 'design',       icon: '⚙️', label: 'Design Projects',  panel: () => wrapWithBanner(buildProjectsPanel(designProjects, 'design'), 'Design Projects') },
+    { id: 'research',     icon: '🔬', label: 'Research Projects', panel: () => wrapWithBanner(buildProjectsPanel(researchProjects, 'research'), 'Research Projects') },
     null, // divider
     { id: 'documents',    icon: '📁', label: 'Documents / PDFs',  panel: () => buildDocumentsPanel(cv, portfolio, research) },
+    ...(staticData ? [null, { id: 'seed', icon: '📥', label: 'Import Data', panel: () => buildSeedPanel(staticData, () => { root.innerHTML = ''; renderDashboard(root); }) }] : []),
   ];
 
   const sidebar = el('nav', { class: 'admin-sidebar' });
@@ -1191,13 +1397,17 @@ async function renderDashboard(root) {
   root.appendChild(
     el('div', { class: 'admin-header-bar' },
       el('h1', {}, '⚙️ Admin Dashboard'),
-      el('p', { class: 'admin-muted' }, 'All changes go live on the public site immediately.')
+      el('p', { class: 'admin-muted' },
+        staticData
+          ? 'Some data is loaded from static JSON — click "📥 Import Data" in the sidebar to persist everything to Supabase.'
+          : 'All changes go live on the public site immediately.'
+      )
     )
   );
   root.appendChild(layout);
 
-  // Activate Profile tab by default
-  switchPanel('profile');
+  // If data came from JSON fallback, open the Import panel first so the user sees the prompt
+  switchPanel(staticData ? 'seed' : 'profile');
 }
 
 // ── Entry point ────────────────────────────────────────────────
