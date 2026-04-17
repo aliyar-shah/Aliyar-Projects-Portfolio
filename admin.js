@@ -292,13 +292,17 @@ function buildUploadSection({ title, desc, storagePath, fileType, currentUrl, on
       if (typeof blobUrl === 'string' && blobUrl.startsWith('blob:')) {
         _previewBlobUrl = blobUrl;
         const img = el('img', { class: 'preview-img', alt: 'Preview' });
-        img.src = blobUrl;
+        img.setAttribute('src', blobUrl);
         previewEl.appendChild(img);
       }
     } else {
+      // file.name is safe to use as text content (createTextNode handles escaping)
+      const nameText = document.createTextNode(`${file.name} — ${formatBytes(file.size)}`);
+      const nameSpan = el('span', {});
+      nameSpan.appendChild(nameText);
       previewEl.appendChild(el('div', { class: 'preview-file-info' },
         el('span', { class: 'preview-file-icon' }, '📄'),
-        el('span', {}, `${file.name} — ${formatBytes(file.size)}`)
+        nameSpan
       ));
     }
   });
