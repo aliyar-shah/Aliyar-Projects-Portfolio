@@ -44,6 +44,11 @@ ALTER TABLE public.profile   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.documents ENABLE ROW LEVEL SECURITY;
 
 -- Public can read both tables
+DROP POLICY IF EXISTS "Public read profile"    ON public.profile;
+DROP POLICY IF EXISTS "Auth write profile"     ON public.profile;
+DROP POLICY IF EXISTS "Public read documents"  ON public.documents;
+DROP POLICY IF EXISTS "Auth write documents"   ON public.documents;
+
 CREATE POLICY "Public read profile"
   ON public.profile FOR SELECT USING (true);
 
@@ -78,6 +83,8 @@ INSERT INTO public.site_content (section_key, data) VALUES
 ON CONFLICT (section_key) DO NOTHING;
 
 ALTER TABLE public.site_content ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read site_content" ON public.site_content;
+DROP POLICY IF EXISTS "Auth write site_content"  ON public.site_content;
 CREATE POLICY "Public read site_content"
   ON public.site_content FOR SELECT USING (true);
 CREATE POLICY "Auth write site_content"
@@ -102,6 +109,8 @@ CREATE TABLE IF NOT EXISTS public.publications (
 );
 
 ALTER TABLE public.publications ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read publications" ON public.publications;
+DROP POLICY IF EXISTS "Auth write publications"  ON public.publications;
 CREATE POLICY "Public read publications"
   ON public.publications FOR SELECT USING (true);
 CREATE POLICY "Auth write publications"
@@ -126,6 +135,8 @@ CREATE TABLE IF NOT EXISTS public.work_experience (
 );
 
 ALTER TABLE public.work_experience ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read work_experience" ON public.work_experience;
+DROP POLICY IF EXISTS "Auth write work_experience"  ON public.work_experience;
 CREATE POLICY "Public read work_experience"
   ON public.work_experience FOR SELECT USING (true);
 CREATE POLICY "Auth write work_experience"
@@ -148,6 +159,8 @@ CREATE TABLE IF NOT EXISTS public.awards (
 );
 
 ALTER TABLE public.awards ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read awards" ON public.awards;
+DROP POLICY IF EXISTS "Auth write awards"  ON public.awards;
 CREATE POLICY "Public read awards"
   ON public.awards FOR SELECT USING (true);
 CREATE POLICY "Auth write awards"
@@ -168,6 +181,8 @@ CREATE TABLE IF NOT EXISTS public.certifications (
 );
 
 ALTER TABLE public.certifications ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read certifications" ON public.certifications;
+DROP POLICY IF EXISTS "Auth write certifications"  ON public.certifications;
 CREATE POLICY "Public read certifications"
   ON public.certifications FOR SELECT USING (true);
 CREATE POLICY "Auth write certifications"
@@ -199,6 +214,8 @@ CREATE TABLE IF NOT EXISTS public.projects (
 );
 
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public read projects" ON public.projects;
+DROP POLICY IF EXISTS "Auth write projects"  ON public.projects;
 CREATE POLICY "Public read projects"
   ON public.projects FOR SELECT USING (true);
 CREATE POLICY "Auth write projects"
@@ -215,6 +232,11 @@ VALUES ('portfolio-files', 'portfolio-files', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Public read access to all files in the bucket
+DROP POLICY IF EXISTS "Public read portfolio-files"  ON storage.objects;
+DROP POLICY IF EXISTS "Auth upload portfolio-files"  ON storage.objects;
+DROP POLICY IF EXISTS "Auth update portfolio-files"  ON storage.objects;
+DROP POLICY IF EXISTS "Auth delete portfolio-files"  ON storage.objects;
+
 CREATE POLICY "Public read portfolio-files"
   ON storage.objects FOR SELECT
   USING (bucket_id = 'portfolio-files');
