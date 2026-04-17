@@ -416,7 +416,8 @@ function buildImageManager(storagePrefix, initialImages, onChange) {
     addBtn.disabled = true;
     statusEl.textContent = 'Uploading…';
     try {
-      const ext  = (file.name.split('.').pop() || 'jpg').replace(/[^a-z0-9]/gi, '');
+      const mimeToExt = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp' };
+      const ext  = mimeToExt[file.type] || 'jpg';
       const path = `${storagePrefix}/${Date.now()}.${ext}`;
       const url  = await uploadFile(path, file);
       images.push(url);

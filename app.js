@@ -142,7 +142,7 @@ function el(tag, attrs={}, ...children){
 // Returns a valid image src — handles full Supabase URLs and local asset paths
 function imgSrc(img) {
   if (!img) return 'assets/projects_p1.png';
-  if (typeof img === 'string' && (img.startsWith('http') || img.startsWith('/') || img.startsWith('blob:'))) return img;
+  if (typeof img === 'string' && (img.startsWith('https://') || img.startsWith('/') || img.startsWith('blob:'))) return img;
   return `assets/${img}`;
 }
 
