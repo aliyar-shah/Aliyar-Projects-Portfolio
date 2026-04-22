@@ -5,6 +5,7 @@
 - CV embedded + downloadable.
 - Two portfolios (Design / Research) + project detail pages.
 - All assets (PDFs + rendered project pages) inside `/assets`.
+- **Admin dashboard** (`admin.html`) — upload/update your profile photo, CV, and portfolio documents directly from the browser.
 
 ## How to edit / add projects (no complex coding)
 1) Open `content/projects.json`
@@ -20,6 +21,48 @@
 ### Adding images
 - Put PNG/JPG in `/assets`.
 - Update the project's `heroImage` to match the filename.
+
+---
+
+## Admin Dashboard — Direct Upload Setup
+
+The admin dashboard lets you upload your profile photo and documents directly from the browser without touching any files. It uses [Supabase](https://supabase.com) (free tier) for authentication, file storage, and metadata.
+
+### Step 1 — Create a Supabase project
+1. Go to <https://supabase.com> and sign up (free).
+2. Create a new project (choose any region/password).
+3. Wait ~1 minute for the project to be ready.
+
+### Step 2 — Run the database setup
+1. In your Supabase project, go to **SQL Editor → New Query**.
+2. Paste the entire contents of `supabase-setup.sql` and click **Run**.
+3. You should see "Success. No rows returned."
+
+### Step 3 — Fill in your credentials
+1. In Supabase, go to **Project Settings → API**.
+2. Copy your **Project URL** and **anon / public** key.
+3. Open `supabase-config.js` and replace the placeholder values:
+   ```js
+   const SUPABASE_URL      = 'https://xxxxxxxxxxxx.supabase.co';
+   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1Ni...';
+   ```
+
+### Step 4 — Create your admin account
+1. In Supabase, go to **Authentication → Users → Add user**.
+2. Enter your email and a strong password.
+3. Click **Create user**.
+
+### Step 5 — Re-deploy the site
+Push your changes to GitHub. GitHub Pages / Netlify will pick up the updated files automatically.
+
+### Step 6 — Use the dashboard
+1. Open `https://your-site.com/admin.html`.
+2. Sign in with the email/password you created in Step 4.
+3. Upload your profile photo, CV, Portfolio PDF, or Research PDF from the **Profile** and **Documents** tabs.
+
+> **Security note:** The anon key in `supabase-config.js` is safe to commit — Supabase Row-Level Security policies (installed by `supabase-setup.sql`) ensure that only authenticated admin users can write data, while the public can only read it.
+
+---
 
 ## How to host (fast + free)
 ### Option A (recommended): GitHub + Netlify

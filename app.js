@@ -1,5 +1,17 @@
 
-const state = { data: null, portfolioData: null };
+const state = {
+  data: null,
+  portfolioData: null,
+  // Supabase overrides — null means "use static fallback"
+  profilePhotoUrl: null,
+  profileName:     null,
+  profileTitle:    null,
+  profilePhone:    null,
+  cvUrl:           null,
+  portfolioUrl:    null,
+  researchUrl:     null,
+  welcomeText:     null,
+};
 
 async function loadData(){
   const res = await fetch('content/projects.json');
@@ -12,6 +24,104 @@ async function loadData(){
   } catch(e) {
     console.warn('Could not load data.json, using minimal fallbacks');
     state.portfolioData = {education: {}, publications: [], workExperience: [], awards: [], certifications: []};
+  }
+
+  // Optionally pull live data from Supabase (overrides static JSON)
+  await loadSupabaseOverrides();
+}
+
+async function loadSupabaseOverrides(){
+  if (!window.supabaseClient) return;
+  try {
+    const results = await Promise.allSettled([
+      window.supabaseClient.from('profile').select('*').eq('id', 'main').single(),
+      window.supabaseClient.from('documents').select('*'),
+      window.supabaseClient.from('site_content').select('section_key,data'),
+      window.supabaseClient.from('publications').select('*').order('sort_order', {ascending:true}),
+      window.supabaseClient.from('work_experience').select('*').order('sort_order', {ascending:true}),
+      window.supabaseClient.from('awards').select('*').order('sort_order', {ascending:true}),
+      window.supabaseClient.from('certifications').select('*').order('sort_order', {ascending:true}),
+      window.supabaseClient.from('projects').select('*').order('sort_order', {ascending:true}),
+    ]);
+
+    // Profile
+    const profileRes = results[0];
+    if (profileRes.status === 'fulfilled' && !profileRes.value.error && profileRes.value.data) {
+      const p = profileRes.value.data;
+      if (p.photo_url) state.profilePhotoUrl = p.photo_url;
+      if (p.name)      state.profileName     = p.name;
+      if (p.title)     state.profileTitle    = p.title;
+    }
+
+    // Documents
+    const docsRes = results[1];
+    if (docsRes.status === 'fulfilled' && !docsRes.value.error && docsRes.value.data) {
+      docsRes.value.data.forEach(d => {
+        if (d.id === 'cv'        && d.file_url) state.cvUrl        = d.file_url;
+        if (d.id === 'portfolio' && d.file_url) state.portfolioUrl = d.file_url;
+        if (d.id === 'research'  && d.file_url) state.researchUrl  = d.file_url;
+      });
+    }
+
+    // site_content sections
+    const contentRes = results[2];
+    if (contentRes.status === 'fulfilled' && !contentRes.value.error && contentRes.value.data) {
+      contentRes.value.data.forEach(row => {
+        if (!row.data) return;
+        if (row.section_key === 'contact') {
+          if (row.data.email    && state.data?.links) state.data.links.email    = row.data.email;
+          if (row.data.linkedin && state.data?.links) state.data.links.linkedin = row.data.linkedin;
+          if (row.data.phone)    state.profilePhone = row.data.phone;
+        }
+        if (row.section_key === 'welcome' && row.data.text) {
+          state.welcomeText = row.data.text;
+        }
+        if (row.section_key === 'education') {
+          state.portfolioData.education = row.data;
+        }
+      });
+    }
+
+    // Publications
+    const pubsRes = results[3];
+    if (pubsRes.status === 'fulfilled' && !pubsRes.value.error && pubsRes.value.data && pubsRes.value.data.length > 0) {
+      state.portfolioData.publications = pubsRes.value.data;
+    }
+
+    // Work Experience
+    const expRes = results[4];
+    if (expRes.status === 'fulfilled' && !expRes.value.error && expRes.value.data && expRes.value.data.length > 0) {
+      state.portfolioData.workExperience = expRes.value.data;
+    }
+
+    // Awards
+    const awardsRes = results[5];
+    if (awardsRes.status === 'fulfilled' && !awardsRes.value.error && awardsRes.value.data && awardsRes.value.data.length > 0) {
+      state.portfolioData.awards = awardsRes.value.data;
+    }
+
+    // Certifications
+    const certsRes = results[6];
+    if (certsRes.status === 'fulfilled' && !certsRes.value.error && certsRes.value.data && certsRes.value.data.length > 0) {
+      state.portfolioData.certifications = certsRes.value.data.map(c => ({
+        ...c,
+        credentialLink: c.credential_link || c.credentialLink || ''
+      }));
+    }
+
+    // Projects (replace static JSON projects when Supabase has data)
+    const projRes = results[7];
+    if (projRes.status === 'fulfilled' && !projRes.value.error && projRes.value.data && projRes.value.data.length > 0) {
+      state.data.projects = projRes.value.data.map(p => ({
+        ...p,
+        phdDirection: p.phd_direction || p.phdDirection || [],
+        paperStatus:  p.paper_status  || p.paperStatus  || '',
+        paperLink:    p.paper_link    || p.paperLink    || '',
+      }));
+    }
+
+  } catch(e) {
+    console.warn('[Supabase] Failed to load overrides:', e.message);
   }
 }
 
@@ -27,6 +137,13 @@ function el(tag, attrs={}, ...children){
     node.appendChild(typeof ch === 'string' ? document.createTextNode(ch) : ch);
   }
   return node;
+}
+
+// Returns a valid image src — handles full Supabase URLs and local asset paths
+function imgSrc(img) {
+  if (!img) return 'assets/projects_p1.png';
+  if (typeof img === 'string' && (img.startsWith('https://') || img.startsWith('/') || img.startsWith('blob:'))) return img;
+  return `assets/${img}`;
 }
 
 function getRoute(){
@@ -47,7 +164,7 @@ function setActiveNav(){
 function projectCard(p){
   return el('a', {class:'card proj proj-dense', href:`#/project/${p.id}`},
     el('div',{class:'thumb'},
-      el('img',{src:`assets/${p.images?.[0] || 'projects_p1.png'}`, alt:p.title})
+      el('img',{src:imgSrc(p.images?.[0]), alt:p.title})
     ),
     el('div',{class:'proj-body'},
       el('div',{class:'proj-header'},
@@ -74,8 +191,8 @@ function renderHome(root){
       el('div', {class: 'profile-photo-wrapper'},
         el('img', {
           class: 'profile-photo',
-          src: 'assets/profile/profile-photo.png',
-          alt: 'Syed Aliyar Shah',
+          src: state.profilePhotoUrl || 'assets/profile/profile-photo.png',
+          alt: state.profileName || 'Syed Aliyar Shah',
           onerror: function() {
             // Fallback to initials if image not found
             this.style.display = 'none';
@@ -87,8 +204,8 @@ function renderHome(root){
       ),
       // Profile info
       el('div', {class: 'profile-info'},
-        el('h1', {class: 'profile-name'}, 'SYED ALIYAR SHAH'),
-        el('div', {class: 'profile-title'}, 'Mechanical Design & Simulation Engineer'),
+        el('h1', {class: 'profile-name'}, state.profileName  || 'SYED ALIYAR SHAH'),
+        el('div', {class: 'profile-title'}, state.profileTitle || 'Mechanical Design & Simulation Engineer'),
         el('div', {class: 'profile-contact'},
           el('div', {class: 'contact-item'},
             el('span', {class: 'contact-icon'}, '📧'),
@@ -96,7 +213,7 @@ function renderHome(root){
           ),
           el('div', {class: 'contact-item'},
             el('span', {class: 'contact-icon'}, '📱'),
-            el('span', {class: 'contact-text'}, '(+92) 335-9926750')
+            el('span', {class: 'contact-text'}, state.profilePhone || '(+92) 335-9926750')
           ),
           el('div', {class: 'contact-item'},
             el('span', {class: 'contact-icon'}, '🔗'),
@@ -113,10 +230,9 @@ function renderHome(root){
   );
 
   // Welcome text
+  const defaultWelcome = 'Welcome! I am a Mechanical Design and Simulation Engineer with expertise in EV battery systems, CAE (FEA/CFD), composite materials, and multi-physics modeling. Currently pursuing advanced research in structural mechanics, sustainable energy systems, and computational methods. I hold a Bachelor\'s in Mechanical Engineering from NUST and have industry experience with Ohmitron Inc. (USA) working on high-voltage EV systems and power electronics.';
   const welcomeSection = el('div', {class: 'welcome-section card pad'},
-    el('p', {class: 'welcome-text'},
-      'Welcome! I am a Mechanical Design and Simulation Engineer with expertise in EV battery systems, CAE (FEA/CFD), composite materials, and multi-physics modeling. Currently pursuing advanced research in structural mechanics, sustainable energy systems, and computational methods. I hold a Bachelor\'s in Mechanical Engineering from NUST and have industry experience with Ohmitron Inc. (USA) working on high-voltage EV systems and power electronics.'
-    ),
+    el('p', {class: 'welcome-text'}, state.welcomeText || defaultWelcome),
     el('div', {class: 'scroll-button-wrapper'},
       el('button', {
         class: 'btn primary scroll-to-highlights',
@@ -204,7 +320,9 @@ function renderList(root, category){
     : 'Research papers, simulations, and materials/mechanics investigations.';
   
   // PDF paths and routes based on category
-  const pdfPath = category==='design' ? 'assets/Aliyar_Project_Portfolio.pdf' : 'assets/Aliyar_Research_Document.pdf';
+  const pdfPath = category==='design'
+    ? (state.portfolioUrl || 'assets/Aliyar_Project_Portfolio.pdf')
+    : (state.researchUrl  || 'assets/Aliyar_Research_Document.pdf');
   const viewerRoute = category==='design' ? '#/docs/portfolio' : '#/docs/research';
   
   root.appendChild(el('div',{class:'card pad'},
@@ -227,7 +345,7 @@ function renderList(root, category){
   root.appendChild(el('div',{class:'showcase-grid'}, ...items.map(p => {
     return el('div',{class:'showcase-card card'},
       el('div',{class:'showcase-thumb'},
-        el('img',{src:`assets/${p.images?.[0] || 'projects_p1.png'}`, alt:p.title})
+        el('img',{src:imgSrc(p.images?.[0]), alt:p.title})
       ),
       el('div',{class:'showcase-content'},
         el('div',{class:'showcase-header'},
@@ -267,7 +385,7 @@ function createGallery(projectId, images) {
   // Main image container
   const mainImage = el('img', {
     class: 'gallery-image',
-    src: `assets/${images[state.currentIndex]}`,
+    src: imgSrc(images[state.currentIndex]),
     alt: 'Project image'
   });
   
@@ -296,7 +414,7 @@ function createGallery(projectId, images) {
   const thumbnails = images.map((img, idx) => {
     return el('img', {
       class: idx === state.currentIndex ? 'thumb active' : 'thumb',
-      src: `assets/${img}`,
+      src: imgSrc(img),
       alt: `Thumbnail ${idx + 1}`,
       'data-index': idx,
       onclick: (e) => {
@@ -313,7 +431,7 @@ function createGallery(projectId, images) {
   
   // Update function
   function updateGallery() {
-    mainImage.src = `assets/${images[state.currentIndex]}`;
+    mainImage.src = imgSrc(images[state.currentIndex]);
     thumbnails.forEach((thumb, idx) => {
       thumb.className = idx === state.currentIndex ? 'thumb active' : 'thumb';
     });
@@ -482,17 +600,18 @@ function renderProject(root, id){
 }
 
 function renderCV(root){
+  const cvPath = state.cvUrl || 'assets/Aliyar_CV_Oct_25.pdf';
   root.appendChild(el('div',{class:'card pad'},
     el('div',{class:'kicker'},'Curriculum Vitae'),
     el('h1',{},'CV'),
     el('p',{},'Academic and professional background. Download or view inline below.'),
     el('div',{class:'cta-row'},
-      el('a',{class:'btn',href:'assets/Aliyar_CV_Oct_25.pdf', download:'Aliyar_CV_Oct_25.pdf'},'Download CV PDF'),
-      el('a',{class:'btn primary',href:'assets/Aliyar_CV_Oct_25.pdf', target:'_blank', rel:'noreferrer'},'Open in New Tab')
+      el('a',{class:'btn',href:cvPath, download:'Aliyar_CV.pdf'},'Download CV PDF'),
+      el('a',{class:'btn primary',href:cvPath, target:'_blank', rel:'noreferrer'},'Open in New Tab')
     ),
     el('hr',{class:'sep'}),
     el('iframe',{
-      src:'assets/Aliyar_CV_Oct_25.pdf',
+      src:cvPath,
       style:'width:100%; height:78vh; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(0,0,0,.2)'
     })
   ));
@@ -513,7 +632,7 @@ function renderDocsHub(root){
         'Awards & Achievements'
       ],
       viewLink: '#/cv',
-      downloadPath: 'assets/Aliyar_CV_Oct_25.pdf'
+      downloadPath: state.cvUrl || 'assets/Aliyar_CV_Oct_25.pdf'
     },
     {
       id: 'portfolio',
@@ -528,7 +647,7 @@ function renderDocsHub(root){
         'Mechanical Design & Manufacturing'
       ],
       viewLink: '#/docs/portfolio',
-      downloadPath: 'assets/Aliyar_Project_Portfolio.pdf'
+      downloadPath: state.portfolioUrl || 'assets/Aliyar_Project_Portfolio.pdf'
     },
     {
       id: 'research',
@@ -543,7 +662,7 @@ function renderDocsHub(root){
         'Conference Submissions'
       ],
       viewLink: '#/docs/research',
-      downloadPath: 'assets/Aliyar_Research_Document.pdf'
+      downloadPath: state.researchUrl || 'assets/Aliyar_Research_Document.pdf'
     }
   ];
 
@@ -593,16 +712,22 @@ function renderDocsHub(root){
 }
 
 function renderDocViewer(root, docType){
+  const staticNames = {
+    portfolio: 'Aliyar_Project_Portfolio.pdf',
+    research:  'Aliyar_Research_Document.pdf',
+  };
   const docs = {
     portfolio: {
-      title: 'Design Projects Portfolio',
-      file: 'Aliyar_Project_Portfolio.pdf',
-      desc: 'Detailed design project documentation and visuals.'
+      title:    'Design Projects Portfolio',
+      file:     state.portfolioUrl || 'assets/Aliyar_Project_Portfolio.pdf',
+      fileName: staticNames.portfolio,
+      desc:     'Detailed design project documentation and visuals.'
     },
     research: {
-      title: 'Research Document',
-      file: 'Aliyar_Research_Document.pdf',
-      desc: 'Research projects, publications, and academic work overview.'
+      title:    'Research Document',
+      file:     state.researchUrl || 'assets/Aliyar_Research_Document.pdf',
+      fileName: staticNames.research,
+      desc:     'Research projects, publications, and academic work overview.'
     }
   };
   const doc = docs[docType];
@@ -616,13 +741,13 @@ function renderDocViewer(root, docType){
     el('h1',{}, doc.title),
     el('p',{}, doc.desc),
     el('div',{class:'cta-row'},
-      el('a',{class:'btn primary',href:`assets/${doc.file}`, target:'_blank', rel:'noreferrer'},'Open in New Tab'),
-      el('a',{class:'btn',href:`assets/${doc.file}`, download:doc.file},'Download PDF'),
+      el('a',{class:'btn primary',href:doc.file, target:'_blank', rel:'noreferrer'},'Open in New Tab'),
+      el('a',{class:'btn',href:doc.file, download:doc.fileName},'Download PDF'),
       el('a',{class:'btn',href:'#/docs'},'← Back to Download Centre')
     ),
     el('hr',{class:'sep'}),
     el('iframe',{
-      src:`assets/${doc.file}`,
+      src:doc.file,
       style:'width:100%; height:78vh; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(0,0,0,.2)'
     })
   ));
@@ -699,7 +824,7 @@ function renderPublications(root) {
         el('h3', {}, `[${pub.id}] ${pub.title}`),
         el('p', {class: 'pub-authors'}, pub.authors),
         el('p', {class: 'pub-journal'}, pub.journal),
-        el('p', {class: 'pub-status'}, `Status: ${pub.statusText || 'Manuscript Under Review'}`)
+        el('p', {class: 'pub-status'}, `Status: ${pub.status_text || pub.statusText || 'Manuscript Under Review'}`)
       ));
     });
   }
