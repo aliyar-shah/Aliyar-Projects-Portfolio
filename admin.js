@@ -73,7 +73,7 @@ function toggleLinePrefix(input, prefix) {
   const allHavePrefix = lines.every(line => line.trim() === '' || line.startsWith(prefix));
   const nextLines = lines.map(line => {
     if (line.trim() === '') return line;
-    return allHavePrefix ? line.replace(prefix, '') : `${prefix}${line}`;
+    return allHavePrefix ? (line.startsWith(prefix) ? line.slice(prefix.length) : line) : `${prefix}${line}`;
   });
   const nextBlock = nextLines.join('\n');
   input.value = text.slice(0, lineStart) + nextBlock + text.slice(safeEnd);

@@ -140,47 +140,94 @@ function el(tag, attrs={}, ...children){
   return node;
 }
 
-function escapeHtml(str = '') {
-  return String(str)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
+function isSafeLinkUrl(url = '') {
+  const clean = String(url).trim();
+  if (/[\u0000-\u001F\u007F]/.test(clean)) return false;
+  try {
+    const decoded = decodeURIComponent(clean);
+    if (/^(javascript|data|vbscript):/i.test(decoded)) return false;
+  } catch {
+    // Keep validating the original value if decoding fails
+  }
+  if (!/^https?:\/\/[A-Za-z0-9\-._~:/?#[\]@!$&'()*+,;=%]+$/.test(clean)) return false;
+  try {
+    const u = new URL(clean);
+    if (!u.hostname) return false;
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
-function mdInline(text = '') {
-  let out = escapeHtml(text);
-  out = out.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>');
-  out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  out = out.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
-  return out;
+function appendInlineMarkdown(parent, text = '') {
+  const src = String(text);
+  const tokenRe = /\[([^\]]+)\]\(([^)\s]+)\)|\*\*([^*]+)\*\*|\*(?!\*)([^*\n]+?)\*(?!\*)/;
+  let rest = src;
+  while (rest.length > 0) {
+    const m = rest.match(tokenRe);
+    if (!m) {
+      parent.appendChild(document.createTextNode(rest));
+      return;
+    }
+    if (m.index > 0) parent.appendChild(document.createTextNode(rest.slice(0, m.index)));
+    if (m[1] != null && m[2] != null) {
+      const label = m[1];
+      const url = m[2];
+      if (isSafeLinkUrl(url)) {
+        parent.appendChild(el('a', { href: url, target: '_blank', rel: 'noreferrer' }, label));
+      } else {
+        parent.appendChild(document.createTextNode(`${label} (${url})`));
+      }
+    } else if (m[3] != null) {
+      parent.appendChild(el('strong', {}, m[3]));
+    } else if (m[4] != null) {
+      parent.appendChild(el('em', {}, m[4]));
+    }
+    rest = rest.slice((m.index || 0) + m[0].length);
+  }
 }
 
 function mdTextBlock(text = '', className = '') {
+  const BULLET_LINE_RE  = /^\s*-\s+/;
+  const NUMBERED_LINE_RE = /^\s*\d+\.\s+/;
   const wrap = el('div', className ? { class: className } : {});
   const lines = String(text).split('\n');
   let i = 0;
   while (i < lines.length) {
-    if (/^\s*-\s+/.test(lines[i])) {
+    if (BULLET_LINE_RE.test(lines[i])) {
       const ul = el('ul', {});
-      while (i < lines.length && /^\s*-\s+/.test(lines[i])) {
+      while (i < lines.length && BULLET_LINE_RE.test(lines[i])) {
         const li = el('li', {});
-        li.innerHTML = mdInline(lines[i].replace(/^\s*-\s+/, '').trim());
+        appendInlineMarkdown(li, lines[i].replace(BULLET_LINE_RE, '').trim());
         ul.appendChild(li);
         i++;
       }
       wrap.appendChild(ul);
       continue;
     }
+    if (NUMBERED_LINE_RE.test(lines[i])) {
+      const ol = el('ol', {});
+      while (i < lines.length && NUMBERED_LINE_RE.test(lines[i])) {
+        const li = el('li', {});
+        appendInlineMarkdown(li, lines[i].replace(NUMBERED_LINE_RE, '').trim());
+        ol.appendChild(li);
+        i++;
+      }
+      wrap.appendChild(ol);
+      continue;
+    }
     const paraLines = [];
-    while (i < lines.length && !/^\s*-\s+/.test(lines[i])) {
+    while (i < lines.length && !BULLET_LINE_RE.test(lines[i]) && !NUMBERED_LINE_RE.test(lines[i])) {
       paraLines.push(lines[i]);
       i++;
     }
     if (paraLines.join('').trim()) {
       const p = el('p', {});
-      p.innerHTML = paraLines.map(line => mdInline(line)).join('<br>');
+      paraLines.forEach((line, idx) => {
+        appendInlineMarkdown(p, line);
+        const nextLine = paraLines[idx + 1] || '';
+        if (idx < paraLines.length - 1 && (line.trim() || nextLine.trim())) p.appendChild(el('br', {}));
+      });
       wrap.appendChild(p);
     }
   }
@@ -190,7 +237,7 @@ function mdTextBlock(text = '', className = '') {
 function mdList(items = []) {
   return el('ul', {}, ...(items || []).map(x => {
     const li = el('li', {});
-    li.innerHTML = mdInline(x);
+    appendInlineMarkdown(li, x);
     return li;
   }));
 }
@@ -996,11 +1043,15 @@ function renderCertifications(root) {
   ));
   
   certs.forEach(cert => {
+    const areasText = (cert.areas || []).join(' • ');
+    const areasEl = el('p', {class: 'cert-areas'});
+    areasEl.appendChild(document.createTextNode('Areas: '));
+    appendInlineMarkdown(areasEl, areasText);
     root.appendChild(el('div', {class: 'certification-card card pad'},
       el('div', {class: 'cert-icon'}, '📜'),
       el('h2', {}, cert.title),
       el('p', {class: 'cert-issuer'}, cert.issuer),
-      cert.areas && cert.areas.length > 0 ? el('div', { class: 'cert-areas' }, mdList(cert.areas)) : null,
+      cert.areas && cert.areas.length > 0 ? areasEl : null,
       cert.credentialLink ? el('a', {class: 'btn primary', href: cert.credentialLink, target: '_blank', rel: 'noreferrer'}, '🔗 View Credential') : null
     ));
   });
