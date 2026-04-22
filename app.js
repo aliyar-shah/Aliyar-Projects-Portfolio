@@ -114,6 +114,7 @@ async function loadSupabaseOverrides(){
     if (projRes.status === 'fulfilled' && !projRes.value.error && projRes.value.data && projRes.value.data.length > 0) {
       state.data.projects = projRes.value.data.map(p => ({
         ...p,
+        sections: p.sections || p.project_sections || [],
         phdDirection: p.phd_direction || p.phdDirection || [],
         paperStatus:  p.paper_status  || p.paperStatus  || '',
         paperLink:    p.paper_link    || p.paperLink    || '',
@@ -137,6 +138,86 @@ function el(tag, attrs={}, ...children){
     node.appendChild(typeof ch === 'string' ? document.createTextNode(ch) : ch);
   }
   return node;
+}
+
+function escapeHtml(str = '') {
+  return String(str)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function mdInline(text = '') {
+  let out = escapeHtml(text);
+  out = out.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>');
+  out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  out = out.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+  return out;
+}
+
+function mdTextBlock(text = '', className = '') {
+  const wrap = el('div', className ? { class: className } : {});
+  const lines = String(text).split('\n');
+  let i = 0;
+  while (i < lines.length) {
+    if (/^\s*-\s+/.test(lines[i])) {
+      const ul = el('ul', {});
+      while (i < lines.length && /^\s*-\s+/.test(lines[i])) {
+        const li = el('li', {});
+        li.innerHTML = mdInline(lines[i].replace(/^\s*-\s+/, '').trim());
+        ul.appendChild(li);
+        i++;
+      }
+      wrap.appendChild(ul);
+      continue;
+    }
+    const paraLines = [];
+    while (i < lines.length && !/^\s*-\s+/.test(lines[i])) {
+      paraLines.push(lines[i]);
+      i++;
+    }
+    if (paraLines.join('').trim()) {
+      const p = el('p', {});
+      p.innerHTML = paraLines.map(line => mdInline(line)).join('<br>');
+      wrap.appendChild(p);
+    }
+  }
+  return wrap;
+}
+
+function mdList(items = []) {
+  return el('ul', {}, ...(items || []).map(x => {
+    const li = el('li', {});
+    li.innerHTML = mdInline(x);
+    return li;
+  }));
+}
+
+function inferLegacyProjectSections(project) {
+  const isDesign = project.category === 'design';
+  const legacy = [
+    { title: 'Problem / Motivation', items: project.problem || [] },
+    { title: 'My Role', items: project.role || [] },
+    { title: 'Methods', items: project.methods || [] },
+    { title: 'Results', items: project.results || [] },
+    { title: isDesign ? 'PhD Direction' : 'Future Research Directions', items: project.phdDirection || project.phd_direction || [] }
+  ];
+  return legacy.filter(s => Array.isArray(s.items) && s.items.length > 0);
+}
+
+function getProjectSections(project) {
+  const sections = project.sections || project.project_sections;
+  if (!Array.isArray(sections) || sections.length === 0) {
+    return inferLegacyProjectSections(project);
+  }
+  return sections
+    .map(sec => ({
+      title: (sec?.title || '').trim(),
+      items: Array.isArray(sec?.items) ? sec.items.filter(Boolean) : []
+    }))
+    .filter(sec => sec.title || sec.items.length > 0);
 }
 
 // Returns a valid image src — handles full Supabase URLs and local asset paths
@@ -232,7 +313,7 @@ function renderHome(root){
   // Welcome text
   const defaultWelcome = 'Welcome! I am a Mechanical Design and Simulation Engineer with expertise in EV battery systems, CAE (FEA/CFD), composite materials, and multi-physics modeling. Currently pursuing advanced research in structural mechanics, sustainable energy systems, and computational methods. I hold a Bachelor\'s in Mechanical Engineering from NUST and have industry experience with Ohmitron Inc. (USA) working on high-voltage EV systems and power electronics.';
   const welcomeSection = el('div', {class: 'welcome-section card pad'},
-    el('p', {class: 'welcome-text'}, state.welcomeText || defaultWelcome),
+    mdTextBlock(state.welcomeText || defaultWelcome, 'welcome-text'),
     el('div', {class: 'scroll-button-wrapper'},
       el('button', {
         class: 'btn primary scroll-to-highlights',
@@ -555,43 +636,19 @@ function renderProject(root, id){
   // Project details
   mainContentItems.push(
     el('h1', {}, p.title),
-    el('p', {class: 'summary-detail'}, p.summary || '')
+    mdTextBlock(p.summary || '', 'summary-detail')
   );
-  
-  if (p.problem && p.problem.length > 0) {
-    mainContentItems.push(
-      el('h3', {}, 'Problem / Motivation'),
-      el('ul', {}, ...(p.problem || []).map(x => el('li', {}, x)))
-    );
-  }
-  
-  if (p.role && p.role.length > 0) {
-    mainContentItems.push(
-      el('h3', {}, 'My Role'),
-      el('ul', {}, ...(p.role || []).map(x => el('li', {}, x)))
-    );
-  }
-  
-  if (p.methods && p.methods.length > 0) {
-    mainContentItems.push(
-      el('h3', {}, 'Methods'),
-      el('ul', {}, ...(p.methods || []).map(x => el('li', {}, x)))
-    );
-  }
-  
-  if (p.results && p.results.length > 0) {
-    mainContentItems.push(
-      el('h3', {}, 'Results'),
-      el('ul', {}, ...(p.results || []).map(x => el('li', {}, x)))
-    );
-  }
-  
-  if (p.phdDirection && p.phdDirection.length > 0) {
-    mainContentItems.push(
-      el('h3', {}, p.category === 'design' ? 'PhD Direction' : 'Future Research Directions'),
-      el('ul', {}, ...(p.phdDirection || []).map(x => el('li', {}, x)))
-    );
-  }
+
+  const dynamicSections = getProjectSections(p);
+  dynamicSections.forEach((sec) => {
+    if ((!sec.title || !sec.title.trim()) && (!sec.items || sec.items.length === 0)) return;
+    if (sec.title && sec.title.trim()) {
+      mainContentItems.push(el('h3', {}, sec.title));
+    }
+    if (sec.items && sec.items.length > 0) {
+      mainContentItems.push(mdList(sec.items));
+    }
+  });
   
   const mainContent = el('div', {class: 'project-main-content card pad'}, ...mainContentItems);
   
@@ -772,9 +829,9 @@ function renderEducation(root) {
       el('p', {}, edu.location || 'Islamabad, Pakistan'),
       el('p', {class: 'duration'}, `Duration: ${edu.duration || 'November 2021 - May 2025'}`),
       el('h3', {}, 'Key Areas:'),
-      el('ul', {}, ...(edu.keyAreas || []).map(area => el('li', {}, area))),
+      mdList(edu.keyAreas || []),
       el('h3', {}, 'Thesis:'),
-      el('p', {class: 'thesis'}, edu.thesis || '')
+      mdTextBlock(edu.thesis || '', 'thesis')
     )
   ));
   
@@ -866,8 +923,8 @@ function renderExperience(root) {
           el('p', {class: 'exp-company'}, exp.company),
           el('p', {}, exp.location),
           el('p', {class: 'exp-duration'}, exp.duration),
-          el('p', {}, exp.description),
-          exp.responsibilities && exp.responsibilities.length > 0 ? el('ul', {}, ...exp.responsibilities.map(r => el('li', {}, r))) : null
+          mdTextBlock(exp.description || ''),
+          exp.responsibilities && exp.responsibilities.length > 0 ? mdList(exp.responsibilities) : null
         )
       )
     ));
@@ -898,7 +955,7 @@ function renderAwards(root) {
             el('h2', {}, award.title),
             el('p', {class: 'award-org'}, award.organization),
             el('p', {class: 'award-year'}, award.year),
-            el('p', {}, award.description)
+            mdTextBlock(award.description || '')
           )
         )
       ));
@@ -917,7 +974,7 @@ function renderAwards(root) {
             el('h2', {}, award.title),
             el('p', {class: 'award-org'}, award.organization),
             el('p', {class: 'award-year'}, award.year),
-            el('p', {}, award.description)
+            mdTextBlock(award.description || '')
           )
         )
       ));
@@ -943,7 +1000,7 @@ function renderCertifications(root) {
       el('div', {class: 'cert-icon'}, '📜'),
       el('h2', {}, cert.title),
       el('p', {class: 'cert-issuer'}, cert.issuer),
-      cert.areas && cert.areas.length > 0 ? el('p', {class: 'cert-areas'}, `Areas: ${cert.areas.join(' • ')}`) : null,
+      cert.areas && cert.areas.length > 0 ? el('div', { class: 'cert-areas' }, mdList(cert.areas)) : null,
       cert.credentialLink ? el('a', {class: 'btn primary', href: cert.credentialLink, target: '_blank', rel: 'noreferrer'}, '🔗 View Credential') : null
     ));
   });

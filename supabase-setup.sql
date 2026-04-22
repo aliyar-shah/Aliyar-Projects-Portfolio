@@ -297,6 +297,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
   org           TEXT DEFAULT '',
   period        TEXT DEFAULT '',
   summary       TEXT DEFAULT '',
+  sections      JSONB DEFAULT '[]',
   problem       JSONB DEFAULT '[]',
   role          JSONB DEFAULT '[]',
   methods       JSONB DEFAULT '[]',
@@ -309,6 +310,9 @@ CREATE TABLE IF NOT EXISTS public.projects (
   status        TEXT DEFAULT '',
   updated_at    TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Safe in-place upgrade for existing projects table (re-run this SQL file anytime)
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS sections JSONB DEFAULT '[]';
 
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Public read projects" ON public.projects;
