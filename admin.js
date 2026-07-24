@@ -1,7 +1,7 @@
 // ============================================================
 // ADMIN DASHBOARD — Syed Aliyar Shah Portfolio
 // ============================================================
-// Requires supabase-config.js loaded before this file.
+// Requires a Supabase config file loaded before this file.
 // ============================================================
 
 const STORAGE_BUCKET = 'portfolio-files';
@@ -1219,13 +1219,14 @@ function renderLogin(root) {
 // ── Not-configured screen ──────────────────────────────────────
 
 function renderNotConfigured(root) {
+  const activeConfigFile = window.__SUPABASE_CONFIG_FILE || 'supabase-config-main.js / supabase-config-redesign.js';
   root.appendChild(
     el('div', { class: 'admin-not-configured card' },
       el('div', { class: 'big-icon' }, '⚠️'),
       el('h2', {}, 'Supabase Not Configured'),
       el('p', {},
         'To use the admin dashboard, open ',
-        el('code', {}, 'supabase-config.js'),
+        el('code', {}, activeConfigFile),
         ' and replace the placeholder URL and anon key with your Supabase project credentials. ',
         'Then run the SQL in ',
         el('code', {}, 'supabase-setup.sql'),
