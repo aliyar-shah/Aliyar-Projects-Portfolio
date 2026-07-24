@@ -8,14 +8,14 @@
 // 5. Re-deploy your site.
 // ============================================================
 
-const SUPABASE_URL  = 'https://czjukdwmbmwzzlpztfpi.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_u-lcDte-dRC5yFCYEDFt6g_xJP59O1B';
+const SUPABASE_URL  = 'https://gnnomcyaszzkmwpdikor.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_URdcfrMqZ_RtcI64O1xMrQ_9O2POAf2';
 
 // ── DO NOT EDIT BELOW THIS LINE ────────────────────────────
 (function initSupabase() {
   const configured =
-    SUPABASE_URL  !== 'https://YOUR_PROJECT_ID.supabase.co' &&
-    SUPABASE_ANON_KEY !== 'your-anon-public-key-here';
+    SUPABASE_URL  !== 'https://gnnomcyaszzkmwpdikor.supabase.co' &&
+    SUPABASE_ANON_KEY !== 'sb_publishable_URdcfrMqZ_RtcI64O1xMrQ_9O2POAf2';
 
   if (!configured) {
     console.info('[Supabase] Not configured — site runs in static-only mode.');
