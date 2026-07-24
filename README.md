@@ -6,6 +6,7 @@
 - Two portfolios (Design / Research) + project detail pages.
 - All assets (PDFs + rendered project pages) inside `/assets`.
 - **Admin dashboard** (`admin.html`) — upload/update your profile photo, CV, and portfolio documents directly from the browser.
+- **Thematic interactive copy** (`makeup.html` + `makeup.css` + `makeup-effects.js`) with a separate admin entry (`makeup-admin.html`) that uses the same Supabase-backed editing controls.
 
 ## How to edit / add projects (no complex coding)
 1) Open `content/projects.json`
