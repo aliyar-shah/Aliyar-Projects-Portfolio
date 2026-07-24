@@ -37,6 +37,7 @@ The admin dashboard lets you upload your profile photo and documents directly fr
 1. In your Supabase project, go to **SQL Editor → New Query**.
 2. Paste the entire contents of `supabase-setup.sql` and click **Run**.
 3. You should see "Success. No rows returned."
+4. You can re-run the same SQL file later to apply safe schema updates (`IF NOT EXISTS` / `ADD COLUMN IF NOT EXISTS`) without recreating your database.
 
 ### Step 3 — Fill in your credentials
 1. In Supabase, go to **Project Settings → API**.

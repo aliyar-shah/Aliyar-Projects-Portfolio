@@ -180,6 +180,24 @@ li{margin:6px 0; color:rgba(234,240,246,.92); line-height:1.45}
   border-radius:8px;
 }
 
+.welcome-text p,
+.summary-detail p,
+.thesis p {
+  margin: 0 0 10px;
+}
+
+.welcome-text p:last-child,
+.summary-detail p:last-child,
+.thesis p:last-child {
+  margin-bottom: 0;
+}
+
+.welcome-text ul,
+.summary-detail ul,
+.thesis ul {
+  margin: 0 0 10px 18px;
+}
+
 /* Project page improvements */
 .proj-page h3{
   color:var(--accent);

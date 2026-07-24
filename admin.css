@@ -46,6 +46,26 @@
 select.admin-input    { cursor: pointer; resize: none; }
 textarea.admin-input  { min-height: 64px; }
 
+.rich-toolbar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rich-toolbar-hint {
+  font-size: 11px;
+}
+
+.project-sections-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project-section-item {
+  padding: 8px;
+}
+
 /* ── Grid ──────────────────────────────────────────────────── */
 .admin-grid-2 {
   display: grid;

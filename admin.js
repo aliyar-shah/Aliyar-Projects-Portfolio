@@ -49,9 +49,63 @@ function parseLines(str) { return (str || '').split('\n').map(s => s.trim()).fil
 
 // ── Form helpers ───────────────────────────────────────────────
 
+function applyAroundSelection(input, before, after = before, placeholder = 'text') {
+  const start = input.selectionStart ?? input.value.length;
+  const end   = input.selectionEnd ?? input.value.length;
+  const selected = input.value.slice(start, end) || placeholder;
+  const next = input.value.slice(0, start) + before + selected + after + input.value.slice(end);
+  input.value = next;
+  input.focus();
+  input.selectionStart = start + before.length;
+  input.selectionEnd   = start + before.length + selected.length;
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function toggleLinePrefix(input, prefix) {
+  const start = input.selectionStart ?? 0;
+  const end   = input.selectionEnd ?? 0;
+  const text  = input.value;
+  const lineStart = text.lastIndexOf('\n', start - 1) + 1;
+  const lineEnd   = text.indexOf('\n', end);
+  const safeEnd   = lineEnd === -1 ? text.length : lineEnd;
+  const block     = text.slice(lineStart, safeEnd);
+  const lines     = block.split('\n');
+  const allHavePrefix = lines.every(line => line.trim() === '' || line.startsWith(prefix));
+  const nextLines = lines.map(line => {
+    if (line.trim() === '') return line;
+    return allHavePrefix ? (line.startsWith(prefix) ? line.slice(prefix.length) : line) : `${prefix}${line}`;
+  });
+  const nextBlock = nextLines.join('\n');
+  input.value = text.slice(0, lineStart) + nextBlock + text.slice(safeEnd);
+  input.focus();
+  input.selectionStart = lineStart;
+  input.selectionEnd   = lineStart + nextBlock.length;
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function buildRichTextToolbar(textarea) {
+  const toolBtn = (label, title, onClick) => {
+    const b = el('button', { class: 'admin-btn admin-btn-xs', type: 'button', title }, label);
+    b.addEventListener('click', () => onClick(textarea));
+    return b;
+  };
+  return el('div', { class: 'rich-toolbar' },
+    toolBtn('B', 'Bold',   (t) => applyAroundSelection(t, '**')),
+    toolBtn('I', 'Italic', (t) => applyAroundSelection(t, '*')),
+    toolBtn('•', 'Bullet list', (t) => toggleLinePrefix(t, '- ')),
+    toolBtn('1.', 'Numbered list', (t) => toggleLinePrefix(t, '1. ')),
+    toolBtn('🔗', 'Link', (t) => applyAroundSelection(t, '[', '](https://example.com)', 'label'))
+  );
+}
+
 function fld(label, input, spanFull) {
-  return el('div', { class: 'admin-field' + (spanFull ? ' g-span-full' : '') },
-    el('label', {}, label), input);
+  const children = [el('label', {}, label)];
+  if (input && input.tagName === 'TEXTAREA') {
+    children.push(buildRichTextToolbar(input));
+    children.push(el('div', { class: 'admin-muted rich-toolbar-hint' }, 'Formatting supported: **bold**, *italic*, lists, and links.'));
+  }
+  children.push(input);
+  return el('div', { class: 'admin-field' + (spanFull ? ' g-span-full' : '') }, ...children);
 }
 
 function inp(type, value, placeholder) {
@@ -882,6 +936,98 @@ function buildCertificationsPanel(certs) {
 
 // ── Panel: Projects (design or research) ──────────────────────
 
+function inferLegacyProjectSections(proj, category) {
+  const legacy = [
+    { title: 'Problem / Motivation', items: proj?.problem || [] },
+    { title: 'My Role',              items: proj?.role || [] },
+    { title: 'Methods',              items: proj?.methods || [] },
+    { title: 'Results',              items: proj?.results || [] },
+    { title: category === 'design' ? 'PhD Direction' : 'Future Research Directions', items: proj?.phdDirection || proj?.phd_direction || [] }
+  ];
+  return legacy.filter(s => Array.isArray(s.items) && s.items.length > 0);
+}
+
+function normalizeProjectSections(rawSections, proj, category) {
+  if (!Array.isArray(rawSections) || rawSections.length === 0) {
+    return inferLegacyProjectSections(proj, category);
+  }
+  return rawSections
+    .map((sec) => ({
+      title: (sec?.title || '').trim(),
+      items: Array.isArray(sec?.items) ? sec.items.map(x => String(x).trim()).filter(Boolean) : []
+    }))
+    .filter(sec => sec.title || sec.items.length > 0);
+}
+
+function buildProjectSectionsEditor(initialSections, onChange) {
+  let sections = Array.isArray(initialSections) ? [...initialSections] : [];
+  const wrap = el('div', { class: 'project-sections-editor' });
+  const list = el('div', { class: 'project-sections-list' });
+
+  const notify = () => onChange(sections.map(s => ({ title: s.title, items: [...s.items] })));
+
+  function sectionRow(sec, idx) {
+    const titleIn = inp('text', sec.title || '', 'Section title (e.g. Problem / Motivation)');
+    const bodyIn  = txta(linesJoin(sec.items), 4, 'One bullet point per line');
+    titleIn.addEventListener('input', () => { sections[idx].title = titleIn.value; notify(); });
+    bodyIn.addEventListener('input', () => { sections[idx].items = parseLines(bodyIn.value); notify(); });
+
+    const upBtn = el('button', { class: 'admin-btn admin-btn-xs', type: 'button' }, '↑');
+    const downBtn = el('button', { class: 'admin-btn admin-btn-xs', type: 'button' }, '↓');
+    const delBtn = el('button', { class: 'admin-btn danger admin-btn-xs', type: 'button' }, '🗑️');
+
+    upBtn.disabled = idx === 0;
+    downBtn.disabled = idx === sections.length - 1;
+
+    upBtn.addEventListener('click', () => {
+      if (idx === 0) return;
+      const [current] = sections.splice(idx, 1);
+      sections.splice(idx - 1, 0, current);
+      render();
+    });
+    downBtn.addEventListener('click', () => {
+      if (idx >= sections.length - 1) return;
+      const [current] = sections.splice(idx, 1);
+      sections.splice(idx + 1, 0, current);
+      render();
+    });
+    delBtn.addEventListener('click', () => {
+      sections.splice(idx, 1);
+      render();
+    });
+
+    return el('div', { class: 'project-section-item card' },
+      el('div', { class: 'crud-row-top' },
+        el('strong', {}, `Section ${idx + 1}`),
+        el('div', { class: 'crud-row-actions' }, upBtn, downBtn, delBtn)
+      ),
+      el('div', { class: 'admin-grid-2 project-section-grid' },
+        fld('Section Title', titleIn, true),
+        fld('Items (one per line)', bodyIn, true)
+      )
+    );
+  }
+
+  function render() {
+    list.innerHTML = '';
+    sections.forEach((sec, idx) => list.appendChild(sectionRow(sec, idx)));
+    notify();
+  }
+
+  const addBtn = el('button', { class: 'admin-btn admin-btn-xs', type: 'button' }, '+ Add Section');
+  addBtn.addEventListener('click', () => {
+    sections.push({ title: '', items: [] });
+    render();
+  });
+
+  wrap.append(
+    el('div', { class: 'crud-topbar' }, addBtn),
+    list
+  );
+  render();
+  return wrap;
+}
+
 function buildProjectsPanel(projects, category) {
   const panelTitle = category === 'design' ? '⚙️ Design Projects' : '🔬 Research Projects';
 
@@ -896,11 +1042,8 @@ function buildProjectsPanel(projects, category) {
     const periodIn  = inp('text', proj?.period  || '', 'e.g. 2023–2025');
     const statusIn  = inp('text', proj?.status  || '', 'Status (e.g. Completed)');
     const summaryIn = txta(proj?.summary || '', 4, 'Short project summary (1–3 sentences)');
-    const problemIn = txta(linesJoin(proj?.problem), 4, 'One problem/motivation point per line');
-    const roleIn    = txta(linesJoin(proj?.role), 4, 'One role point per line');
-    const methodsIn = txta(linesJoin(proj?.methods), 4, 'One method point per line');
-    const resultsIn = txta(linesJoin(proj?.results), 4, 'One result point per line');
-    const phdIn     = txta(linesJoin(proj?.phdDirection || proj?.phd_direction), 3, 'One future/PhD direction per line');
+    let projectSections = normalizeProjectSections(proj?.sections || proj?.project_sections, proj, category);
+    const sectionsEditor = buildProjectSectionsEditor(projectSections, (nextSections) => { projectSections = nextSections; });
     const tagsIn    = inp('text', (proj?.tags || []).join(', '), 'Comma-separated tags');
 
     // Image manager
@@ -928,11 +1071,9 @@ function buildProjectsPanel(projects, category) {
         id, category, title,
         org: orgIn.value.trim(), period: periodIn.value.trim(), status: statusIn.value.trim(),
         summary: summaryIn.value.trim(),
-        problem: parseLines(problemIn.value),
-        role:    parseLines(roleIn.value),
-        methods: parseLines(methodsIn.value),
-        results: parseLines(resultsIn.value),
-        phd_direction: parseLines(phdIn.value),
+        sections: projectSections
+          .map(sec => ({ title: (sec.title || '').trim(), items: (sec.items || []).map(x => String(x).trim()).filter(Boolean) }))
+          .filter(sec => sec.title || sec.items.length > 0),
         tags:   tagsIn.value.split(',').map(s => s.trim()).filter(Boolean),
         images: imgList
       };
@@ -956,11 +1097,10 @@ function buildProjectsPanel(projects, category) {
       fld('Period', periodIn),
       fld('Status', statusIn),
       fld('Summary', summaryIn, true),
-      fld('Problem / Motivation (one per line)', problemIn, true),
-      fld('My Role (one per line)', roleIn, true),
-      fld('Methods (one per line)', methodsIn, true),
-      fld('Results (one per line)', resultsIn, true),
-      fld('PhD / Future Directions (one per line)', phdIn, true),
+      el('div', { class: 'admin-field g-span-full' },
+        el('label', {}, 'Project Sections (add / remove / reorder)'),
+        sectionsEditor
+      ),
       fld('Tags (comma-separated)', tagsIn, true),
       ...(category === 'research' ? [fld('Paper Status', paperStatusIn), fld('Paper URL', paperLinkIn, false)] : []),
       imgMgrEl
@@ -1179,6 +1319,7 @@ async function seedAllToSupabase(staticData) {
       await upsertRow('projects', {
         ...p,
         sort_order:    i,
+        sections:      normalizeProjectSections(p.sections || p.project_sections, p, p.category || 'design'),
         phd_direction: p.phdDirection  || p.phd_direction  || [],
         paper_status:  p.paperStatus   || p.paper_status   || '',
         paper_link:    p.paperLink     || p.paper_link     || '',
@@ -1322,6 +1463,7 @@ async function renderDashboard(root) {
       const allProjects = staticData.projects.map((p, i) => ({
         ...p,
         sort_order:    i,
+        sections:      normalizeProjectSections(p.sections || p.project_sections, p, p.category || 'design'),
         phd_direction: p.phdDirection  || p.phd_direction  || [],
         paper_status:  p.paperStatus   || p.paper_status   || '',
         paper_link:    p.paperLink     || p.paper_link     || '',
