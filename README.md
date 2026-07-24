@@ -43,10 +43,12 @@ The admin dashboard lets you upload your profile photo and documents directly fr
 ### Step 3 — Fill in your credentials
 1. In Supabase, go to **Project Settings → API**.
 2. Copy your **Project URL** and **anon / public** key.
-3. Open `supabase-config.js` and replace the placeholder values:
+3. For the main site (`index.html` / `admin.html`), edit `supabase-config-main.js`.
+4. For the redesign/thematic site (`makeup.html` / `makeup-admin.html`), edit `supabase-config-redesign.js`.
+5. Replace the placeholder values:
    ```js
    const SUPABASE_URL      = 'https://xxxxxxxxxxxx.supabase.co';
-   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1Ni...';
+   const SUPABASE_ANON_KEY = '******';
    ```
 
 ### Step 4 — Create your admin account
@@ -62,7 +64,26 @@ Push your changes to GitHub. GitHub Pages / Netlify will pick up the updated fil
 2. Sign in with the email/password you created in Step 4.
 3. Upload your profile photo, CV, Portfolio PDF, or Research PDF from the **Profile** and **Documents** tabs.
 
-> **Security note:** The anon key in `supabase-config.js` is safe to commit — Supabase Row-Level Security policies (installed by `supabase-setup.sql`) ensure that only authenticated admin users can write data, while the public can only read it.
+> **Security note:** The anon/public key is safe to commit, but never expose a `service_role` key in frontend files. Supabase Row-Level Security policies (installed by `supabase-setup.sql`) ensure only authenticated admin users can write data while the public can read.
+
+### Separate Supabase + Runtime for redesign (recommended)
+Use this when you want the redesign on a fully separate backend/runtime while keeping the current live site unchanged.
+
+1. Create a second Supabase project in the same org for redesign.
+2. Run `supabase-setup.sql` in that new project.
+3. Recreate storage bucket(s), RLS policies, and auth provider/redirect settings in the new project.
+4. Put redesign project credentials in `supabase-config-redesign.js`.
+5. Keep main project credentials in `supabase-config-main.js`.
+6. Create a separate deployment target (new Netlify/Vercel project) connected to the same GitHub repo.
+7. Set branch flow:
+   - `main` branch → main runtime + `supabase-config-main.js`
+   - `redesign` branch (or equivalent) → redesign runtime + `supabase-config-redesign.js`
+8. Before go-live, verify:
+   - Admin auth/login works
+   - Reads/writes are hitting the intended Supabase project
+   - Storage uploads/downloads work
+   - Unauthorized writes are blocked by RLS
+9. Optional safe launch: use a subdomain (e.g. `new.yourdomain.com`) for redesign, then switch primary domain when ready.
 
 ---
 

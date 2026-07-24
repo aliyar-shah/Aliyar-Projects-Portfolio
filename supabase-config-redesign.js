@@ -1,15 +1,17 @@
 // ============================================================
-// SUPABASE CONFIGURATION
+// SUPABASE CONFIGURATION (REDESIGN/THEMATIC SITE)
 // ============================================================
-// 1. Create a free project at https://supabase.com
+// 1. Create or open your REDESIGN Supabase project.
 // 2. Go to: Project Settings → API
 // 3. Copy your Project URL and anon/public key and paste them below.
 // 4. Run the SQL in supabase-setup.sql inside Supabase → SQL Editor.
-// 5. Re-deploy your site.
+// 5. Re-deploy your redesign runtime.
 // ============================================================
 
-const SUPABASE_URL  = 'https://czjukdwmbmwzzlpztfpi.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_u-lcDte-dRC5yFCYEDFt6g_xJP59O1B';
+const SUPABASE_URL  = 'https://YOUR_PROJECT_ID.supabase.co';
+const SUPABASE_ANON_KEY = 'your-anon-public-key-here';
+
+window.__SUPABASE_CONFIG_FILE = 'supabase-config-redesign.js';
 
 // ── DO NOT EDIT BELOW THIS LINE ────────────────────────────
 (function initSupabase() {
@@ -23,7 +25,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_u-lcDte-dRC5yFCYEDFt6g_xJP59O1B';
   }
 
   if (typeof window.supabase === 'undefined') {
-    console.warn('[Supabase] SDK not loaded yet. Make sure the CDN script comes before supabase-config.js.');
+    console.warn('[Supabase] SDK not loaded yet. Make sure the CDN script comes before the Supabase config file.');
     return;
   }
 
