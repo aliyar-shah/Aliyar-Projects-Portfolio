@@ -1,0 +1,60 @@
+body.makeup-theme {
+  background:
+    radial-gradient(950px 700px at 10% -10%, rgba(239, 68, 68, 0.22), transparent 60%),
+    radial-gradient(850px 650px at 90% 0%, rgba(255, 255, 255, 0.08), transparent 65%),
+    #070707;
+}
+
+.theme-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.admin-login-card,
+.admin-section,
+.crud-row,
+.crud-item-form,
+.upload-area-sm,
+.current-file,
+.preview-file-info,
+.admin-not-configured {
+  background: linear-gradient(170deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.sidebar-nav-item.active,
+.admin-btn.primary,
+.upload-area-sm:hover,
+.upload-area-sm.drag-over {
+  border-color: rgba(239, 68, 68, 0.75) !important;
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #fff !important;
+}
+
+.admin-btn,
+.admin-input,
+.sidebar-nav-item,
+.pill {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.admin-btn:hover,
+.sidebar-nav-item:hover,
+.pill:hover,
+.admin-input:focus {
+  border-color: rgba(239, 68, 68, 0.7) !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.current-photo-preview,
+.preview-img {
+  border-color: rgba(239, 68, 68, 0.7);
+}
+
+.admin-alert.success,
+.admin-alert.info,
+.admin-alert.error {
+  color: #fff;
+}

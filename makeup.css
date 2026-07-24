@@ -1,0 +1,199 @@
+:root {
+  --bg: #050505;
+  --panel: #111111;
+  --muted: #b8b8b8;
+  --text: #f5f5f5;
+  --accent: #ef4444;
+  --accent2: #f87171;
+  --border: rgba(255, 255, 255, 0.12);
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+}
+
+body.makeup-theme {
+  position: relative;
+  background:
+    radial-gradient(1200px 700px at 0% 0%, rgba(239, 68, 68, 0.22), transparent 60%),
+    radial-gradient(1000px 650px at 100% 10%, rgba(255, 255, 255, 0.08), transparent 65%),
+    linear-gradient(180deg, #0a0a0a 0%, #050505 45%, #0d0d0d 100%);
+}
+
+.theme-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.theme-bg::before,
+.theme-bg::after {
+  content: '';
+  position: absolute;
+  width: 42vw;
+  height: 42vw;
+  border-radius: 50%;
+  filter: blur(65px);
+  opacity: 0.2;
+  animation: pulseFloat 10s ease-in-out infinite alternate;
+}
+
+.theme-bg::before {
+  background: rgba(239, 68, 68, 0.8);
+  left: -8vw;
+  top: -12vw;
+}
+
+.theme-bg::after {
+  background: rgba(255, 255, 255, 0.45);
+  right: -10vw;
+  bottom: -15vw;
+  animation-delay: 2s;
+}
+
+.nav {
+  background: rgba(0, 0, 0, 0.7);
+  border-bottom-color: rgba(239, 68, 68, 0.35);
+}
+
+.card,
+.document-card,
+.profile-contact,
+.current-file,
+.preview-file-info,
+.crud-row,
+.crud-row-top,
+.crud-item-form {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.card,
+.showcase-card,
+.highlight-card,
+.document-card,
+.publication-card,
+.experience-card,
+.award-card,
+.certification-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.card:hover,
+.showcase-card:hover,
+.highlight-card:hover,
+.document-card:hover,
+.publication-card:hover,
+.experience-card:hover,
+.award-card:hover,
+.certification-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 24px rgba(239, 68, 68, 0.24);
+}
+
+.pill,
+.btn,
+.admin-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.btn.primary,
+.document-actions .btn.primary,
+.admin-btn.primary,
+.sidebar-nav-item.active,
+.showcase-label,
+.project-side-panel .btn.primary,
+.gallery-thumbnails .thumb.active,
+.all-certs-card {
+  border-color: rgba(239, 68, 68, 0.7) !important;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.28), rgba(255, 255, 255, 0.12)) !important;
+  color: #fff !important;
+}
+
+.btn:hover,
+.pill:hover,
+.admin-btn:hover,
+.gallery-nav:hover,
+.contact-link:hover {
+  border-color: rgba(239, 68, 68, 0.75) !important;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.highlight-icon,
+.cert-icon,
+.education-icon,
+.contact-icon,
+.doc-icon {
+  filter: saturate(0.85);
+}
+
+.section-subtitle,
+.brand span,
+.small,
+.kicker,
+.pub-authors,
+.pub-journal,
+.highlight-detail,
+.contact-text,
+.side-panel-label,
+.duration,
+.exp-duration,
+.award-year,
+.cert-issuer {
+  color: #d0d0d0;
+}
+
+.tag,
+.notice,
+.evidence-box,
+.summary-detail,
+.thesis,
+.profile-photo-wrapper.fallback {
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+.profile-photo-wrapper,
+.preview-img,
+.current-photo-preview {
+  border-color: rgba(239, 68, 68, 0.7);
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.28);
+}
+
+.gallery-main,
+.thumb,
+.showcase-thumb,
+.doc-thumb,
+.document-thumbnail {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(22px) scale(0.98);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@keyframes pulseFloat {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(20px, -20px, 0) scale(1.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-bg::before,
+  .theme-bg::after,
+  .card,
+  .showcase-card,
+  .highlight-card,
+  .document-card,
+  .reveal-on-scroll {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
