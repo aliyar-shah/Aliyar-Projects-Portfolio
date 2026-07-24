@@ -8,8 +8,8 @@
 // 5. Re-deploy your redesign runtime.
 // ============================================================
 
-const SUPABASE_URL  = 'https://YOUR_PROJECT_ID.supabase.co';
-const SUPABASE_ANON_KEY = 'your-anon-public-key-here';
+const SUPABASE_URL  = 'https://gnnomcyaszzkmwpdikor.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_URdcfrMqZ_RtcI64O1xMrQ_9O2POAf2';
 
 window.__SUPABASE_CONFIG_FILE = 'supabase-config-redesign.js';
 
