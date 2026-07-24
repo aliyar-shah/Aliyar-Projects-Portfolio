@@ -16,8 +16,8 @@ window.__SUPABASE_CONFIG_FILE = 'supabase-config-redesign.js';
 // ── DO NOT EDIT BELOW THIS LINE ────────────────────────────
 (function initSupabase() {
   const configured =
-    SUPABASE_URL  !== 'https://YOUR_PROJECT_ID.supabase.co' &&
-    SUPABASE_ANON_KEY !== 'your-anon-public-key-here';
+    SUPABASE_URL  !== 'https://gnnomcyaszzkmwpdikor.supabase.co' &&
+    SUPABASE_ANON_KEY !== 'sb_publishable_URdcfrMqZ_RtcI64O1xMrQ_9O2POAf2';
 
   if (!configured) {
     console.info('[Supabase] Not configured — site runs in static-only mode.');
