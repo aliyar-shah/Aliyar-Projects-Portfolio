@@ -1377,7 +1377,6 @@ function buildSeedPanel(staticData, onImported) {
 
 // ── Dashboard ──────────────────────────────────────────────────
 
-async 
 async function buildAnalyticsPanel() {
   const panel = el('div', {});
   panel.appendChild(el('h2', {}, 'Visitor Analytics'));
@@ -1398,7 +1397,7 @@ async function buildAnalyticsPanel() {
   return panel;
 }
 
-function renderDashboard(root) {
+async function renderDashboard(root) {
   // Fetch all data concurrently, fail gracefully per section
   let profile   = { name: 'Syed Aliyar Shah', title: 'Mechanical Design & Simulation Engineer', photo_url: null };
   let documents = [];
