@@ -1219,9 +1219,24 @@ window.addEventListener('hashchange', () => {
 });
 
 
+
+function showAnalyticsConsent() {
+  if (!window.supabaseClient || localStorage.getItem('portfolio_analytics_choice')) return;
+  const banner = document.createElement('aside');
+  banner.className = 'analytics-consent';
+  banner.setAttribute('role','dialog');
+  banner.setAttribute('aria-label','Analytics preferences');
+  banner.innerHTML = '<div><strong>Help improve this portfolio?</strong><p>Optional analytics counts visits and estimates country from your IP address. A random browser ID is stored locally. No names or precise location are collected. You can decline.</p></div><div class="analytics-consent-actions"><button type="button" data-choice="yes">Allow analytics</button><button type="button" data-choice="no">Decline</button></div>';
+  banner.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+    localStorage.setItem('portfolio_analytics_choice', btn.dataset.choice);
+    banner.remove();
+    if (btn.dataset.choice === 'yes') trackPortfolioVisit();
+  }));
+  document.body.appendChild(banner);
+}
 async function trackPortfolioVisit() {
   try {
-    if (localStorage.getItem('portfolio_analytics_optout') === '1' || !window.supabaseClient) return;
+    if (localStorage.getItem('portfolio_analytics_choice') !== 'yes' || !window.supabaseClient) return;
     let visitorId = localStorage.getItem('portfolio_visitor_id');
     if (!visitorId) {
       visitorId = crypto.randomUUID();
@@ -1230,9 +1245,9 @@ async function trackPortfolioVisit() {
     await window.supabaseClient.functions.invoke('portfolio-track-view', { body: { visitor_id: visitorId } });
   } catch (e) { console.warn('[Analytics] Visit tracking unavailable:', e.message); }
 }
-
 (async function init(){
   await loadData();
+  showAnalyticsConsent();
   trackPortfolioVisit();
   render();
   initMobileMenu();
