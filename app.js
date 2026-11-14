@@ -109,16 +109,19 @@ async function loadSupabaseOverrides(){
       }));
     }
 
-    // Projects (replace static JSON projects when Supabase has data)
+    // Projects (merge Supabase rows over static JSON by ID so one new row never hides other projects)
     const projRes = results[7];
     if (projRes.status === 'fulfilled' && !projRes.value.error && projRes.value.data && projRes.value.data.length > 0) {
-      state.data.projects = projRes.value.data.map(p => ({
+      const dbProjects = projRes.value.data.map(p => ({
         ...p,
         sections: p.sections || p.project_sections || [],
         phdDirection: p.phd_direction || p.phdDirection || [],
         paperStatus:  p.paper_status  || p.paperStatus  || '',
         paperLink:    p.paper_link    || p.paperLink    || '',
       }));
+      const byId = new Map((state.data.projects || []).map(p => [p.id, p]));
+      dbProjects.forEach(p => byId.set(p.id, { ...(byId.get(p.id) || {}), ...p }));
+      state.data.projects = Array.from(byId.values()).sort((a, b) => (a.sort_order ?? 999) - (b.sort_order ?? 999));
     }
 
   } catch(e) {
@@ -1215,8 +1218,22 @@ window.addEventListener('hashchange', () => {
   setTimeout(initTouchSwipe, 100);
 });
 
+
+async function trackPortfolioVisit() {
+  try {
+    if (localStorage.getItem('portfolio_analytics_optout') === '1' || !window.supabaseClient) return;
+    let visitorId = localStorage.getItem('portfolio_visitor_id');
+    if (!visitorId) {
+      visitorId = crypto.randomUUID();
+      localStorage.setItem('portfolio_visitor_id', visitorId);
+    }
+    await window.supabaseClient.functions.invoke('portfolio-track-view', { body: { visitor_id: visitorId } });
+  } catch (e) { console.warn('[Analytics] Visit tracking unavailable:', e.message); }
+}
+
 (async function init(){
   await loadData();
+  trackPortfolioVisit();
   render();
   initMobileMenu();
   initTouchSwipe();
