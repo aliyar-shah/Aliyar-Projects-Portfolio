@@ -6,7 +6,7 @@
   },
   "publications": [
     {
-      "title": "Assessment of Impact Resistance Characteristics of 3D\u2011Printed Polymers",
+      "title": "Assessment of Impact Resistance Characteristics of 3D‑Printed Polymers",
       "status": "Published"
     },
     {
@@ -14,7 +14,7 @@
       "status": "Submitted"
     },
     {
-      "title": "Design, Analysis, and Comparison of Hybrid and Non\u2011Pneumatic Tires (NPTs)",
+      "title": "Design, Analysis, and Comparison of Hybrid and Non‑Pneumatic Tires (NPTs)",
       "status": "Submitted",
       "link": "https://www.researchgate.net/publication/381123426_Design_Analysis_and_Comparison_of_Hybrid_and_Non-Pneumatic_Tires"
     },
@@ -30,7 +30,7 @@
       "category": "design",
       "title": "High Voltage EV Battery Pack (900V)",
       "org": "Ohmitron, Inc",
-      "period": "2023\u2013present",
+      "period": "2023–present",
       "summary": "Architected and validated a 900V battery pack system for heavy-duty EVs with focus on thermal runaway mitigation and fast charging capabilities.",
       "problem": [
         "Heavy-duty EVs require high-voltage architectures (>800V) to minimize current and conductor mass while enabling ultra-fast charging",
@@ -89,10 +89,10 @@
       "category": "design",
       "title": "EV 360kW DC Fast Charger (Modular)",
       "org": "Ohmitron, Inc",
-      "period": "2023\u20132024",
+      "period": "2023–2024",
       "summary": "Designed scalable modular DC fast charger cabinet (120kW base, expandable to 360kW) with optimized thermal management and CCS1/NACS compatibility.",
       "problem": [
-        "EV charging infrastructure needs flexibility: single cabinet must support 120\u2013360kW via add/remove converter modules without redesign",
+        "EV charging infrastructure needs flexibility: single cabinet must support 120–360kW via add/remove converter modules without redesign",
         "Power electronics generate significant heat; airflow optimization critical to maintain component reliability and prevent thermal throttling",
         "Manufacturing cost pressure: sheet metal design must balance structural rigidity, thermal performance, and DFA/DFM"
       ],
@@ -106,11 +106,11 @@
         "CAD: SolidWorks (sheet metal, parametric families for module scaling)",
         "CFD: ANSYS Fluent (forced convection, fan placement optimization, temperature mapping)",
         "FEA: ANSYS Mechanical (static structural, vibration from fan/transport loads)",
-        "Assumptions: Ambient 25\u201340\u00b0C, converter heat loads from EE specifications, fan curves from vendor datasheets"
+        "Assumptions: Ambient 25–40°C, converter heat loads from EE specifications, fan curves from vendor datasheets"
       ],
       "results": [
         "Portfolio-stated: Modular architecture around 120kW base unit, expandable to 360kW",
-        "Portfolio-stated: Internal component temperatures maintained at 55\u201365\u00b0C at max load",
+        "Portfolio-stated: Internal component temperatures maintained at 55–65°C at max load",
         "CCS1 and NACS connector compatibility integrated per industry standards"
       ],
       "phdDirection": [
@@ -146,10 +146,10 @@
       "category": "design",
       "title": "Automotive Grade 12V Li-ion Battery",
       "org": "Ohmitron, Inc",
-      "period": "2023\u20132024",
+      "period": "2023–2024",
       "summary": "Developed automotive-grade 12V Li-ion battery with extreme temperature operation and vibration/impact robustness for multi-vehicle platforms.",
       "problem": [
-        "Replace lead-acid with Li-ion (4\u00d73.2V prismatic cells) while meeting automotive vibration, shock, and temperature extremes (-40\u00b0C to +85\u00b0C)",
+        "Replace lead-acid with Li-ion (4×3.2V prismatic cells) while meeting automotive vibration, shock, and temperature extremes (-40°C to +85°C)",
         "Thermal management challenge: enable low-temperature operation and prevent thermal runaway in confined IP65 enclosure",
         "Design for manufacturing: modular architecture must support multiple ampere ratings and fit diverse vehicle/stationary applications"
       ],
@@ -162,10 +162,10 @@
         "CAD: SolidWorks (parametric design for scalability across ratings)",
         "FEA: ANSYS (static, modal, frequency response, drop/impact, fatigue life estimation)",
         "Thermal: CFD with heating pad models; low-temperature cell performance curves from vendor data",
-        "Assumptions: Cell thermal properties extrapolated to -40\u00b0C; vibration profiles per SAE J2380 or equivalent"
+        "Assumptions: Cell thermal properties extrapolated to -40°C; vibration profiles per SAE J2380 or equivalent"
       ],
       "results": [
-        "Portfolio-stated: Low-temperature operation to -40\u00b0C using thermal pads and advanced cell chemistry",
+        "Portfolio-stated: Low-temperature operation to -40°C using thermal pads and advanced cell chemistry",
         "Portfolio-stated: Cell holder fatigue life claims (quantified cycles/safety factor not specified in source material)",
         "IP65 rating target for environmental protection; BMS packaging validated for vibration/shock"
       ],
@@ -200,7 +200,7 @@
       "category": "design",
       "title": "ASME E-Fests XRC Autonomous Vehicle",
       "org": "NUST Racing",
-      "period": "2023\u20132024",
+      "period": "2023–2024",
       "summary": "Designed competition autonomous vehicles (2023 Ariel Atom, 2024 F1-inspired) achieving 1st place worldwide both years via chassis optimization and aerodynamic refinement.",
       "problem": [
         "Competition rules impose strict size/weight constraints; must maximize structural rigidity while minimizing mass for acceleration and agility",
@@ -258,7 +258,7 @@
       "id": "mercedes-f1-cad",
       "category": "design",
       "title": "Mercedes F1 CAD Model",
-      "org": "Dassault Syst\u00e8mes x ASME E-Fests 2024 Competition",
+      "org": "Dassault Systèmes x ASME E-Fests 2024 Competition",
       "period": "2024",
       "summary": "High-fidelity CAD modeling of Mercedes F1 car for design competition, emphasizing surface modeling accuracy and assembly complexity.",
       "problem": [
@@ -419,7 +419,7 @@
     {
       "id": "cfd-f1-car",
       "category": "design",
-      "title": "CFD Analysis \u2014 Formula 1 Car",
+      "title": "CFD Analysis — Formula 1 Car",
       "org": "Academic/Personal Project",
       "period": "2023",
       "summary": "Aerodynamic CFD simulation of Formula 1 car to quantify drag, downforce, and flow features for educational and design insight purposes.",
@@ -431,12 +431,12 @@
       "role": [
         "Prepared CAD geometry (simplified F1 car) for CFD meshing; defined computational domain and boundary conditions",
         "Generated mesh (unstructured tetrahedral/polyhedral) with near-wall refinement for boundary layer resolution",
-        "Set up and ran CFD simulations in ANSYS Fluent: selected turbulence model (k-\u03c9 SST or k-\u03b5), monitored convergence, post-processed results"
+        "Set up and ran CFD simulations in ANSYS Fluent: selected turbulence model (k-ω SST or k-ε), monitored convergence, post-processed results"
       ],
       "methods": [
         "CFD: ANSYS Fluent (steady RANS or transient if needed)",
         "Meshing: ANSYS Meshing or ICEM CFD (inflation layers for y+ control, refinement zones for critical regions)",
-        "Turbulence model: k-\u03c9 SST (standard for external aero, captures separation and adverse pressure gradients)",
+        "Turbulence model: k-ω SST (standard for external aero, captures separation and adverse pressure gradients)",
         "Boundary conditions: Velocity inlet (representative F1 speed), pressure outlet, no-slip walls, symmetry plane; ground as moving wall for ground effect",
         "Assumptions: Steady-state flow (no time-dependent effects), simplified geometry (no rotating wheels or moving suspension)"
       ],
@@ -474,7 +474,7 @@
     {
       "id": "cfd-kenworth-t800",
       "category": "design",
-      "title": "CFD Analysis \u2014 Kenworth T800 Commercial Truck",
+      "title": "CFD Analysis — Kenworth T800 Commercial Truck",
       "org": "Academic/Personal Project",
       "period": "2023",
       "summary": "External aerodynamic CFD study of Kenworth T800 truck to quantify drag reduction strategies for fuel efficiency improvement.",
@@ -490,7 +490,7 @@
       ],
       "methods": [
         "CFD: ANSYS Fluent (steady-state RANS)",
-        "Turbulence model: k-\u03b5 Realizable or k-\u03c9 SST (appropriate for bluff body external aero)",
+        "Turbulence model: k-ε Realizable or k-ω SST (appropriate for bluff body external aero)",
         "Meshing: Polyhedral mesh with prism layers for boundary layer; refinement boxes in wake region to capture recirculation",
         "Boundary conditions: Highway speed inlet (~25 m/s), pressure outlet, no-slip walls, moving ground to simulate road; crosswind if studied",
         "Assumptions: Steady-state flow (no transient gusts); simplified underbody (no detailed suspension); no rotating wheels initially (or MRF/sliding mesh if included)"
@@ -536,7 +536,7 @@
       "problem": [
         "Heat exchangers are critical in thermal management (HVAC, power electronics, engines); design must balance heat transfer rate vs pressure drop",
         "Challenge: model conjugate heat transfer (fluid + solid) with accurate turbulence and near-wall effects in complex fin/tube geometry",
-        "Goal: predict effectiveness (\u03b5) or NTU, optimize fin geometry or flow arrangement, validate against analytical correlations"
+        "Goal: predict effectiveness (ε) or NTU, optimize fin geometry or flow arrangement, validate against analytical correlations"
       ],
       "role": [
         "Created or obtained CAD model of heat exchanger (plate-fin, tube-fin, or shell-and-tube); prepared geometry for meshing",
@@ -545,18 +545,18 @@
       ],
       "methods": [
         "CFD: ANSYS Fluent (conjugate heat transfer, steady-state or transient)",
-        "Turbulence model: k-\u03b5 or k-\u03c9 SST (depending on flow regime and geometry)",
+        "Turbulence model: k-ε or k-ω SST (depending on flow regime and geometry)",
         "Meshing: Conformal mesh at fluid-solid interface; inflation layers for boundary layer capture; refinement in high-gradient regions",
         "Boundary conditions: Hot and cold side inlet velocities/temperatures, pressure outlets, adiabatic or convective outer walls",
         "Assumptions: Incompressible flow (if low Mach), steady-state thermal conditions, negligible radiation (if T not too high)"
       ],
       "results": [
-        "Portfolio-stated: Heat transfer rate (Q) and pressure drop (\u0394P) quantified; effectiveness or NTU calculated from outlet temperatures",
+        "Portfolio-stated: Heat transfer rate (Q) and pressure drop (ΔP) quantified; effectiveness or NTU calculated from outlet temperatures",
         "Temperature and velocity contours visualized to identify hotspots and flow mal-distribution",
-        "Comparison to analytical correlations (\u03b5-NTU method, Colburn j-factor, friction factor) validates CFD setup"
+        "Comparison to analytical correlations (ε-NTU method, Colburn j-factor, friction factor) validates CFD setup"
       ],
       "phdDirection": [
-        "Optimize fin geometry (spacing, thickness, louvered vs plain) using adjoint-based or parametric optimization for max Q/\u0394P ratio",
+        "Optimize fin geometry (spacing, thickness, louvered vs plain) using adjoint-based or parametric optimization for max Q/ΔP ratio",
         "Investigate advanced geometries (3D-printed lattice structures, micro-channels) for enhanced heat transfer",
         "Study transient response (thermal inertia) and control strategies for dynamic loads (e.g., battery thermal management)"
       ],
@@ -601,7 +601,7 @@
       "methods": [
         "CAD: SolidWorks (gear toolbox for pinion, linear pattern for rack teeth, assembly mates for motion simulation)",
         "Kinematics: SolidWorks Motion or hand calculations to verify steering ratio (degrees rotation per inch of rack travel)",
-        "Standards: AGMA gear design standards for pressure angle (typically 20\u00b0), module selection, and contact ratio",
+        "Standards: AGMA gear design standards for pressure angle (typically 20°), module selection, and contact ratio",
         "Assumptions: Static loading (no dynamic FEA); material properties from standards; assumed steering input torque from vehicle class"
       ],
       "results": [
@@ -638,9 +638,9 @@
     {
       "id": "hybrid-tire-research",
       "category": "research",
-      "title": "Hybrid Tire Technology vs Non\u2011Pneumatic Tires (NPTs)",
+      "title": "Hybrid Tire Technology vs Non‑Pneumatic Tires (NPTs)",
       "org": "Research Project / Submitted Paper",
-      "period": "2023\u20132024",
+      "period": "2023–2024",
       "summary": "FEA-based design and comparative analysis of hybrid tire concept aiming to combine puncture-free benefits of NPTs with improved comfort and weight performance.",
       "problem": [
         "Non-pneumatic tires (NPTs) eliminate puncture risk but suffer from weight penalties and ride harshness compared to conventional pneumatic tires",
@@ -702,7 +702,7 @@
       "category": "research",
       "title": "GFRP Composite Insulators for HV Power Transmission",
       "org": "Thesis / Industry R&D",
-      "period": "2024\u20132025",
+      "period": "2024–2025",
       "summary": "Design, manufacturing, and experimental validation of GFRP composite insulators for overhead high-voltage lines with focus on replacing ceramic insulators.",
       "problem": [
         "Ceramic insulators are brittle, heavy, and prone to catastrophic failure; GFRP composites offer lighter, tougher alternatives with superior contamination resistance",
@@ -757,6 +757,85 @@
         "projects/gfrp-insulators/insulator-final.png"
       ],
       "paperStatus": "Submitted"
+    },
+    {
+      "id": "mudry-cap232-composite-wingbox",
+      "category": "research",
+      "title": "Mudry CAP 232 — Composite Wingbox Structural Design & FEA",
+      "org": "FRP++ Integrated Project · University of Girona / University of Minho",
+      "period": "2026",
+      "summary": "Preliminary structural sizing and finite-element assessment of a 3.7 m carbon-composite wingbox for the Mudry CAP 232 aerobatic aircraft. The work combines laminate sizing, spanwise ply-drop design, sandwich flank architecture and Abaqus modelling within the GAP methodology.",
+      "problem": [
+        "Develop a lightweight carbon-composite wingbox capable of carrying the prescribed aerobatic load envelope while meeting structural strength and stability requirements.",
+        "Translate spanwise bending and shear loads into laminate thicknesses, ply orientations and a manufacturable architecture.",
+        "Assess simplified beam and panel calculations using a continuous tapered shell finite-element model."
+      ],
+      "role": [
+        "Developed the tapered wingbox geometry and spanwise partitioning strategy in Abaqus/CAE.",
+        "Performed analytical pre-sizing of upper and lower carbon laminate flanges, including tension/compression allowables and damage-tolerance considerations.",
+        "Defined a composite architecture with unidirectional carbon flange laminates and carbon-skin / Nomex honeycomb sandwich flanks.",
+        "Prepared the finite-element model, composite layups, material orientations, load application and boundary-condition setup."
+      ],
+      "methods": [
+        "GAP methodology: preliminary design phase covering geometry, architecture, process selection and analytical sizing.",
+        "Wingbox spanwise length: 3,700 mm, partitioned to represent changing geometry and ply drop-offs.",
+        "Abaqus/CAE: lofted shell geometry, face partitions, composite layups and linear structural / eigenvalue-buckling assessment.",
+        "Materials and architecture: UD carbon G947 flange plies; woven carbon G939 skins; Nomex honeycomb sandwich core on the side flanks."
+      ],
+      "results": [
+        "Completed the tapered wingbox finite-element model and successfully executed the Abaqus simulation.",
+        "Established a spanwise flange sizing and ply-drop schedule from root toward tip, rather than applying a uniform laminate thickness.",
+        "Identified sandwich flank construction as the structural response to shear-buckling concerns in thin carbon side skins.",
+        "Quantitative stress, displacement, failure-index and buckling values are not stated here; they must be taken from verified final output plots and report tables."
+      ],
+      "phd_direction": [
+        "Progress toward progressive damage and delamination modelling of composite wing structures.",
+        "Compare analytical pre-sizing assumptions with full-field finite-element stress and buckling predictions.",
+        "Investigate manufacturable ply-drop and flange-to-sandwich junction designs."
+      ],
+      "tags": [
+        "Composite Structures",
+        "Wingbox Design",
+        "Abaqus",
+        "Finite Element Analysis",
+        "Laminate Theory",
+        "Ply Drop-offs",
+        "Sandwich Structures",
+        "GAP Methodology"
+      ],
+      "images": [
+        "projects/mudry-cap232/01-wingbox-overview.svg",
+        "projects/mudry-cap232/02-spanwise-partitioning.svg",
+        "projects/mudry-cap232/03-laminate-architecture.svg",
+        "projects/mudry-cap232/04-fea-workflow.svg",
+        "projects/mudry-cap232/05-analysis-results-placeholder.svg"
+      ],
+      "sections": [
+        {
+          "title": "Project Scope",
+          "items": [
+            "Structural pre-sizing of the main wingbox for the Mudry CAP 232 aerobatic aircraft.",
+            "The assignment deliverables include laminate thickness and stacking sequence/orientation based on analytical and finite-element calculations, plus a proposed manufacturing process."
+          ]
+        },
+        {
+          "title": "Engineering Workflow",
+          "items": [
+            "Defined the tapered 3.7 m wingbox geometry and spanwise stations.",
+            "Calculated bending and shear load distributions and converted them into flange and flank sizing requirements.",
+            "Developed spanwise ply-drop regions and composite layups.",
+            "Built and ran the Abaqus shell model to investigate global response and stability."
+          ]
+        },
+        {
+          "title": "Model Status & Evidence",
+          "items": [
+            "The Abaqus model has been completed and the simulation run successfully.",
+            "The five current gallery illustrations are temporary explanatory placeholders, not Abaqus screenshots or measured results. Replace them with original model, mesh, layup, loading and contour screenshots when ready.",
+            "Final numerical performance claims should only be added after checking the actual ODB plots and assignment report."
+          ]
+        }
+      ]
     }
   ]
 }
