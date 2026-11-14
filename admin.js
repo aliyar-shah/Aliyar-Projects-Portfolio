@@ -1377,7 +1377,28 @@ function buildSeedPanel(staticData, onImported) {
 
 // ── Dashboard ──────────────────────────────────────────────────
 
-async function renderDashboard(root) {
+async 
+async function buildAnalyticsPanel() {
+  const panel = el('div', {});
+  panel.appendChild(el('h2', {}, 'Visitor Analytics'));
+  panel.appendChild(el('p', { class: 'admin-muted' }, 'Page views and estimated unique browsers, grouped by approximate visitor country.'));
+  const { data, error } = await window.supabaseClient.from('portfolio_analytics_daily')
+    .select('day,country_code,page_views,unique_visitors').order('day', { ascending: false }).limit(500);
+  if (error) { panel.appendChild(el('div', { class: 'admin-alert show error' }, 'Could not load analytics: ' + error.message)); return panel; }
+  const rows = data || [], sum = (list, key) => list.reduce((n,r)=>n+Number(r[key]||0),0);
+  const today = new Date().toISOString().slice(0,10), todayRows=rows.filter(r=>r.day===today);
+  panel.appendChild(el('div',{class:'admin-grid-2'},
+    ...[['All-time page views',sum(rows,'page_views')],['All-time unique browsers*',sum(rows,'unique_visitors')],["Today's page views",sum(todayRows,'page_views')],["Today's unique browsers*",sum(todayRows,'unique_visitors')]].map(([k,v])=>el('div',{class:'card pad'},el('div',{class:'admin-muted'},k),el('h2',{},String(v))))
+  ));
+  const byCountry={}; rows.forEach(r=>byCountry[r.country_code||'UN']=(byCountry[r.country_code||'UN']||0)+Number(r.page_views||0));
+  const table=el('table',{class:'admin-table'}), head=el('thead',{},el('tr',{},el('th',{},'Country code'),el('th',{},'Page views')));
+  const body=el('tbody',{}); Object.entries(byCountry).sort((a,b)=>b[1]-a[1]).forEach(([c,n])=>body.appendChild(el('tr',{},el('td',{},c),el('td',{},String(n)))));
+  table.appendChild(head);table.appendChild(body);panel.appendChild(el('h3',{},'Traffic by country'));panel.appendChild(table);
+  panel.appendChild(el('p',{class:'admin-muted'},"*Unique browsers are counted per browser per UTC day, not across devices. Country is approximate IP geolocation. Tracking starts at deployment; historical traffic cannot be recovered."));
+  return panel;
+}
+
+function renderDashboard(root) {
   // Fetch all data concurrently, fail gracefully per section
   let profile   = { name: 'Syed Aliyar Shah', title: 'Mechanical Design & Simulation Engineer', photo_url: null };
   let documents = [];
@@ -1499,6 +1520,7 @@ async function renderDashboard(root) {
   // Build sidebar nav
   const navItems = [
     { id: 'profile',      icon: '👤', label: 'Profile',           panel: () => buildProfilePanel(profile) },
+    { id: 'analytics', icon: '📊', label: 'Visitor Analytics', panel: () => { const p = el('div', {}); buildAnalyticsPanel().then(x => p.replaceWith(x)); return p; } },
     { id: 'contact',      icon: '📞', label: 'Contact',           panel: () => buildContactPanel(contact) },
     { id: 'home',         icon: '🏠', label: 'Home Page',         panel: () => buildHomePanel(welcome) },
     { id: 'education',    icon: '🎓', label: 'Education',         panel: () => buildEducationPanel(education) },
